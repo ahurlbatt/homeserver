@@ -6,7 +6,7 @@ services:
         image: "mariadb:10.11.2"
         
         volumes:
-            - "NCMariaDB:/var/lib/mysql"
+            - "NCDB:/var/lib/mysql"
 
         environment:
             - MYSQL_ROOT_PASSWORD
@@ -47,8 +47,8 @@ services:
         networks: ["net", "common"]
 
 volumes:
-    NCMariaDB:
-    NCData:
+    NCDB: /tank/NC/NCDB
+    NCData: /tank/NC/NCData
 
 networks:
     net:
