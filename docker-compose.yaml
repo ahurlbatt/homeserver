@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
     NCDatabase:
-        image: "mariadb:10.5.9"
+        image: "mariadb:10.11.2"
         
         volumes:
             - "NCMariaDB:/var/lib/mysql"
@@ -19,7 +19,7 @@ services:
         networks: ["common"]
 
     NCFrontend:
-        image: "nextcloud:21.0.0"
+        image: "nextcloud:23-apache"
 
         volumes: 
           - "NCData:/var/www/html"
