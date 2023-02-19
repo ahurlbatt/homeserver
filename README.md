@@ -31,8 +31,8 @@
 3. Create pool and vdev - check ashift vs block size!
     1. `cat zdisks.txt | sudo xargs zpool create tank raidz2 `
 4. Create dataset
-    1. `sudo zfs create tank/nextcloud`
-    2. Optionally enable compression with `sudo zfs set compression=lz4 tank/nextcloud`
+    1. `sudo zfs create tank/NC`
+    2. Optionally enable compression with `sudo zfs set compression=lz4 tank/NC`
 5. Check maintainance options
     1. Regular scrub `cat /etc/cron.d/zfsutils-linux`
 
