@@ -33,13 +33,15 @@
 4. Create dataset
     1. `sudo zfs create tank/NC`
     2. Optionally enable compression with `sudo zfs set compression=lz4 tank/NC`
+    3. Make folders for DB and Data: `sudo mkdir /tank/NC/NCDB /tank/NC/NCData`
 5. Check maintainance options
     1. Regular scrub `cat /etc/cron.d/zfsutils-linux`
 
 ## TO DO
-1. Nextcloud in docker
+1. Docker Images
     1. Nextcloud
-	2. MariaDB
+    2. MariaDB
 	3. Redis
-2. Docker network
-3. Caddy Docker
+    4. Caddy
+2. Docker secrets
+3. SMTP?
