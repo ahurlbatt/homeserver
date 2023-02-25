@@ -3,8 +3,10 @@ services:
     NCDatabase:
         image: mariadb:10.11.2
         
-        volumes:
-            - NCDB:/var/lib/mysql
+        volumes: 
+            - type: bind
+              source: /tank/NC/NCDB
+              target: /var/lib/mysql
 
         networks:
             - private
@@ -27,7 +29,9 @@ services:
         image: nextcloud:23-apache
 
         volumes: 
-            - NCData:/var/www/html
+            - type: bind
+              source: /tank/NC/NCData
+              target: /var/www/html
 
         ports:
           - 8080:80
@@ -63,10 +67,6 @@ networks:
     private:
         internal: true
     ondisplay:
-
-volumes:
-    NCDB: /tank/NC/NCDB
-    NCData: /tank/NC/NCData
 
 secrets:
     mysql_user:
