@@ -1,10 +1,13 @@
 services:
 
     NCDatabase:
-        image: "mariadb:10.11.2"
+        image: mariadb:10.11.2
         
         volumes:
-            - "NCDB:/var/lib/mysql"
+            - NCDB:/var/lib/mysql
+
+        networks:
+            - private
 
         environment:
             - MYSQL_USER_FILE
@@ -12,7 +15,7 @@ services:
             - MYSQL_DATABASE_FILE
             - MYSQL_ROOT_PASSWORD_FILE
 
-        restart: "always"
+        restart: always
 
         secrets:
             - mysql_user
@@ -20,14 +23,21 @@ services:
             - mysql_database
             - mysql_root_password
 
-        networks: ["common"]
-
-
     NCFrontend:
-        image: "nextcloud:23-apache"
+        image: nextcloud:23-apache
 
         volumes: 
-          - "NCData:/var/www/html"
+            - NCData:/var/www/html
+
+        ports:
+          - 8080:80
+
+        networks:
+            - private
+            - ondisplay
+
+        links:
+            - NCDatabase
 
         environment:
             - MYSQL_HOST
@@ -37,10 +47,10 @@ services:
             - NEXTCLOUD_ADMIN_USER_FILE
             - NEXTCLOUD_ADMIN_PASSWORD_FILE
 
-        restart: "always"
+        restart: always
 
         depends_on:
-            - "NCDatabase"
+            - NCDatabase
 
         secrets:
             - mysql_user
@@ -49,17 +59,14 @@ services:
             - nextcloud_admin_user
             - nextcloud_admin_password
 
-        networks: ["net", "common"]
+networks:
+    private:
+        internal: true
+    ondisplay:
 
 volumes:
     NCDB: /tank/NC/NCDB
     NCData: /tank/NC/NCData
-
-networks:
-    net:
-        external: true
-    common:
-        internal: true
 
 secrets:
     mysql_user:
