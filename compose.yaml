@@ -2,6 +2,8 @@ services:
 
     NCDatabase:
         image: mariadb:10.11.2
+
+        env_file: homeserver.env
         
         volumes: 
             - type: bind
@@ -28,6 +30,8 @@ services:
     NCFrontend:
         image: nextcloud:23-apache
 
+        env_file: homeserver.env
+        
         volumes: 
             - type: bind
               source: /tank/NC/NCData
