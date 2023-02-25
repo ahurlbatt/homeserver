@@ -9,13 +9,21 @@ services:
             - "NCDB:/var/lib/mysql"
 
         environment:
-            - MYSQL_ROOT_PASSWORD_FILE
-            - MYSQL_DATABASE_FILE
             - MYSQL_USER_FILE
             - MYSQL_PASSWORD_FILE
+            - MYSQL_DATABASE_FILE
+            - MYSQL_ROOT_PASSWORD_FILE
 
-        restart: "on-failure"
+        restart: "always"
+
+        secrets:
+            - mysql_user
+            - mysql_password
+            - mysql_database
+            - mysql_root_password
+
         networks: ["common"]
+
 
     NCFrontend:
         image: "nextcloud:23-apache"
@@ -25,14 +33,24 @@ services:
 
         environment:
             - MYSQL_HOST
-            - MYSQL_DATABASE_FILE
             - MYSQL_USER_FILE
             - MYSQL_PASSWORD_FILE
+            - MYSQL_DATABASE_FILE
             - NEXTCLOUD_ADMIN_USER_FILE
             - NEXTCLOUD_ADMIN_PASSWORD_FILE
 
+        restart: "always"
+
         depends_on:
             - "NCDatabase"
+
+        secrets:
+            - mysql_user
+            - mysql_password
+            - mysql_database
+            - nextcloud_admin_user
+            - nextcloud_admin_password
+
         networks: ["net", "common"]
 
 volumes:
@@ -44,3 +62,17 @@ networks:
         external: true
     common:
         internal: true
+
+secrets:
+    mysql_user:
+        file: mysql_user.secret
+    mysql_password:
+        file: mysql_password.secret
+    mysql_database:
+        file: mysql_database.secret
+    mysql_root_password:
+        file: mysql_root_password.secret
+    nextcloud_admin_user:
+        file: nextcloud_admin_user.secret
+    nextcloud_admin_password:
+        file: nextcloud_admin_password.secret

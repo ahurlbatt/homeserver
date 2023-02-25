@@ -1,0 +1,11 @@
+# Database
+MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+MYSQL_DATABASE_FILE=/run/secrets/mysql_database
+MYSQL_USER_FILE=/run/secrets/mysql_user
+MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+MYSQL_HOST=NCDatabase
+
+# Nextcloud
+NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nextcloud_admin_user
+NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
+
