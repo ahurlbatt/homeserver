@@ -22,7 +22,7 @@ services:
             - mysql_root_password
 
     NCFrontend:
-        image: nextcloud:23-apache
+        image: nextcloud:25-apache
 
         env_file: homeserver.env
         
