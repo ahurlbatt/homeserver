@@ -13,12 +13,6 @@ services:
         networks:
             - private
 
-        environment:
-            - MYSQL_USER_FILE
-            - MYSQL_PASSWORD_FILE
-            - MYSQL_DATABASE_FILE
-            - MYSQL_ROOT_PASSWORD_FILE
-
         restart: always
 
         secrets:
@@ -46,14 +40,6 @@ services:
 
         links:
             - NCDatabase
-
-        environment:
-            - MYSQL_HOST
-            - MYSQL_USER_FILE
-            - MYSQL_PASSWORD_FILE
-            - MYSQL_DATABASE_FILE
-            - NEXTCLOUD_ADMIN_USER_FILE
-            - NEXTCLOUD_ADMIN_PASSWORD_FILE
 
         restart: always
 
