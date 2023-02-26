@@ -7,6 +7,7 @@
     3. openssh-server
         1. `PasswordAuthentication no`
         2. `PubkeyAuthentication yes`
+	4. [Allow `fork` memory overcommit for redis](https://redis.io/docs/getting-started/faq/#background-saving-fails-with-a-fork-error-on-linux) - `sudo sh -c "echo '\n# Enable overcommit for fork\nvm.overcommit_memory = 1\n' >> /etc/sysctl.conf"`
 2. zfs
     1. Add `contrib` and `backports` to [SourcesList](https://wiki.debian.org/SourcesList)
     2. `sudo apt update`
@@ -45,7 +46,6 @@
 
 ## TO DO
 1. Docker Images
-    1. Redis
     2. Caddy
 2. Tuning
 	1. ZFS for NC
