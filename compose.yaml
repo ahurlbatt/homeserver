@@ -2,19 +2,15 @@ services:
 
     db:
         image: mariadb:10.11.2
-
+        command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
         env_file: homeserver.env
-        
         volumes: 
             - type: bind
               source: /tank/nc/db
               target: /var/lib/mysql
-
         networks:
             - private
-
         restart: always
-
         secrets:
             - mysql_user
             - mysql_password
@@ -29,31 +25,23 @@ services:
 
     app:
         image: nextcloud:25-apache
-
         env_file: homeserver.env
-        
         volumes: 
             - type: bind
               source: /tank/nc/ncdata
               target: /var/www/html
-
         ports:
           - 8080:80
-
         networks:
             - private
             - ondisplay
-
         links:
             - db
             - redis
-
         restart: always
-
         depends_on:
             - db
             - redis
-
         secrets:
             - mysql_user
             - mysql_password
