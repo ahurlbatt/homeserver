@@ -1,7 +1,12 @@
 # homeserver
 
 ## Setting up debian
-1. vim
+1. Basics
+    1. `usermod -aG sudo USERNAME`
+    2. vim
+    3. openssh-server
+        1. `PasswordAuthentication no`
+        2. `PubkeyAuthentication yes`
 2. zfs
     1. Add `contrib` and `backports` to [SourcesList](https://wiki.debian.org/SourcesList)
     2. `sudo apt update`
@@ -39,9 +44,6 @@
 
 ## TO DO
 1. Docker Images
-    1. Nextcloud
-    2. MariaDB
-	3. Redis
-    4. Caddy
-2. Docker secrets
-3. SMTP?
+	1. Redis
+    2. Caddy
+2. Email?
