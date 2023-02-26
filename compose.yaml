@@ -21,6 +21,12 @@ services:
             - mysql_database
             - mysql_root_password
 
+    redis:
+        image: redis:7-bullseye
+        restart: always
+        networks:
+            - private
+
     app:
         image: nextcloud:25-apache
 
@@ -40,11 +46,13 @@ services:
 
         links:
             - db
+            - redis
 
         restart: always
 
         depends_on:
             - db
+            - redis
 
         secrets:
             - mysql_user
