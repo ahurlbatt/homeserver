@@ -14,16 +14,17 @@
     4. `sudo apt install -t bullseye-backports zfsutils-linux`
 3. docker
     1. Add to repositories
-    
-          ```
+
+            ```
             sudo apt install ca-certificates curl gnupg lsb-release
             sudo mkdir -m 0755 -p /etc/apt/keyrings
             curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
             echo \
-              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
             sudo apt update
-    2. Install: `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
+            ```
+    2. Install: `sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
     3. Test: `sudo docker run hello-world`
 
 ## Setting up zfs
@@ -36,14 +37,14 @@
 3. Create pool and vdev - check ashift vs block size!
     1. `cat zdisks.txt | sudo xargs zpool create tank raidz2 `
 4. Create dataset
-    1. `sudo zfs create tank/NC`
-    2. Optionally enable compression with `sudo zfs set compression=lz4 tank/NC`
-    3. Make folders for DB and Data: `sudo mkdir /tank/NC/NCDB /tank/NC/NCData`
+    1. `sudo zfs create tank/nc`
+    2. Optionally enable compression with `sudo zfs set compression=lz4 tank/nc`
+    3. Make folders for DB and Data: `sudo mkdir /tank/nc/db /tank/nc/ncdata`
 5. Check maintainance options
     1. Regular scrub `cat /etc/cron.d/zfsutils-linux`
 
 ## TO DO
 1. Docker Images
-	1. Redis
+    1. Redis
     2. Caddy
 2. Email?

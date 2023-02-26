@@ -1,13 +1,13 @@
 services:
 
-    NCDatabase:
+    db:
         image: mariadb:10.11.2
 
         env_file: homeserver.env
         
         volumes: 
             - type: bind
-              source: /tank/NC/NCDB
+              source: /tank/nc/db
               target: /var/lib/mysql
 
         networks:
@@ -21,14 +21,14 @@ services:
             - mysql_database
             - mysql_root_password
 
-    NCFrontend:
+    app:
         image: nextcloud:25-apache
 
         env_file: homeserver.env
         
         volumes: 
             - type: bind
-              source: /tank/NC/NCData
+              source: /tank/nc/ncdata
               target: /var/www/html
 
         ports:
@@ -39,12 +39,12 @@ services:
             - ondisplay
 
         links:
-            - NCDatabase
+            - db
 
         restart: always
 
         depends_on:
-            - NCDatabase
+            - db
 
         secrets:
             - mysql_user
