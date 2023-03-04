@@ -1,13 +1,11 @@
 services:
 
-    db:
+    nc-db:
         image: mariadb:10.11.2
         command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
         env_file: homeserver.env
-        volumes: 
-            - type: bind
-              source: /tank/nc/db
-              target: /var/lib/mysql
+        volumes:
+            - ncdb:/var/lib/mysql
         networks:
             - private
         restart: always
@@ -23,24 +21,22 @@ services:
         networks:
             - private
 
-    app:
+    nc-app:
         image: nextcloud:25-apache
         env_file: homeserver.env
-        volumes: 
-            - type: bind
-              source: /tank/nc/ncdata
-              target: /var/www/html
+        volumes:
+            - ncdata:/var/www/html
         ports:
-          - 8080:80
+            - 80:80
         networks:
             - private
             - ondisplay
         links:
-            - db
+            - nc-db
             - redis
         restart: always
         depends_on:
-            - db
+            - nc-db
             - redis
         secrets:
             - mysql_user
@@ -53,6 +49,20 @@ networks:
     private:
         internal: true
     ondisplay:
+
+volumes:
+    ncdata:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: /tank/nc/data
+    ncdb:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: /tank/nc/db
 
 secrets:
     mysql_user:
