@@ -1,6 +1,5 @@
 x-nc-app: &nc-app
     image: nextcloud:25-apache
-    env_file: homeserver.env
     volumes:
         - ncdata:/var/www/html
     networks:
@@ -13,6 +12,15 @@ x-nc-app: &nc-app
     depends_on:
         - nc-db
         - redis
+    env_file: homeserver.env
+    environment:
+        - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nextcloud_admin_user
+        - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
+        - MYSQL_DATABASE_FILE=/run/secrets/mysql_database
+        - MYSQL_USER_FILE=/run/secrets/mysql_user
+        - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+        - MYSQL_HOST=nc-db
+        - REDIS_HOST=redis
     secrets:
         - mysql_user
         - mysql_password
@@ -25,12 +33,18 @@ services:
     nc-db:
         image: mariadb:10.11.2
         command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
-        env_file: homeserver.env
         volumes:
             - ncdb:/var/lib/mysql
         networks:
             - private
         restart: unless-stopped
+        environment:
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+            - MYSQL_DATABASE_FILE=/run/secrets/mysql_database
+            - MYSQL_USER_FILE=/run/secrets/mysql_user
+            - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+            - MARIADB_AUTO_UPGRADE=1
+            - MARIADB_DISABLE_UPGRADE_BACKUP=1
         secrets:
             - mysql_user
             - mysql_password
