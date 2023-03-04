@@ -44,6 +44,14 @@
 5. Check maintainance options
     1. Regular scrub `cat /etc/cron.d/zfsutils-linux`
 
+## Starting the services
+1. Check out this repo to the system
+2. Make the necessary `.secret` files
+3. Adapt `homeserver.env` if needed e.g. for your domain
+3. Run `sudo docker compose up`
+4. Secure MariaDB
+	1. Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
+
 ## TO DO
 1. Docker Images
     2. Caddy
