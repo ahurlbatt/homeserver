@@ -1,3 +1,25 @@
+x-nc-app: &nc-app
+    image: nextcloud:25-apache
+    env_file: homeserver.env
+    volumes:
+        - ncdata:/var/www/html
+    networks:
+        - private
+        - ondisplay
+    links:
+        - nc-db
+        - redis
+    restart: unless-stopped
+    depends_on:
+        - nc-db
+        - redis
+    secrets:
+        - mysql_user
+        - mysql_password
+        - mysql_database
+        - nextcloud_admin_user
+        - nextcloud_admin_password
+
 services:
 
     nc-db:
@@ -22,28 +44,15 @@ services:
             - private
 
     nc-app:
-        image: nextcloud:25-apache
-        env_file: homeserver.env
-        volumes:
-            - ncdata:/var/www/html
+        <<: *nc-app
         ports:
             - 80:80
-        networks:
-            - private
-            - ondisplay
-        links:
-            - nc-db
-            - redis
-        restart: unless-stopped
+
+    nc-cron:
+        <<: *nc-app
+        entrypoint: /cron.sh
         depends_on:
-            - nc-db
-            - redis
-        secrets:
-            - mysql_user
-            - mysql_password
-            - mysql_database
-            - nextcloud_admin_user
-            - nextcloud_admin_password
+            - nc-app
 
 networks:
     private:
