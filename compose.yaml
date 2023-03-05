@@ -3,11 +3,7 @@ x-nc-app: &nc-app
     volumes:
         - ncdata:/var/www/html
     networks:
-        - private
-        - ondisplay
-    links:
-        - nc-db
-        - redis
+        - internal-only
     restart: unless-stopped
     depends_on:
         - nc-db
@@ -38,7 +34,7 @@ services:
             - ncdb:/var/lib/mysql
             - ./mariadb_override.cnf:/etc/mysql/conf.d/override.cnf:ro
         networks:
-            - private
+            - internal-only
         restart: unless-stopped
         environment:
             - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
@@ -58,13 +54,22 @@ services:
         image: redis:7-bullseye
         restart: unless-stopped
         networks:
-            - private
+            - internal-only
 
     nc-app:
         container_name: nc-app
         <<: *nc-app
-        ports:
-            - 80:80
+        labels:
+            caddy: http://local.vm
+            caddy.reverse_proxy: "{{upstreams 80}}"
+            caddy.file_server: ""
+            caddy.encode: gzip
+            caddy.header: /*
+            caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
+            caddy.redir_0: "/.well-known/carddav /remote.php/dav"
+            caddy.redir_1: "/.well-known/caldav /remote.php/dav"
+            caddy.@forbidden.path: "/.htaccess /data/* /config/* /db_structure /.xml /README /3rdparty/* /lib/* /templates/* /occ /console.php"
+            caddy.respond: "@forbidden 403"
 
     nc-cron:
         container_name: nc-cron
@@ -73,11 +78,31 @@ services:
         depends_on:
             - nc-app
 
+    caddy:
+        container_name: caddy
+        image: lucaslorentz/caddy-docker-proxy:2.8
+        restart: unless-stopped
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            - exposed
+            - internal-only
+        environment:
+            - CADDY_INGRESS_NETWORKS=internal-only
+        depends_on:
+            - nc-app
+            - nc-cron
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - caddy-data:/data
+            - ncdata:/nextcloud/var/www/html:ro
+
 networks:
-    private:
+    internal-only:
         name: internal-only
         internal: true
-    ondisplay:
+    exposed:
         name: exposed
 
 volumes:
@@ -95,6 +120,8 @@ volumes:
             o: bind
             type: none
             device: /tank/mariadb
+    caddy-data:
+        name: caddy-data
 
 secrets:
     mysql_user:

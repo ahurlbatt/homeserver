@@ -57,10 +57,16 @@
     - [ZFS Documentation](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html#mysql)
     - [This company](https://www.percona.com/blog/mysql-zfs-performance-update/)
     - [This Blog](https://shatteredsilicon.net/mysql-mariadb-innodb-on-zfs/)
+2. Caddy settings and docker parameters are taken from:
+    - [Nextcloud Documentation](https://github.com/nextcloud/documentation/blob/master/admin_manual/configuration_server/reverse_proxy_configuration.rst)
+    - [The Repo for the image](https://github.com/lucaslorentz/caddy-docker-proxy)
+    - [This dudes Repo](https://github.com/blazekjan/docker-selfhosted-apps)
+    - [This blog post](https://dev.to/jhot/caddy-docker-proxy-like-traefik-but-better-565l)
+    - [This Gist](https://gist.github.com/tmo1/72a9dc98b0b6b75f7e4ec336cdc399e1)
 
 ## TO DO
 1. Docker Images
-    2. Caddy
+    1. Change mariadb override.cnf to `config` tag
 2. Tuning
     1. ZFS for NC
     2. NC for ZFS
