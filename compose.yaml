@@ -31,6 +31,7 @@ x-nc-app: &nc-app
 services:
 
     nc-db:
+        container_name: nc-db
         image: mariadb:10.11.2
         command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
         volumes:
@@ -53,17 +54,20 @@ services:
             - mysql_root_password
 
     redis:
+        container_name: redis
         image: redis:7-bullseye
         restart: unless-stopped
         networks:
             - private
 
     nc-app:
+        container_name: nc-app
         <<: *nc-app
         ports:
             - 80:80
 
     nc-cron:
+        container_name: nc-cron
         <<: *nc-app
         entrypoint: /cron.sh
         depends_on:
@@ -71,17 +75,21 @@ services:
 
 networks:
     private:
+        name: internal-only
         internal: true
     ondisplay:
+        name: exposed
 
 volumes:
     ncdata:
+        name: ncdata
         driver: local
         driver_opts:
             o: bind
             type: none
             device: /tank/nextcloud
     ncdb:
+        name: ncdb
         driver: local
         driver_opts:
             o: bind
