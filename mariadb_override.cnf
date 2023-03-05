@@ -1,8 +1,4 @@
 [mysqld]
-skip-innodb_doublewrite
-innodb_read_io_threads = 10
-innodb_write_io_threads = 10
-innodb_fast_shutdown = 2
 innodb_doublewrite = 0
 innodb_use_atomic_writes = 0
 innodb_use_native_aio = 0

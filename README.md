@@ -37,10 +37,9 @@
     2. Edit to remove e.g. boot drive
 3. Create pool and vdev - check ashift vs block size!
     1. `cat zdisks.txt | sudo xargs zpool create tank raidz2 `
-4. Create dataset
-    1. `sudo zfs create tank/nc`
-    2. Optionally enable compression with `sudo zfs set compression=lz4 tank/nc`
-    3. Make folders for DB and Data: `sudo mkdir /tank/nc/db /tank/nc/ncdata`
+4. Create datasets
+    - Nextcloud Data: `sudo zfs create -o compression=lz4 tank/nextcloud`
+    - MariaDB Data: `sudo zfs create -o recordsize=16k -o primarycache=metadata -o compression=lz4 -o logbias=throughput -o atime=off tank/mariadb`
 5. Check maintainance options
     1. Regular scrub `cat /etc/cron.d/zfsutils-linux`
 
@@ -55,14 +54,14 @@
 ## Some explanations
 1. MariaDB settings are taken from the following sources. I don't understand all of them.
     - [Reddit post about it](https://www.reddit.com/r/zfs/comments/u1xklc/mariadbmysql_database_settings_for_zfs/)
-	- [ZFS Documentation](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html#mysql)
-	- [This company](https://www.percona.com/blog/mysql-zfs-performance-update/)
+    - [ZFS Documentation](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html#mysql)
+    - [This company](https://www.percona.com/blog/mysql-zfs-performance-update/)
+    - [This Blog](https://shatteredsilicon.net/mysql-mariadb-innodb-on-zfs/)
+
 ## TO DO
 1. Docker Images
     2. Caddy
 2. Tuning
     1. ZFS for NC
     2. NC for ZFS
-    3. ZFS for MariaDB
-    4. MariaDB for ZFS
 3. Email?

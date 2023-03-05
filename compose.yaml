@@ -80,13 +80,13 @@ volumes:
         driver_opts:
             o: bind
             type: none
-            device: /tank/nc/data
+            device: /tank/nextcloud
     ncdb:
         driver: local
         driver_opts:
             o: bind
             type: none
-            device: /tank/nc/db
+            device: /tank/mariadb
 
 secrets:
     mysql_user:
