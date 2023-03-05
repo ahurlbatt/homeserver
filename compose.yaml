@@ -32,7 +32,6 @@ services:
         command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
         volumes:
             - ncdb:/var/lib/mysql
-            - ./mariadb_override.cnf:/etc/mysql/conf.d/override.cnf:ro
         networks:
             - internal-only
         restart: unless-stopped
@@ -43,6 +42,9 @@ services:
             - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
             - MARIADB_AUTO_UPGRADE=1
             - MARIADB_DISABLE_UPGRADE_BACKUP=1
+        configs:
+            - source: mariadb-override
+              target: /etc/mysql/conf.d/override.cnf
         secrets:
             - mysql_user
             - mysql_password
@@ -122,6 +124,10 @@ volumes:
             device: /tank/mariadb
     caddy-data:
         name: caddy-data
+
+configs:
+    mariadb-override:
+        file: ./mariadb_override.cnf
 
 secrets:
     mysql_user:

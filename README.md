@@ -30,13 +30,13 @@
 
 ## Setting up zfs
 1. Helpful:
-    1. https://wiki.debian.org/ZFS
-    2. https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/
+    - https://wiki.debian.org/ZFS
+    - https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/
 2. List of disks to include
     1. `for f in /dev/disk/by-id/*; do stat --format='%n' "$f"; done > zdisks.txt`
     2. Edit to remove e.g. boot drive
 3. Create pool and vdev - check ashift vs block size!
-    1. `cat zdisks.txt | sudo xargs zpool create tank raidz2 `
+    - `cat zdisks.txt | sudo xargs zpool create tank raidz2 `
 4. Create datasets
     - Nextcloud Data: `sudo zfs create -o compression=lz4 tank/nextcloud`
     - MariaDB Data: `sudo zfs create -o recordsize=16k -o primarycache=metadata -o compression=lz4 -o logbias=throughput -o atime=off tank/mariadb`
@@ -49,7 +49,7 @@
 3. Adapt `homeserver.env` if needed e.g. for your domain
 3. Run `sudo docker compose up`
 4. Secure MariaDB
-    1. Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
+    - Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
 
 ## Some explanations
 1. MariaDB settings are taken from the following sources. I don't understand all of them.
@@ -65,9 +65,7 @@
     - [This Gist](https://gist.github.com/tmo1/72a9dc98b0b6b75f7e4ec336cdc399e1)
 
 ## TO DO
-1. Docker Images
-    1. Change mariadb override.cnf to `config` tag
-2. Tuning
+1. Tuning
     1. ZFS for NC
     2. NC for ZFS
-3. Email?
+2. Email?
