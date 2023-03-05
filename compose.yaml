@@ -35,6 +35,7 @@ services:
         command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
         volumes:
             - ncdb:/var/lib/mysql
+            - ./mariadb_override.cnf:/etc/mysql/conf.d/override.cnf:ro
         networks:
             - private
         restart: unless-stopped

@@ -7,7 +7,7 @@
     3. openssh-server
         1. `PasswordAuthentication no`
         2. `PubkeyAuthentication yes`
-	4. [Allow `fork` memory overcommit for redis](https://redis.io/docs/getting-started/faq/#background-saving-fails-with-a-fork-error-on-linux) - `sudo sh -c "echo '\n# Enable overcommit for fork\nvm.overcommit_memory = 1\n' >> /etc/sysctl.conf"`
+    4. [Allow `fork` memory overcommit for redis](https://redis.io/docs/getting-started/faq/#background-saving-fails-with-a-fork-error-on-linux) - `sudo sh -c "echo '\n# Enable overcommit for fork\nvm.overcommit_memory = 1\n' >> /etc/sysctl.conf"`
 2. zfs
     1. Add `contrib` and `backports` to [SourcesList](https://wiki.debian.org/SourcesList)
     2. `sudo apt update`
@@ -50,14 +50,19 @@
 3. Adapt `homeserver.env` if needed e.g. for your domain
 3. Run `sudo docker compose up`
 4. Secure MariaDB
-	1. Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
+    1. Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
 
+## Some explanations
+1. MariaDB settings are taken from the following sources. I don't understand all of them.
+    - [Reddit post about it](https://www.reddit.com/r/zfs/comments/u1xklc/mariadbmysql_database_settings_for_zfs/)
+	- [ZFS Documentation](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html#mysql)
+	- [This company](https://www.percona.com/blog/mysql-zfs-performance-update/)
 ## TO DO
 1. Docker Images
     2. Caddy
 2. Tuning
-	1. ZFS for NC
-	2. NC for ZFS
-	3. ZFS for MariaDB
-	4. MariaDB for ZFS
+    1. ZFS for NC
+    2. NC for ZFS
+    3. ZFS for MariaDB
+    4. MariaDB for ZFS
 3. Email?
