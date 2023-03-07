@@ -4,14 +4,18 @@ x-nc-app: &nc-app
         - ncdata:/var/www/html
     networks:
         - internal-only
+        - exposed
     restart: unless-stopped
     depends_on:
         - nc-db
         - redis
-    env_file: homeserver.env
     environment:
         - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nextcloud_admin_user
         - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
+        - NEXTCLOUD_TRUSTED_DOMAINS="${MY_DOMAIN}"
+        - NEXTCLOUD_TRUSTED_PROXIES=172.24.0.0/16
+        - OVERWRITECLIURL=https://${MY_DOMAIN}
+        - OVERWRITEPROTOCOL=https
         - MYSQL_DATABASE_FILE=/run/secrets/mysql_database
         - MYSQL_USER_FILE=/run/secrets/mysql_user
         - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
@@ -62,7 +66,7 @@ services:
         container_name: nc-app
         <<: *nc-app
         labels:
-            caddy: http://local.vm
+            caddy: "${MY_DOMAIN}"
             caddy.reverse_proxy: "{{upstreams 80}}"
             caddy.file_server: ""
             caddy.encode: gzip
