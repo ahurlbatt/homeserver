@@ -67,7 +67,6 @@
 	- [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
 
 ## TO DO
-1. Read cache on ssd
-2. Borg backup to borgbase
-3. Ansible or similar
-4. Checkmk
+1. Borg backup to borgbase
+2. Ansible or similar
+3. Checkmk
