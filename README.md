@@ -63,12 +63,11 @@
     - [This dudes Repo](https://github.com/blazekjan/docker-selfhosted-apps)
     - [This blog post](https://dev.to/jhot/caddy-docker-proxy-like-traefik-but-better-565l)
     - [This Gist](https://gist.github.com/tmo1/72a9dc98b0b6b75f7e4ec336cdc399e1)
+3. Nextcloud tuning takes info from here
+	- [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
 
 ## TO DO
-1. Tuning
-    1. ZFS for NC
-    2. NC for ZFS
-2. Read cache on ssd
-3. Borg backup to borgbase
-4. Ansible or similar
-5. Checkmk
+1. Read cache on ssd
+2. Borg backup to borgbase
+3. Ansible or similar
+4. Checkmk
