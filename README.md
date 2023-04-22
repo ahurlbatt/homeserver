@@ -68,4 +68,7 @@
 1. Tuning
     1. ZFS for NC
     2. NC for ZFS
-2. Email?
+2. Read cache on ssd
+3. Borg backup to borgbase
+4. Ansible or similar
+5. Checkmk
