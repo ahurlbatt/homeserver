@@ -12,3 +12,12 @@
       loop:
         - "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
         - "deb-src http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
+    - name: Install Linux Headers
+      ansible.builtin.apt:
+        name: "linux-headers-amd64"
+        update_cache: true
+    - name: Install ZFS
+      ansible.builtin.apt:
+        name: "zfsutils-linux"
+        update_cache: true
+        default_release: "{{ ansible_distribution_release }}-backports"
