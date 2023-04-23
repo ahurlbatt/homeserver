@@ -1,8 +1,8 @@
-- name: My first play
+- name: Server setup
   hosts: myservers
+  become: true
   tasks:
-    - name: Ping my hosts
-      ansible.builtin.ping:
-    - name: Print message
-      ansible.builtin.debug:
-        msg: Hello world
+    - name: Allow memory over commit
+      sysctl:
+        name: vm.overcommit_memory
+        value: "1"
