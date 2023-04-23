@@ -86,6 +86,14 @@
 
 ## TO DO
 
-1. Borg backup to borgbase
-2. Ansible or similar
+1. Ansible
+   1. Memory overcommit
+   2. Install zfs
+   3. Install docker
+   4. Set up zfs
+   5. Checkout repo
+   6. Set up secrets and environment
+   7. Start containers
+   8. Secure MariaDB
+2. Borg backup to borgbase
 3. Checkmk
