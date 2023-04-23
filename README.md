@@ -96,4 +96,7 @@
    7. Start containers
    8. Secure MariaDB
 2. Borg backup to borgbase
-3. Checkmk
+3. Secrets
+   1. Create encrypted files with ansible vault
+   2. Put into git submodule
+4. Checkmk
