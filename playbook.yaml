@@ -6,3 +6,9 @@
       ansible.posix.sysctl:
         name: vm.overcommit_memory
         value: "1"
+    - name: Add contrib and backports repositories
+      ansible.builtin.apt_repository:
+        repo: "{{ item }}"
+      loop:
+        - "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
+        - "deb-src http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
