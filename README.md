@@ -1,5 +1,14 @@
 # homeserver
 
+## Setting up Ansible Controller
+1. If on Windows, install WLS2 and do everything in there
+2. [Follow the online guide for Ubuntu](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html)
+   - For Ubuntu, after an `apt update` just use `apt install ansible`
+3. Add the IP/hostname of the target machine to `/etc/ansible/hosts`
+    - It needs to be under a group like `[myserver]`
+4. Ensure SSH access (by e.g. copying the public key)
+5. Check the connection with `ansible all -m ping`
+
 ## Setting up debian
 1. Basics
     1. `usermod -aG sudo USERNAME`
