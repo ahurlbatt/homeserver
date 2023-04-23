@@ -1,21 +1,23 @@
 # homeserver
 
 ## Setting up Ansible Controller
+
 1. If on Windows, install WLS2 and do everything in there
 2. [Follow the online guide for Ubuntu](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html)
-   - For Ubuntu, after an `apt update` just use `apt install ansible`
+    - For Ubuntu, after an `apt update` just use `apt install ansible`
 3. Add the IP/hostname of the target machine to `/etc/ansible/hosts`
     - It needs to be under a group like `[myserver]`
 4. Ensure SSH access (by e.g. copying the public key)
 5. Check the connection with `ansible all -m ping`
 
 ## Setting up debian
+
 1. Basics
     1. `su -c "usermod -aG sudo USERNAME" -`
     2. Reboot
     3. `sudo apt update && sudo apt upgrade -y`
     4. `sudo apt install vim openssh-server`
-    5. Copy ssh-key from controller with `ssh-copy-id SERVER` 
+    5. Copy ssh-key from controller with `ssh-copy-id SERVER`
     6. `sudo vim /etc/ssh/sshd_config`
         1. `PasswordAuthentication no`
         2. `PubkeyAuthentication yes`
@@ -42,6 +44,7 @@
     3. Test: `sudo docker run hello-world`
 
 ## Setting up zfs
+
 1. Helpful:
     - https://wiki.debian.org/ZFS
     - https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/
@@ -53,18 +56,20 @@
 4. Create datasets
     - Nextcloud Data: `sudo zfs create -o compression=lz4 tank/nextcloud`
     - MariaDB Data: `sudo zfs create -o recordsize=16k -o primarycache=metadata -o compression=lz4 -o logbias=throughput -o atime=off tank/mariadb`
-5. Check maintainance options
+5. Check maintenance options
     1. Regular scrub `cat /etc/cron.d/zfsutils-linux`
 
 ## Starting the services
+
 1. Check out this repo to the system
 2. Make the necessary `.secret` files
 3. Adapt `homeserver.env` if needed e.g. for your domain
-3. Run `sudo docker compose up`
-4. Secure MariaDB
+4. Run `sudo docker compose up`
+5. Secure MariaDB
     - Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
 
 ## Some explanations
+
 1. MariaDB settings are taken from the following sources. I don't understand all of them.
     - [Reddit post about it](https://www.reddit.com/r/zfs/comments/u1xklc/mariadbmysql_database_settings_for_zfs/)
     - [ZFS Documentation](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html#mysql)
@@ -77,9 +82,10 @@
     - [This blog post](https://dev.to/jhot/caddy-docker-proxy-like-traefik-but-better-565l)
     - [This Gist](https://gist.github.com/tmo1/72a9dc98b0b6b75f7e4ec336cdc399e1)
 3. Nextcloud tuning takes info from here
-	- [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
+    - [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
 
 ## TO DO
+
 1. Borg backup to borgbase
 2. Ansible or similar
 3. Checkmk
