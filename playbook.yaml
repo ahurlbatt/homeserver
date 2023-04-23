@@ -3,6 +3,6 @@
   become: true
   tasks:
     - name: Allow memory over commit
-      sysctl:
+      ansible.posix.sysctl:
         name: vm.overcommit_memory
         value: "1"
