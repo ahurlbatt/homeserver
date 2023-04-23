@@ -11,12 +11,16 @@
 
 ## Setting up debian
 1. Basics
-    1. `usermod -aG sudo USERNAME`
-    2. vim
-    3. openssh-server
+    1. `su -c "usermod -aG sudo USERNAME" -`
+    2. Reboot
+    3. `sudo apt update && sudo apt upgrade -y`
+    4. `sudo apt install vim openssh-server`
+    5. Copy ssh-key from controller with `ssh-copy-id SERVER` 
+    6. `sudo vim /etc/ssh/sshd_config`
         1. `PasswordAuthentication no`
         2. `PubkeyAuthentication yes`
-    4. [Allow `fork` memory overcommit for redis](https://redis.io/docs/getting-started/faq/#background-saving-fails-with-a-fork-error-on-linux) - `sudo sh -c "echo '\n# Enable overcommit for fork\nvm.overcommit_memory = 1\n' >> /etc/sysctl.conf"`
+    7. `sudo systemctl restart ssh`
+    8. [Allow `fork` memory overcommit for redis](https://redis.io/docs/getting-started/faq/#background-saving-fails-with-a-fork-error-on-linux) - `sudo sh -c "echo '\n# Enable overcommit for fork\nvm.overcommit_memory = 1\n' >> /etc/sysctl.conf"`
 2. zfs
     1. Add `contrib` and `backports` to [SourcesList](https://wiki.debian.org/SourcesList)
     2. `sudo apt update`
