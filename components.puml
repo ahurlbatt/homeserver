@@ -1,0 +1,57 @@
+@startuml
+		
+
+component "Router"
+cloud "DuckDNS"
+cloud "User"
+
+component "Server" {
+	portin "80/443" as serverport
+	component "Docker Services" as docker {
+		portin "80/443" as dockerport
+		() "HTTPS" as caddyhttps
+		component "Caddy" as caddy
+		component "Nextcloud App" as ncapp
+		() "HTTP" as nchttp
+		component "Redis" as redis
+		component "MariaDB" as db
+		component "Nextcloud Cron" as nccron
+	}
+	component "ZPool" {
+		component "Nextcloud Data" as ncdata
+		component "MariaDB Data" as dbdata
+	}
+	component "Setup" {
+		component "Installed Services" as apps
+		component "SSH"
+		component "ZFS"
+	}
+}
+
+component "Repository" {
+	component "README.md" as readme
+	component "compose.yml" as compose
+}
+
+Router -> DuckDNS
+User -> Router: HTTPS
+User --> DuckDNS : DNS
+Router -> serverport : "Port Forward"
+serverport -> dockerport : Exposed
+dockerport --> caddyhttps
+caddy - caddyhttps
+caddy --> nchttp
+nchttp - ncapp
+ncapp -> ncdata
+ncapp --> redis
+ncapp --> nccron
+ncapp --> db
+db -> dbdata
+
+readme ..> apps
+readme ..> SSH
+readme ..> ZFS
+compose ..> docker
+ZFS ..> ZPool
+
+@enduml
