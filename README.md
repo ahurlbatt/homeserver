@@ -87,9 +87,9 @@
 ## TO DO
 
 1. Ansible
-   1. Memory overcommit
-   2. Install zfs
-   3. Install docker
+   1. ~~Memory overcommit~~
+   2. ~~Install zfs~~
+   3. ~~Install docker~~
    4. Set up zfs
    5. Checkout repo
    6. Set up secrets and environment
