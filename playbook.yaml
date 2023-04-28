@@ -21,3 +21,9 @@
         name: "zfsutils-linux"
         update_cache: true
         default_release: "{{ ansible_distribution_release }}-backports"
+    - name: Install docker and docker-compose
+      ansible.builtin.apt:
+        name: 
+          - docker
+          - docker-compose
+        update_cache: true
