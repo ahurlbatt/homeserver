@@ -12,15 +12,14 @@
       loop:
         - "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
         - "deb-src http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
-    - name: Install Linux Headers
+    - name: Install Linux Headers, zfs utils, and zfs kernal stuff, in that order
       ansible.builtin.apt:
-        name: "linux-headers-amd64"
+        name: "{{ item }}"
         update_cache: true
-    - name: Install ZFS
-      ansible.builtin.apt:
-        name: "zfsutils-linux"
-        update_cache: true
-        default_release: "{{ ansible_distribution_release }}-backports"
+        loop:
+          - linux-headers-amd64
+          - zfsutils-linux
+          - zfs-dkms
     - name: Install docker and docker-compose
       ansible.builtin.apt:
         name: 
