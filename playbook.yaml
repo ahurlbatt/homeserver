@@ -26,6 +26,6 @@
           - docker
           - docker-compose
         update_cache: true
-    - name: Get the boot drive (remove partitions)
-      command: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
-      register: boot_drive_label
+    - name: Get a list of drives that are not the boot drive
+      command: lsblk -dpn -I 8 -o NAME -l | sed "\&`df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'`&d"
+      register: zpool_drives
