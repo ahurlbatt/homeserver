@@ -33,3 +33,8 @@
     - name: Get a list of drives that are not the boot drive
       command: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive }}&d"
       register: zpool_drives
+      changed_when: false
+    - name: Check existence of zpools on drives
+      command: "{{ 'zpool import -N ' + ' -d'.join(zpool_drives)}}"
+      register: zpool_import_results
+      changed_when: false
