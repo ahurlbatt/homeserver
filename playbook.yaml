@@ -12,12 +12,16 @@
       loop:
         - "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
         - "deb-src http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
-    - name: Install Linux Headers, zfs utils, and zfs kernal stuff, in that order
+    - name: Install Linux Headers and update cache
+      ansible.builtin.apt:
+        name:
+          - linux-headers-amd64
+        update_cache: true
+    - name: Install zfs utils and zfs kernal stuff in that order
       ansible.builtin.apt:
         name: "{{ item }}"
-        update_cache: true
+        update_cache: false
         loop:
-          - linux-headers-amd64
           - zfsutils-linux
           - zfs-dkms
     - name: Install docker and docker-compose
@@ -25,7 +29,7 @@
         name: 
           - docker
           - docker-compose
-        update_cache: true
+        update_cache: false
     - name: Get the boot drive
       command: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
       register: boot_drive
