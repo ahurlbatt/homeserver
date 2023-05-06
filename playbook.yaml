@@ -26,16 +26,16 @@
           - zfsutils-linux
           - zfs-dkms
     - name: Get the boot drive
-      command: "df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'"
+      shell: "df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'"
       register: boot_drive
       changed_when: false
     - name: Get a list of drives that are not the boot drive
-      command: "lsblk -dpn -I 8 -o NAME -l | sed \"\\&{{ boot_drive }}&d\""
+      shell: "lsblk -dpn -I 8 -o NAME -l | sed \"\\&{{ boot_drive }}&d\""
       register: zpool_drives
       changed_when: false
     - fail: msg="No additional drives were found on the system for ZFS use."
       when: zpool_drives|length==0
     - name: Check existence of zpools on drives
-      command: "{{ 'zpool import -N ' + ' -d'.join(zpool_drives)}}"
+      shell: "{{ 'zpool import -N ' + ' -d'.join(zpool_drives)}}"
       register: zpool_import_results
       changed_when: false
