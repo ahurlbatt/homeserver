@@ -17,19 +17,14 @@
         name:
           - linux-headers-amd64
         update_cache: true
-    - name: Install zfs utils and zfs kernal stuff in that order
+    - name: Install zfs and docker
       ansible.builtin.apt:
-        name: "{{ item }}"
         update_cache: false
-        loop:
-          - zfsutils-linux
-          - zfs-dkms
-    - name: Install docker and docker-compose
-      ansible.builtin.apt:
-        name: 
+        name:
           - docker
           - docker-compose
-        update_cache: false
+          - zfsutils-linux
+          - zfs-dkms
     - name: Get the boot drive
       command: "df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'"
       register: boot_drive
