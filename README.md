@@ -8,6 +8,7 @@
 3. Ensure SSH access (by e.g. copying the public key)
 4. Check the IP/hostname of the target machine in inventory.yaml
 5. Check the connection with `ansible all -i inventory.yaml -m ping`
+6. Put the ansible vault password in `ansiblevault.secret`
 
 ## Setting up debian
 
@@ -83,13 +84,22 @@
 3. Nextcloud tuning takes info from here
     - [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
 
+## Ansible Notes
+
+1. GitHub deploy key was generated on a VM, then extracted and encrypted with ansible vault using these commands:
+
+    ```
+    ssh 192.168.178.56 'cat ~/.ssh/id_rsa.pub' | ansible-vault encrypt_string --vault-password-file ansiblevault.secret --stdin-name 'github_deploy_key_public' --output 'github_deploy_key_public.vault'
+    ssh 192.168.178.56 'cat ~/.ssh/id_rsa' | ansible-vault encrypt_string --vault-password-file ansiblevault.secret --stdin-name 'github_deploy_key_private' --output 'github_deploy_key_private.vault'
+    ```
+
 ## TO DO
 
 1. Ansible
    1. ~~Memory overcommit~~
    2. ~~Install zfs~~
    3. ~~Install docker~~
-   4. Set up zfs
+   4. ~~Set up zfs~~
    5. Checkout repo
    6. Set up secrets and environment
    7. Start containers
