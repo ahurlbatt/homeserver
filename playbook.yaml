@@ -44,7 +44,7 @@
       changed_when: false
       ignore_errors: true
     - name: Check existence of zpool
-      ansible.builtin.command: zpool list -H -o name
+      ansible.builtin.command: zpool list -t filesystem -H -o name
       register: existing_zpools
       changed_when: false
     - name: Unknown zpool found
