@@ -47,26 +47,24 @@
       ansible.builtin.fail:
         msg: "Existing zpool(s) found with name(s): {{ existing_zpools.stdout_lines | join(', ') }}"
       when: existing_zpools.stdout != "" and existing_zpools.stdout != zpool_name
-    - name: Find Drive configuration and check for pre-existing ZFS pools
+    - name: Import or create zpool
       block:
-        - name: Get the boot drive
-          ansible.builtin.shell: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
-          register: boot_drive
-          changed_when: false
-        - name: Get a list of drives that are not the boot drive
-          ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
-          register: zpool_drives
-          changed_when: false
-        - name: Check existence of drives for zpool
-          ansible.builtin.fail:
-            msg: No additional drives were found on the system for ZFS use.
-          when: zpool_drives.stdout_lines|length==0
-        - name: Find any existing zpools
-          ansible.builtin.shell: zpool import -N -d {{ zpool_drives.stdout_lines | join(" -d ") }}
-          register: zpool_import_results
-          changed_when: false
-        - name: Check for existing zpools
-#          TODO: Check this fails when a real pool exists
-          ansible.builtin.fail:
-            msg: Existing zpool found!
-          when: zpool_import_results.stdout != ""
+      - name: Import zpool
+        ansible.builtin.command: zpool import {{ zpool_name }}
+        register: zpool_import_results
+        changed_when: false
+        ignore_errors: true
+      - name: Create zpool
+        block:
+          - name: Get the boot drive
+            ansible.builtin.shell: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
+            register: boot_drive
+            changed_when: false
+          - name: Get a list of drives that are not the boot drive
+            ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
+            register: zpool_drives
+            changed_when: false
+          - name: Create zpool
+            ansible.builtin.command: zpool create -o ashift=12 {{ zpool_name }} raidz2 {{ zpool_drives.stdout_lines | join(' ') }}
+        when: zpool_import_results.rc != 0
+      when: existing_zpools.stdout != zpool_name
