@@ -8,7 +8,7 @@
 3. Ensure SSH access (by e.g. copying the public key)
 4. Check the IP/hostname of the target machine in inventory.yaml
 5. Check the connection with `ansible all -i inventory.yaml -m ping`
-6. Put the ansible vault password in `ansiblevault.secret`
+6. Put the ansible vault password in `./secrets/ansiblevault.secret`
 
 ## Setting up debian
 
@@ -86,7 +86,8 @@
 
 ## Ansible Notes
 
-1. GitHub deploy key was generated on a VM, then extracted and encrypted with ansible vault using these commands:
+1. For encryption of key and other secrets, the file `./secrets/ansiblevault.secret` is also needed.
+2. GitHub deploy key was generated on a VM, then extracted and encrypted with ansible vault using these commands:
 
     ```
     ssh 192.168.178.56 'cat ~/.ssh/id_rsa.pub' | ansible-vault encrypt_string --vault-password-file ansiblevault.secret --stdin-name 'github_deploy_key_public' --output 'github_deploy_key_public.vault'
