@@ -88,3 +88,11 @@
       ansible.builtin.fail:
           msg: "Existing dataset(s) found with name(s): {{ existing_zfs_objects.stdout_lines | join(', ') }}. Expected: {{ all_zfs_objects | join(', ') }}."
       when: existing_zfs_objects.stdout != "" and existing_zfs_objects.stdout_lines | difference(all_zfs_objects) | length > 0
+    - name: Create dataset for nextcloud
+      ansible.builtin.command: zfs create -o {{ dataset_nextcloud_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }}/{{ dataset_nextcloud_name | quote }}
+      args:
+        creates: "{{ '/' + zpool_name + '/' + dataset_nextcloud_name }}"
+    - name: Create dataset for db
+      ansible.builtin.command: zfs create -o {{ dataset_db_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }}/{{ dataset_db_name | quote }}
+      args:
+        creates: "{{ '/' + zpool_name + '/' + dataset_db_name }}"
