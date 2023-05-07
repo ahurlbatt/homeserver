@@ -39,6 +39,14 @@
               - docker-compose
               - zfsutils-linux
               - zfs-dkms
+    - name: Check existence of zpool
+      ansible.builtin.command: zpool list -H -o name
+      register: existing_zpools
+      changed_when: false
+    - name: Unknown zpool found
+      ansible.builtin.fail:
+        msg: "Existing zpool(s) found with name(s): {{ existing_zpools.stdout_lines | join(', ') }}"
+      when: existing_zpools.stdout != "" and existing_zpools.stdout != zpool_name
     - name: Find Drive configuration and check for pre-existing ZFS pools
       block:
         - name: Get the boot drive
