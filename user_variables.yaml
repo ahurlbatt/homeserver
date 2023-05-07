@@ -12,3 +12,5 @@ dataset_db_options:
   - compression=lz4
   - logbias=throughput
   - atime=off
+github_repo: git@github.com:ahurlbatt/homeserver.git
+github_repo_destination: ~/homeserver

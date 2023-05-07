@@ -3,6 +3,8 @@
   become: true
   vars_files:
     - user_variables.yaml
+    - github_deploy_key_public.vault
+    - github_deploy_key_private.vault
   vars:
     all_zfs_objects:
       - "{{ zpool_name }}"
@@ -86,3 +88,23 @@
         ansible.builtin.command: zfs create -o {{ dataset_db_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }}/{{ dataset_db_name | quote }}
         args:
           creates: "{{ '/' + zpool_name + '/' + dataset_db_name }}"
+    - name: Copy key files and checkout repo
+      block:
+        - name: Copy over deploy private key
+          ansible.builtin.copy:
+            content: "{{ github_deploy_key_private }}"
+            dest: ~/.ssh/id_rsa
+            mode: 0600
+        - name: Copy over deploy public key
+          ansible.builtin.copy:
+            content: "{{ github_deploy_key_public }}"
+            dest: ~/.ssh/id_rsa.pub
+            mode: 0644
+        - name: Checkout repo
+          ansible.builtin.git:
+            repo: "{{ github_repo }}"
+            dest: "{{ github_repo_destination }}"
+            accept_newhostkey: true
+            key_file: ~/.ssh/id_rsa
+            force: true
+      become: false
