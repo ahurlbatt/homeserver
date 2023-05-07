@@ -72,3 +72,7 @@
             ansible.builtin.command: zpool create -o ashift=12 {{ zpool_name }} raidz2 {{ zpool_drives.stdout_lines | join(' ') }}
         when: zpool_import_results.rc != 0
       when: existing_zpools.stdout != zpool_name
+    - name: Check existence of dataset
+      ansible.builtin.command: zfs list -t volume -H -o name
+      register: existing_datasets
+      changed_when: false
