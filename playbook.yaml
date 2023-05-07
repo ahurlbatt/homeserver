@@ -39,6 +39,10 @@
               - docker-compose
               - zfsutils-linux
               - zfs-dkms
+    - name : Get zfs to mount everything it knows about
+      ansible.builtin.shell: zfs mount -a
+      changed_when: false
+      ignore_errors: true
     - name: Check existence of zpool
       ansible.builtin.command: zpool list -H -o name
       register: existing_zpools
