@@ -13,6 +13,10 @@
       - compression=lz4
       - logbias=throughput
       - atime=off
+    all_zfs_objects:
+      - "{{ zpool_name }}"
+      - "{{ zpool_name + '/' + dataset_nextcloud_name }}"
+      - "{{ zpool_name + '/' + dataset_db_name }}"
   tasks:
     - name: Allow memory over commit
       ansible.posix.sysctl:
@@ -39,10 +43,6 @@
               - docker-compose
               - zfsutils-linux
               - zfs-dkms
-    - name : Get zfs to mount everything it knows about
-      ansible.builtin.shell: zfs mount -a
-      changed_when: false
-      ignore_errors: true
     - name: Check existence of zpool
       ansible.builtin.command: zpool list -H -o name
       register: existing_zpools
@@ -73,7 +73,15 @@
             ansible.builtin.command: zpool create -o ashift=12 {{ zpool_name }} raidz2 {{ zpool_drives.stdout_lines | join(' ') }}
         when: zpool_import_results.rc != 0
       when: existing_zpools.stdout != zpool_name
-    - name: Check existence of dataset
-      ansible.builtin.command: zfs list -t volume -H -o name
-      register: existing_datasets
+    - name : Get zfs to mount everything it knows about
+      ansible.builtin.shell: zfs mount -a
       changed_when: false
+      ignore_errors: true
+    - name: Check existence of dataset
+      ansible.builtin.command: zfs list -H -o name
+      register: existing_zfs_objects
+      changed_when: false
+    - name: Unknown dataset found
+      ansible.builtin.fail:
+          msg: "Existing dataset(s) found with name(s): {{ existing_zfs_objects.stdout_lines | join(', ') }}. Expected: {{ all_zfs_objects | join(', ') }}."
+      when: existing_zfs_objects.stdout != "" and existing_zfs_objects.stdout_lines | difference(all_zfs_objects) | length > 0
