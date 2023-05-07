@@ -1,6 +1,18 @@
 - name: Server setup
   hosts: myservers
   become: true
+  vars:
+    zpool_name: tank
+    dataset_nextcloud_name: nextcloud
+    dataset_nextcloud_options:
+      - compression=lz4
+    dataset_db_name: mariadb
+    dataset_db_options:
+      - recordsize=16k
+      - primarycache=metadata
+      - compression=lz4
+      - logbias=throughput
+      - atime=off
   tasks:
     - name: Allow memory over commit
       ansible.posix.sysctl:
