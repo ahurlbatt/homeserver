@@ -33,7 +33,8 @@
       ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
       register: zpool_drives
       changed_when: false
-    - fail: msg="No additional drives were found on the system for ZFS use."
+    - ansible.builtin.fail:
+        msg: No additional drives were found on the system for ZFS use.
       when: zpool_drives|length==0
     - name: Check existence of zpools on drives
       ansible.builtin.shell: zpool import -N -d {{ zpool_drives.stdout_lines | join(" -d ") }}
