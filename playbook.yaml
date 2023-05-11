@@ -113,4 +113,8 @@
               dest: "{{ github_repo_destination + '/' + item }}"
               mode: 0600
           loop: "{{ lookup('file', 'secrets/secrets.txt').splitlines() }}"
+        - name: Copy the domain secret to the .env file, so it's available to docker-compose
+          ansible.builtin.shell: echo -n "MY_DOMAIN=$(cat secrets/mydomain.secret)" > .env
+          args:
+            chdir: "{{ github_repo_destination }}"
       become: false
