@@ -102,7 +102,7 @@
    2. ~~Install zfs~~
    3. ~~Install docker~~
    4. ~~Set up zfs~~
-   5. Checkout repo
+   5. ~~Checkout repo~~
    6. Set up secrets and environment
    7. Start containers
    8. Secure MariaDB

@@ -88,7 +88,7 @@
         ansible.builtin.command: zfs create -o {{ dataset_db_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }}/{{ dataset_db_name | quote }}
         args:
           creates: "{{ '/' + zpool_name + '/' + dataset_db_name }}"
-    - name: Copy key files and checkout repo
+    - name: Copy key files and checkout/decrypt repo
       block:
         - name: Copy over deploy private key
           ansible.builtin.copy:
@@ -107,4 +107,10 @@
             accept_newhostkey: true
             key_file: ~/.ssh/id_rsa
             force: true
+        - name: Copy over secrets
+          ansible.builtin.copy:
+              src: "{{ playbook_dir + '/' + item + '.vault' }}"
+              dest: "{{ github_repo_destination + '/' + item }}"
+              mode: 0600
+          loop: "{{ lookup('file', 'secrets/secrets.txt').splitlines() }}"
       become: false
