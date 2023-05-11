@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 
-secret_files=(
-  "./secrets/mysql_database.secret"
-  "./secrets/mysql_password.secret"
-  "./secrets/mysql_root_password.secret"
-  "./secrets/mysql_user.secret"
-  "./secrets/nextcloud_admin_password.secret"
-  "./secrets/nextcloud_admin_user.secret"
-)
+secret_names_file="./secrets/secrets.txt"
+
+mapfile -t secret_files < "$secret_names_file"
 
 usage_info() {
   echo "Usage: $0 [-d]"
