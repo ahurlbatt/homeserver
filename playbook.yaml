@@ -32,10 +32,42 @@
           ansible.builtin.apt:
             update_cache: false
             name:
-              - docker
-              - docker-compose
               - zfsutils-linux
               - zfs-dkms
+        - name: Install docker
+          block:
+            - name: Install certificate stuff
+              ansible.builtin.apt:
+                  name:
+                  - ca-certificates
+                  - curl
+                  - gnupg
+            - name: Add docker repo with their sketchy custom script
+              block:
+                - name: Get the docker GPG key
+                  ansible.builtin.shell:
+                  args:
+                    cmd: curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+                    creates: /etc/apt/keyrings/docker.gpg
+                - name: Ensure GPG key permissions are correct
+                  ansible.builtin.file:
+                    path: /etc/apt/keyrings/docker.gpg
+                    mode: a+r
+                    state: file
+                - name: Add the docker repo
+                  ansible.builtin.apt_repository:
+                    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+                    state: present
+                    update_cache: true
+            - name: Install docker
+              ansible.builtin.apt:
+                update_cache: true
+                name:
+                  - docker-ce
+                  - docker-ce-cli
+                  - containerd.io
+                  - docker-buildx-plugin
+                  - docker-compose-plugin
     - name: Create/Import zpool and datasets
       block:
       - name: Check existence of zpool
@@ -117,4 +149,5 @@
           ansible.builtin.shell: echo -n "MY_DOMAIN=$(cat secrets/mydomain.secret)" > .env
           args:
             chdir: "{{ github_repo_destination }}"
+            creates: "{{ github_repo_destination + '/.env' }}"
       become: false
