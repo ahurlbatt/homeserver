@@ -1,71 +1,31 @@
 # homeserver
 
+## Setting up debian
+
+1. `su -c "usermod -aG sudo USERNAME" -`
+2. Reboot
+3. `sudo apt update && sudo apt upgrade -y`
+4. `sudo apt install vim openssh-server`
+5. Copy ssh-key from controller with `ssh-copy-id SERVER`
+6. `sudo vim /etc/ssh/sshd_config`
+   1. `PasswordAuthentication no`
+   2. `PubkeyAuthentication yes`
+7. `sudo systemctl restart ssh`
+
 ## Setting up Ansible Controller
 
 1. If on Windows, install WLS2 and do everything in there
 2. [Follow the online guide for Ubuntu](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html)
     - For Ubuntu, after an `apt update` just use `apt install ansible`
-3. Ensure SSH access (by e.g. copying the public key)
+3. Ensure SSH access (see above)
 4. Check the IP/hostname of the target machine in inventory.yaml
 5. Check the connection with `ansible all -i inventory.yaml -m ping`
-6. Put the ansible vault password in `./secrets/ansiblevault.secret`
-
-## Setting up debian
-
-1. Basics
-    1. `su -c "usermod -aG sudo USERNAME" -`
-    2. Reboot
-    3. `sudo apt update && sudo apt upgrade -y`
-    4. `sudo apt install vim openssh-server`
-    5. Copy ssh-key from controller with `ssh-copy-id SERVER`
-    6. `sudo vim /etc/ssh/sshd_config`
-        1. `PasswordAuthentication no`
-        2. `PubkeyAuthentication yes`
-    7. `sudo systemctl restart ssh`
-    8. [Allow `fork` memory overcommit for redis](https://redis.io/docs/getting-started/faq/#background-saving-fails-with-a-fork-error-on-linux) - `sudo sh -c "echo '\n# Enable overcommit for fork\nvm.overcommit_memory = 1\n' >> /etc/sysctl.conf"`
-2. zfs
-    1. Add `contrib` and `backports` to [SourcesList](https://wiki.debian.org/SourcesList)
-    2. `sudo apt update`
-    3. `sudo apt install linux-headers-amd64`
-    4. `sudo apt install -t bullseye-backports zfsutils-linux`
-3. docker
-    1. Add to repositories
-
-            ```
-            sudo apt install ca-certificates curl gnupg lsb-release
-            sudo mkdir -m 0755 -p /etc/apt/keyrings
-            curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-            echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-            sudo apt update
-            ```
-    2. Install: `sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
-    3. Test: `sudo docker run hello-world`
-
-## Setting up zfs
-
-1. Helpful:
-    - https://wiki.debian.org/ZFS
-    - https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/
-2. List of disks to include
-    1. `for f in /dev/disk/by-id/*; do stat --format='%n' "$f"; done > zdisks.txt`
-    2. Edit to remove e.g. boot drive
-3. Create pool and vdev - check ashift vs block size!
-    - `cat zdisks.txt | sudo xargs zpool create tank raidz2 `
-4. Create datasets
-    - Nextcloud Data: `sudo zfs create -o compression=lz4 tank/nextcloud`
-    - MariaDB Data: `sudo zfs create -o recordsize=16k -o primarycache=metadata -o compression=lz4 -o logbias=throughput -o atime=off tank/mariadb`
-5. Check maintenance options
-    1. Regular scrub `cat /etc/cron.d/zfsutils-linux`
+6. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
 
 ## Starting the services
 
-1. Check out this repo to the system
-2. Make the necessary `.secret` files
-3. Adapt `homeserver.env` if needed e.g. for your domain
-4. Run `sudo docker compose up`
-5. Secure MariaDB
+1. Run `sudo docker compose up`
+2. Secure MariaDB
     - Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
 
 ## Some explanations
@@ -86,7 +46,7 @@
 
 ## Ansible Notes
 
-1. For encryption of key and other secrets, the file `./secrets/ansiblevault.secret` is also needed.
+1. For encryption of key and other secrets, the file `./secrets/ansible_vault_password.secret` is also needed.
 2. GitHub deploy key was generated on a VM, then extracted and encrypted with ansible vault using these commands:
 
     ```
@@ -103,11 +63,14 @@
    3. ~~Install docker~~
    4. ~~Set up zfs~~
    5. ~~Checkout repo~~
-   6. Set up secrets and environment
+   6. ~~Set up secrets and environment~~
    7. Start containers
    8. Secure MariaDB
 2. Borg backup to borgbase
-3. Secrets
-   1. Create encrypted files with ansible vault
-   2. Put into git submodule
-4. Checkmk
+3. Nextcloud Apps
+   1. Memories
+4. Monitoring
+   1. Checkmk?
+   2. Uptime Kuma?
+   3. Ntfy?
+5. Move secrets to git submodule, then rotate
