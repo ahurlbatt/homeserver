@@ -21,6 +21,7 @@
 4. Check the IP/hostname of the target machine in inventory.yaml
 5. Check the connection with `ansible all -i inventory.yaml -m ping`
 6. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
+7. Install the hardening collection with `ansible-galaxy collection install devsec.hardening`
 
 ## Starting the services
 
@@ -66,7 +67,7 @@
    4. ~~Set up zfs~~
    5. ~~Checkout repo~~
    6. ~~Set up secrets and environment~~
-   7. OS Hardening
+   7. ~~OS Hardening~~
    8. ~~Start containers~~
    9. MariaDB Hardening
 2. Borg backup to borgbase

@@ -1,6 +1,14 @@
 - name: Server setup
   hosts: myservers
+  collections:
+    - devsec.hardening
   become: true
+  roles:
+    - role: devsec.hardening.os_hardening
+      vars:
+        sysctl_overwrite:
+          # Enable IP forwarding, required for docker
+          net.ipv4.ip_forward: 1
   vars_files:
     - user_variables.yaml
     - github_deploy_key_public.vault
