@@ -83,10 +83,10 @@
         ansible.builtin.command: zpool list -H -o name
         register: existing_zpools
         changed_when: false
-      - name: Unknown zpool found
+      - name: Unknown zpools found
         ansible.builtin.fail:
           msg: "Existing zpool(s) found with name(s): {{ existing_zpools.stdout_lines | join(', ') }}"
-        when: existing_zpools.stdout != "" and not zpool_name | intersect(existing_zpools.stdout_lines)
+        when: existing_zpools.stdout != "" and zpool_name not in existing_zpools.stdout_lines
       - name: Import or create zpool
         block:
         - name: Import zpool
@@ -125,7 +125,7 @@
             - name: Create zpool
               ansible.builtin.command: zpool create -o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
           when: zpool_import_results.rc != 0
-        when: not zpool_name | intersect(existing_zpools.stdout_lines)
+        when: zpool_name not in existing_zpools.stdout_lines
       - name : Get zfs to mount everything it knows about
         ansible.builtin.shell: zfs mount -a
         changed_when: false
