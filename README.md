@@ -66,8 +66,9 @@
    4. ~~Set up zfs~~
    5. ~~Checkout repo~~
    6. ~~Set up secrets and environment~~
-   7. Start containers
-   8. Secure MariaDB
+   7. OS Hardening
+   8. ~~Start containers~~
+   9. MariaDB Hardening
 2. Borg backup to borgbase
 3. Nextcloud Apps
    1. Memories

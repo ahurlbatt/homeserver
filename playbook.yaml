@@ -157,13 +157,13 @@
           args:
             chdir: "{{ github_repo_destination }}"
       become: false
-    - name: Start and configure containers
-      block:
-        - name: Fetch container images
-          ansible.builtin.shell: docker compose pull
-          args:
-            chdir: "{{ github_repo_destination_absolute.stdout }}"
-        - name: Start containers
-          ansible.builtin.shell: docker compose up -d
-          args:
-            chdir: "{{ github_repo_destination_absolute.stdout }}"
+#    - name: Start and configure containers
+#      block:
+#        - name: Fetch container images
+#          ansible.builtin.shell: docker compose pull
+#          args:
+#            chdir: "{{ github_repo_destination_absolute.stdout }}"
+#        - name: Start containers
+#          ansible.builtin.shell: docker compose up -d
+#          args:
+#            chdir: "{{ github_repo_destination_absolute.stdout }}"
