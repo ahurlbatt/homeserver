@@ -37,6 +37,7 @@
     - [This company](https://www.percona.com/blog/mysql-zfs-performance-update/)
     - [This Blog](https://shatteredsilicon.net/mysql-mariadb-innodb-on-zfs/)
     - [This health check discussion](https://github.com/MariaDB/mariadb-docker/issues/94)
+    - [Hardening recreates this](https://github.com/dev-sec/ansible-mysql-hardening/blob/master/tasks/mysql_secure_installation.yml)
 2. Caddy settings and docker parameters are taken from:
     - [Nextcloud Documentation](https://github.com/nextcloud/documentation/blob/master/admin_manual/configuration_server/reverse_proxy_configuration.rst)
     - [The Repo for the image](https://github.com/lucaslorentz/caddy-docker-proxy)
@@ -69,7 +70,7 @@
    6. ~~Set up secrets and environment~~
    7. ~~OS Hardening~~
    8. ~~Start containers~~
-   9. MariaDB Hardening
+   9. ~~MariaDB Hardening~~
 2. Borg backup to borgbase
 3. Nextcloud Apps
    1. Memories
