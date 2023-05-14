@@ -36,22 +36,23 @@
             name:
               - linux-headers-amd64
             update_cache: true
-        - name: Install zfs and docker
+        - name: Install zfs and some GPG stuff docker
           ansible.builtin.apt:
             update_cache: false
             name:
               - zfsutils-linux
               - zfs-dkms
+              - ca-certificates
+              - curl
+              - gnupg
         - name: Install docker
           block:
-            - name: Install certificate stuff
-              ansible.builtin.apt:
-                  name:
-                  - ca-certificates
-                  - curl
-                  - gnupg
             - name: Add docker repo with their sketchy custom script
               block:
+                - name: Make sure the key directory exists, as GPG can't create it
+                  ansible.builtin.file:
+                    path: /etc/apt/keyrings
+                    state: directory
                 - name: Get the docker GPG key
                   ansible.builtin.shell:
                   args:
@@ -85,7 +86,7 @@
       - name: Unknown zpool found
         ansible.builtin.fail:
           msg: "Existing zpool(s) found with name(s): {{ existing_zpools.stdout_lines | join(', ') }}"
-        when: existing_zpools.stdout != "" and existing_zpools.stdout != zpool_name
+        when: existing_zpools.stdout != "" and not zpool_name | intersect(existing_zpools.stdout_lines)
       - name: Import or create zpool
         block:
         - name: Import zpool
@@ -93,8 +94,25 @@
           register: zpool_import_results
           changed_when: false
           ignore_errors: true
-  #        TODO: Handle zpools that come from other servers by asking for confirmation
-        - name: Create zpool
+        - name: Force import if it failed, and user confirms
+          block:
+            - name: Ask user if they want to force import
+              ansible.builtin.pause:
+                prompt: "Zpool {{ zpool_name }} already exists, but may be from a different system:\n  - {{ zpool_import_results.stderr_lines.1 }}\nDo you want to force import it? (y/n)"
+              register: force_zpool_import
+              delegate_to: localhost
+            - name: Fail if user doesn't want to force import
+              ansible.builtin.fail:
+                msg: "Aborting zpool import."
+              delegate_to: localhost
+              when: force_zpool_import.user_input != "y"
+            - name: Force import zpool
+              ansible.builtin.command: zpool import -f {{ zpool_name }}
+              register: zpool_import_results
+              changed_when: false
+              when: force_zpool_import.user_input == "y"
+          when: zpool_import_results.rc != 0 and zpool_import_results.stderr_lines.0 is search("pool was previously in use from another system")
+        - name: Create zpool as it is not importable
           block:
             - name: Get the boot drive
               ansible.builtin.shell: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
@@ -107,7 +125,7 @@
             - name: Create zpool
               ansible.builtin.command: zpool create -o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
           when: zpool_import_results.rc != 0
-        when: existing_zpools.stdout != zpool_name
+        when: not zpool_name | intersect(existing_zpools.stdout_lines)
       - name : Get zfs to mount everything it knows about
         ansible.builtin.shell: zfs mount -a
         changed_when: false

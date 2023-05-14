@@ -71,6 +71,7 @@
    7. ~~OS Hardening~~
    8. ~~Start containers~~
    9. ~~MariaDB Hardening~~
+   10. ~~Deal with zfs volumes from other servers~~
 2. Borg backup to borgbase
 3. Nextcloud Apps
    1. Memories
