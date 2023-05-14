@@ -23,11 +23,11 @@
 6. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
 7. Install the hardening collection with `ansible-galaxy collection install devsec.hardening`
 
-## Starting the services
+## Infrastructure
 
-1. Run `sudo docker compose up`
-2. Secure MariaDB
-    - Use this: `sudo docker exec -it homeserver-nc-db-1 /usr/bin/mariadb-secure-installation`
+1. Register a domain
+2. Set up a dynamic DNS service
+3. Enable HTTP and HTTPS port forwards from your router to the server
 
 ## Some explanations
 
