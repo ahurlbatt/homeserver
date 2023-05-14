@@ -61,7 +61,7 @@ services:
             - mysql_database
             - mysql_root_password
         healthcheck:
-            test: ["CMD-SHELL", "mysqladmin ping -p$$(cat $$MYSQL_ROOT_PASSWORD_FILE"]
+            test: ["CMD-SHELL", "mysqladmin ping -p$$(cat $$MYSQL_ROOT_PASSWORD_FILE)"]
             interval: 2s
             timeout: 2s
             retries: 120
