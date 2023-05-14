@@ -145,9 +145,25 @@
               dest: "{{ github_repo_destination + '/' + item }}"
               mode: 0600
           loop: "{{ lookup('file', 'secrets/secrets.txt').splitlines() }}"
-        - name: Copy the domain secret to the .env file, so it's available to docker-compose
+        - name: Copy the domain secret to the .env file, so it's available to docker compose
           ansible.builtin.shell: echo -n "MY_DOMAIN=$(cat secrets/mydomain.secret)" > .env
           args:
             chdir: "{{ github_repo_destination }}"
             creates: "{{ github_repo_destination + '/.env' }}"
+        - name: Get the absolute path of the repo
+          ansible.builtin.shell: pwd
+          register: github_repo_destination_absolute
+          changed_when: false
+          args:
+            chdir: "{{ github_repo_destination }}"
       become: false
+    - name: Start and configure containers
+      block:
+        - name: Fetch container images
+          ansible.builtin.shell: docker compose pull
+          args:
+            chdir: "{{ github_repo_destination_absolute.stdout }}"
+        - name: Start containers
+          ansible.builtin.shell: docker compose up -d
+          args:
+            chdir: "{{ github_repo_destination_absolute.stdout }}"

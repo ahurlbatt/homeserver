@@ -100,9 +100,6 @@ services:
             - internal-only
         environment:
             - CADDY_INGRESS_NETWORKS=internal-only
-        depends_on:
-            - nc-app
-            - nc-cron
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - caddy-data:/data
