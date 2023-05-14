@@ -11,8 +11,10 @@ x-nc-app: &nc-app
         - redis
         - nc-db
     depends_on:
-        - nc-db
-        - redis
+        nc-db:
+            condition: service_healthy
+        redis:
+            condition: service_started
     environment:
         - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nextcloud_admin_user
         - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
@@ -58,6 +60,11 @@ services:
             - mysql_password
             - mysql_database
             - mysql_root_password
+        healthcheck:
+            test: ["CMD-SHELL", "mysqladmin ping -p$$(cat $$MYSQL_ROOT_PASSWORD_FILE"]
+            interval: 2s
+            timeout: 2s
+            retries: 120
 
     redis:
         container_name: redis
@@ -69,12 +76,17 @@ services:
     nc-app:
         container_name: nc-app
         <<: *nc-app
+        healthcheck:
+            test: curl -sSf 'http://localhost/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
+            interval: 10s
+            timeout: 5s
+            retries: 10
         labels:
             caddy: "${MY_DOMAIN}"
             caddy.reverse_proxy: "{{upstreams 80}}"
             caddy.file_server: ""
             caddy.encode: gzip
-            caddy.header: /*
+            caddy.header: "/*"
             caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
             caddy.redir_0: "/.well-known/carddav /remote.php/dav"
             caddy.redir_1: "/.well-known/caldav /remote.php/dav"
@@ -86,7 +98,8 @@ services:
         <<: *nc-app
         entrypoint: /cron.sh
         depends_on:
-            - nc-app
+            nc-app:
+                condition: service_healthy
 
     caddy:
         container_name: caddy

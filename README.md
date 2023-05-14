@@ -35,14 +35,16 @@
     - [ZFS Documentation](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Workload%20Tuning.html#mysql)
     - [This company](https://www.percona.com/blog/mysql-zfs-performance-update/)
     - [This Blog](https://shatteredsilicon.net/mysql-mariadb-innodb-on-zfs/)
+    - [This health check discussion](https://github.com/MariaDB/mariadb-docker/issues/94)
 2. Caddy settings and docker parameters are taken from:
     - [Nextcloud Documentation](https://github.com/nextcloud/documentation/blob/master/admin_manual/configuration_server/reverse_proxy_configuration.rst)
     - [The Repo for the image](https://github.com/lucaslorentz/caddy-docker-proxy)
     - [This dudes Repo](https://github.com/blazekjan/docker-selfhosted-apps)
     - [This blog post](https://dev.to/jhot/caddy-docker-proxy-like-traefik-but-better-565l)
     - [This Gist](https://gist.github.com/tmo1/72a9dc98b0b6b75f7e4ec336cdc399e1)
-3. Nextcloud tuning takes info from here
+3. Nextcloud setting have been taken from
     - [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
+    - [This health check discussion](https://github.com/nextcloud/docker/issues/676)
 
 ## Ansible Notes
 
