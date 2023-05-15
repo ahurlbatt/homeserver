@@ -44,7 +44,7 @@
     - [This dudes Repo](https://github.com/blazekjan/docker-selfhosted-apps)
     - [This blog post](https://dev.to/jhot/caddy-docker-proxy-like-traefik-but-better-565l)
     - [This Gist](https://gist.github.com/tmo1/72a9dc98b0b6b75f7e4ec336cdc399e1)
-3. Nextcloud setting have been taken from
+3. Nextcloud settings have been taken from
     - [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
     - [This health check discussion](https://github.com/nextcloud/docker/issues/676)
 
@@ -57,7 +57,7 @@
     ssh 192.168.178.56 'cat ~/.ssh/id_rsa.pub' | ansible-vault encrypt_string --vault-password-file ansiblevault.secret --stdin-name 'github_deploy_key_public' --output 'github_deploy_key_public.vault'
     ssh 192.168.178.56 'cat ~/.ssh/id_rsa' | ansible-vault encrypt_string --vault-password-file ansiblevault.secret --stdin-name 'github_deploy_key_private' --output 'github_deploy_key_private.vault'
     ```
-3. Secrets were encrypted using `encrypt_secret.sh` script.
+3. Secrets were encrypted using `encrypt-secrets.sh` script.
 
 ## TO DO
 
@@ -72,11 +72,13 @@
    8. ~~Start containers~~
    9. ~~MariaDB Hardening~~
    10. ~~Deal with zfs volumes from other servers~~
-2. Borg backup to borgbase
-3. Nextcloud Apps
+2. Backups
+   1. Regular ZFS Snapshots
+   2. Borg backup to borgbase
+4. Nextcloud Apps
    1. Memories
-4. Monitoring
+5. Monitoring
    1. Checkmk?
    2. Uptime Kuma?
    3. Ntfy?
-5. Move secrets to git submodule, then rotate
+6. Move secrets to git submodule, then rotate
