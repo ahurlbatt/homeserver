@@ -8,8 +8,8 @@
 4. `sudo apt install vim openssh-server`
 5. Copy ssh-key from controller with `ssh-copy-id SERVER`
 6. `sudo vim /etc/ssh/sshd_config`
-   1. `PasswordAuthentication no`
-   2. `PubkeyAuthentication yes`
+    1. `PasswordAuthentication no`
+    2. `PubkeyAuthentication yes`
 7. `sudo systemctl restart ssh`
 
 ## Setting up Ansible Controller
@@ -59,26 +59,60 @@
     ```
 3. Secrets were encrypted using `encrypt-secrets.sh` script.
 
+## Backup Strategy
+
+1. Snapshot goals
+    1. Daily, weekly, monthly(ish)
+    2. Daily snapshots are kept for D days
+    3. Weekly snapshots are kept for W weeks
+    4. Monthly snapshots are kept for M months
+2. Automating snapshots
+    1. All snapshots are named by their creation date
+    2. Snapshots are created at the same time each day
+    3. When a snapshot is created, existing snapshots are checked for pruning
+    4. Snapshots are pruned based on checking their age and day-of-week or day-of-month
+    5. Based on the goals as set above, rules are built that snapshots are checked against
+        1. No snapshot younger than D days is purged
+        2. Snapshots older than D days are purged, unless they were made on a Monday
+        3. Snapshots older than W weeks are purged, unless they were made on the first Monday of the month
+        4. Snapshots older than M months are purged
+    6. These decisions are automated by a script
+    7. The script can be provided with a list of existing snapshots, and from this determine:
+        1. If a snapshot should be taken at that point in time, and if so what it should be called
+        2. Which snapshots should be pruned, if any
+        3. If any snapshots are missing
+3. Backing up
+    1. Backups are made of snapshots, not the running filesystem
+    2. Backups are done using borgbackup to an external hosted storage service
+    3. Backups are encrypted on-site
+    4. Each snapshot is backed up in a way that allows them to be retrieved individually
+    5. Backups are automatic and monitored
+    6. All existing snapshots are backed up, if they are not already
+    7. Existing backups that do not correspond to an existing snapshot are checked against the defined snapshot strategy
+       before pruning
+    8. An inconsistent state between backups and snapshots creates an alert
+
 ## TO DO
 
 1. Ansible
-   1. ~~Memory overcommit~~
-   2. ~~Install zfs~~
-   3. ~~Install docker~~
-   4. ~~Set up zfs~~
-   5. ~~Checkout repo~~
-   6. ~~Set up secrets and environment~~
-   7. ~~OS Hardening~~
-   8. ~~Start containers~~
-   9. ~~MariaDB Hardening~~
-   10. ~~Deal with zfs volumes from other servers~~
+    1. ~~Memory overcommit~~
+    2. ~~Install zfs~~
+    3. ~~Install docker~~
+    4. ~~Set up zfs~~
+    5. ~~Checkout repo~~
+    6. ~~Set up secrets and environment~~
+    7. ~~OS Hardening~~
+    8. ~~Start containers~~
+    9. ~~MariaDB Hardening~~
+    10. ~~Deal with zfs volumes from other servers~~
 2. Backups
-   1. Regular ZFS Snapshots
-   2. Borg backup to borgbase
-4. Nextcloud Apps
-   1. Memories
-5. Monitoring
-   1. Checkmk?
-   2. Uptime Kuma?
-   3. Ntfy?
-6. Move secrets to git submodule, then rotate
+    1. Ansible-able regular tasks? cron or systemd?
+    2. Regular ZFS Snapshots
+    3. Borg backup to borgbase
+3. Nextcloud Apps
+    1. Memories
+4. Monitoring
+    1. Checkmk?
+    2. Uptime Kuma?
+    3. Ntfy?
+5. Move secrets to git submodule, then rotate
