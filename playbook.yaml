@@ -36,7 +36,7 @@
             name:
               - linux-headers-amd64
             update_cache: true
-        - name: Install zfs and some GPG stuff docker
+        - name: Install zfs, some GPG stuff for docker, and requirements for sanoid
           ansible.builtin.apt:
             update_cache: false
             name:
@@ -45,6 +45,13 @@
               - ca-certificates
               - curl
               - gnupg
+              - debhelper
+              - libcapture-tiny-perl
+              - libconfig-inifiles-perl
+              - pv
+              - lzop
+              - mbuffer
+              - build-essential
         - name: Install docker
           block:
             - name: Add docker repo with their sketchy custom script
@@ -183,6 +190,34 @@
           args:
             chdir: "{{ github_repo_destination }}"
       become: false
+    - name: Install sanoid
+      block:
+        - name: Checkout sanoid repo
+          ansible.builtin.git:
+            repo: "https://github.com/jimsalterjrs/sanoid.git"
+            dest: "{{ playbook_dir }}/sanoid/sanoid"
+            version: "v2.1.0"
+          become: false
+        - name: Link debian folder
+          ansible.builtin.file:
+              src: "{{ playbook_dir }}/sanoid/sanoid/packages/debian"
+              dest: "{{ playbook_dir }}/sanoid/sanoid/debian"
+              state: link
+          become: false
+        - name: Build sanoid package
+          ansible.builtin.command: dpkg-buildpackage -us -uc -b
+          args:
+            chdir: "{{ playbook_dir }}/sanoid/sanoid"
+            creates: "{{ playbook_dir }}/sanoid/sanoid_2.1.0_all.deb"
+          become: false
+        - name: Install sanoid package
+          ansible.builtin.apt:
+              deb: "{{ playbook_dir }}/sanoid/sanoid_2.1.0_all.deb"
+        - name: Enable sanoid timer
+          ansible.builtin.systemd:
+              name: sanoid.timer
+              enabled: true
+              state: started
     - name: Start and configure containers
       block:
         - name: Fetch container images

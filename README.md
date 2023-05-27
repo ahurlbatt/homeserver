@@ -106,13 +106,16 @@
     9. ~~MariaDB Hardening~~
     10. ~~Deal with zfs volumes from other servers~~
 2. Backups
-    1. Ansible-able regular tasks? cron or systemd?
-    2. Regular ZFS Snapshots
-    3. Borg backup to borgbase
+    1. Regular snapshouts with [sanoid](https://github.com/jimsalterjrs/sanoid)
+        1. Install
+        2. Configure
+    2. Borg backup to borgbase
 3. Nextcloud Apps
     1. Memories
 4. Monitoring
-    1. Checkmk?
-    2. Uptime Kuma?
-    3. Ntfy?
+    1. Netdata?
+    2. Prometheus?
+    3. Checkmk?
+    4. Uptime Kuma?
+    5. Ntfy?
 5. Move secrets to git submodule, then rotate
