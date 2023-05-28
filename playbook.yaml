@@ -144,6 +144,29 @@
                   changed_when: false
                 - name: Create zpool
                   ansible.builtin.command: zpool create {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
+                  register: zpool_create_results
+                  ignore_errors: true
+                - name: If zpool fails, try force creation after user confirmation
+                  block:
+                    - name: Ask user if they want to force creation
+                      ansible.builtin.pause:
+                        prompt: "Zpool creation failed for the following reason:\n  - {{ zpool_create_results.stderr_lines.2 }}\nDo you want to force create it? (y/n)"
+                      register: force_zpool_create
+                      delegate_to: localhost
+                    - name: Fail if user doesn't want to force create
+                      ansible.builtin.fail:
+                        msg: "Aborting zpool creation."
+                      delegate_to: localhost
+                      when: force_zpool_create.user_input != "y"
+                    - name: Force create zpool
+                      ansible.builtin.command: zpool create -f {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
+                      register: forced_zpool_create_results
+                      when: force_zpool_create.user_input == "y"
+                    - name: Replace zpool_create_results with forced_zpool_create_results
+                      set_fact:
+                        zpool_create_results: "{{ forced_zpool_create_results }}"
+                      when: force_zpool_create.user_input == "y"
+                  when: zpool_create_results.rc != 0 and zpool_create_results.stderr is search("use '-f' to override the following errors")
               when: zpool_import_results.rc != 0
           when: zpool_name not in existing_zpools.stdout_lines
         - name: Get zfs to mount everything it knows about
