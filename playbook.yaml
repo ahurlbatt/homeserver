@@ -91,78 +91,78 @@
                   - docker-compose-plugin
     - name: Create/Import zpool and datasets
       block:
-      - name: Check existence of zpool
-        ansible.builtin.command: zpool list -H -o name
-        register: existing_zpools
-        changed_when: false
-      - name: Unknown zpools found
-        ansible.builtin.fail:
-          msg: "Existing zpool(s) found with name(s): {{ existing_zpools.stdout_lines | join(', ') }}"
-        when: existing_zpools.stdout != "" and zpool_name not in existing_zpools.stdout_lines
-      - name: Import or create zpool
-        block:
-        - name: Import zpool
-          ansible.builtin.command: zpool import {{ zpool_name }}
-          register: zpool_import_results
+        - name: Check existence of zpool
+          ansible.builtin.command: zpool list -H -o name
+          register: existing_zpools
+          changed_when: false
+        - name: Unknown zpools found
+          ansible.builtin.fail:
+            msg: "Existing zpool(s) found with name(s): {{ existing_zpools.stdout_lines | join(', ') }}"
+          when: existing_zpools.stdout != "" and zpool_name not in existing_zpools.stdout_lines
+        - name: Import or create zpool
+          block:
+            - name: Import zpool
+              ansible.builtin.command: zpool import {{ zpool_name }}
+              register: zpool_import_results
+              changed_when: false
+              ignore_errors: true
+            - name: Force import if it failed, and user confirms
+              block:
+                - name: Ask user if they want to force import
+                  ansible.builtin.pause:
+                    prompt: "Zpool {{ zpool_name }} already exists, but may be from a different system:\n  - {{ zpool_import_results.stderr_lines.1 }}\nDo you want to force import it? (y/n)"
+                  register: force_zpool_import
+                  delegate_to: localhost
+                - name: Fail if user doesn't want to force import
+                  ansible.builtin.fail:
+                    msg: "Aborting zpool import."
+                  delegate_to: localhost
+                  when: force_zpool_import.user_input != "y"
+                - name: Force import zpool
+                  ansible.builtin.command: zpool import -f {{ zpool_name }}
+                  register: forced_zpool_import_results
+                  changed_when: false
+                  when: force_zpool_import.user_input == "y"
+                - name: Replace zpool_import_results with forced_zpool_import_results
+                  set_fact:
+                    zpool_import_results: "{{ forced_zpool_import_results }}"
+                  when: force_zpool_import.user_input == "y"
+              when: zpool_import_results.rc != 0 and zpool_import_results.stderr_lines.0 is search("pool was previously in use from another system")
+            - name: Create zpool as it is not importable
+              block:
+                - name: Get the boot drive
+                  ansible.builtin.shell: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
+                  register: boot_drive
+                  changed_when: false
+                - name: Get a list of drives that are not the boot drive
+                  # '-I 8' restricts to only disks, not partitions
+                  ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
+                  register: zpool_drives
+                  changed_when: false
+                - name: Create zpool
+                  ansible.builtin.command: zpool create {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
+              when: zpool_import_results.rc != 0
+          when: zpool_name not in existing_zpools.stdout_lines
+        - name: Get zfs to mount everything it knows about
+          ansible.builtin.shell: zfs mount -a
           changed_when: false
           ignore_errors: true
-        - name: Force import if it failed, and user confirms
-          block:
-            - name: Ask user if they want to force import
-              ansible.builtin.pause:
-                prompt: "Zpool {{ zpool_name }} already exists, but may be from a different system:\n  - {{ zpool_import_results.stderr_lines.1 }}\nDo you want to force import it? (y/n)"
-              register: force_zpool_import
-              delegate_to: localhost
-            - name: Fail if user doesn't want to force import
-              ansible.builtin.fail:
-                msg: "Aborting zpool import."
-              delegate_to: localhost
-              when: force_zpool_import.user_input != "y"
-            - name: Force import zpool
-              ansible.builtin.command: zpool import -f {{ zpool_name }}
-              register: forced_zpool_import_results
-              changed_when: false
-              when: force_zpool_import.user_input == "y"
-            - name: Replace zpool_import_results with forced_zpool_import_results
-              set_fact:
-                zpool_import_results: "{{ forced_zpool_import_results }}"
-              when: force_zpool_import.user_input == "y"
-          when: zpool_import_results.rc != 0 and zpool_import_results.stderr_lines.0 is search("pool was previously in use from another system")
-        - name: Create zpool as it is not importable
-          block:
-            - name: Get the boot drive
-              ansible.builtin.shell: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
-              register: boot_drive
-              changed_when: false
-            - name: Get a list of drives that are not the boot drive
-              # '-I 8' restricts to only disks, not partitions
-              ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
-              register: zpool_drives
-              changed_when: false
-            - name: Create zpool
-              ansible.builtin.command: zpool create {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
-          when: zpool_import_results.rc != 0
-        when: zpool_name not in existing_zpools.stdout_lines
-      - name : Get zfs to mount everything it knows about
-        ansible.builtin.shell: zfs mount -a
-        changed_when: false
-        ignore_errors: true
-      - name: Check existence of dataset
-        ansible.builtin.command: zfs list -H -o name
-        register: existing_zfs_objects
-        changed_when: false
-      - name: Unknown dataset found
-        ansible.builtin.fail:
+        - name: Check existence of dataset
+          ansible.builtin.command: zfs list -H -o name
+          register: existing_zfs_objects
+          changed_when: false
+        - name: Unknown dataset found
+          ansible.builtin.fail:
             msg: "Existing dataset(s) found with name(s): {{ existing_zfs_objects.stdout_lines | join(', ') }}. Expected: {{ all_zfs_objects | join(', ') }}."
-        when: existing_zfs_objects.stdout != "" and existing_zfs_objects.stdout_lines | difference(all_zfs_objects) | length > 0
-      - name: Create dataset for nextcloud
-        ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud }}
-        args:
-          creates: "/{{ dataset_nextcloud_full_name }}"
-      - name: Create dataset for db
-        ansible.builtin.command: zfs create {{ zfs_create_options_dataset_db }}
-        args:
-          creates: "/{{ dataset_db_full_name }}"
+          when: existing_zfs_objects.stdout != "" and existing_zfs_objects.stdout_lines | difference(all_zfs_objects) | length > 0
+        - name: Create dataset for nextcloud
+          ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud }}
+          args:
+            creates: "/{{ dataset_nextcloud_full_name }}"
+        - name: Create dataset for db
+          ansible.builtin.command: zfs create {{ zfs_create_options_dataset_db }}
+          args:
+            creates: "/{{ dataset_db_full_name }}"
     - name: Copy key files and checkout/decrypt repo
       block:
         - name: Copy over deploy private key
@@ -184,9 +184,9 @@
             force: true
         - name: Copy over secrets
           ansible.builtin.copy:
-              src: "{{ playbook_dir + '/' + item + '.vault' }}"
-              dest: "{{ github_repo_destination + '/' + item }}"
-              mode: 0600
+            src: "{{ playbook_dir + '/' + item + '.vault' }}"
+            dest: "{{ github_repo_destination + '/' + item }}"
+            mode: 0600
           loop: "{{ lookup('file', 'secrets/secrets.txt').splitlines() }}"
         - name: Copy the domain secret to the .env file, so it's available to docker compose
           ansible.builtin.shell: echo -n "MY_DOMAIN=$(cat secrets/mydomain.secret)" > .env
@@ -210,9 +210,9 @@
           become: false
         - name: Link debian folder
           ansible.builtin.file:
-              src: "{{ playbook_dir }}/sanoid/sanoid/packages/debian"
-              dest: "{{ playbook_dir }}/sanoid/sanoid/debian"
-              state: link
+            src: "{{ playbook_dir }}/sanoid/sanoid/packages/debian"
+            dest: "{{ playbook_dir }}/sanoid/sanoid/debian"
+            state: link
           become: false
         - name: Build sanoid package
           ansible.builtin.command: dpkg-buildpackage -us -uc -b
@@ -222,12 +222,12 @@
           become: false
         - name: Install sanoid package
           ansible.builtin.apt:
-              deb: "{{ playbook_dir }}/sanoid/sanoid_2.1.0_all.deb"
+            deb: "{{ playbook_dir }}/sanoid/sanoid_2.1.0_all.deb"
         - name: Enable sanoid timer
           ansible.builtin.systemd:
-              name: sanoid.timer
-              enabled: true
-              state: started
+            name: sanoid.timer
+            enabled: true
+            state: started
     - name: Start and configure containers
       block:
         - name: Fetch container images
