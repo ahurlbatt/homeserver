@@ -2,14 +2,15 @@ zpool_name: tank
 zpool_options:
   - ashift=12
 zpool_raid_type: raidz2
-dataset_nextcloud_name: nextcloud
-dataset_nextcloud_options:
+dataset_nextcloud_parent_name: nextcloud
+dataset_nextcloud_parent_options:
   - compression=lz4
+dataset_nextcloud_name: nextcloud_data
+dataset_nextcloud_options:
 dataset_db_name: mariadb
 dataset_db_options:
   - recordsize=16k
   - primarycache=metadata
-  - compression=lz4
   - logbias=throughput
   - atime=off
 github_repo: git@github.com:ahurlbatt/homeserver.git

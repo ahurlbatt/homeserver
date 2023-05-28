@@ -14,10 +14,15 @@
     - github_deploy_key_public.vault
     - github_deploy_key_private.vault
   vars:
+    zpool_creation_options: "-o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }}"
+    dataset_nextcloud_full_name: "{{ zpool_name + '/' + dataset_nextcloud_name }}"
+    zfs_create_options_dataset_nextcloud: "{{ dataset_nextcloud_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_full_name | quote }}"
+    dataset_db_full_name: "{{ zpool_name + '/' + dataset_db_name }}"
+    zfs_create_options_dataset_db: "{{ dataset_db_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_db_full_name | quote }}"
     all_zfs_objects:
       - "{{ zpool_name }}"
-      - "{{ zpool_name + '/' + dataset_nextcloud_name }}"
-      - "{{ zpool_name + '/' + dataset_db_name }}"
+      - "{{ dataset_nextcloud_full_name }}"
+      - "{{ dataset_db_full_name }}"
   tasks:
     - name: Allow memory over commit
       ansible.posix.sysctl:
@@ -135,7 +140,7 @@
               register: zpool_drives
               changed_when: false
             - name: Create zpool
-              ansible.builtin.command: zpool create -o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
+              ansible.builtin.command: zpool create {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
           when: zpool_import_results.rc != 0
         when: zpool_name not in existing_zpools.stdout_lines
       - name : Get zfs to mount everything it knows about
@@ -151,13 +156,13 @@
             msg: "Existing dataset(s) found with name(s): {{ existing_zfs_objects.stdout_lines | join(', ') }}. Expected: {{ all_zfs_objects | join(', ') }}."
         when: existing_zfs_objects.stdout != "" and existing_zfs_objects.stdout_lines | difference(all_zfs_objects) | length > 0
       - name: Create dataset for nextcloud
-        ansible.builtin.command: zfs create -o {{ dataset_nextcloud_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }}/{{ dataset_nextcloud_name | quote }}
+        ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud }}
         args:
-          creates: "{{ '/' + zpool_name + '/' + dataset_nextcloud_name }}"
+          creates: "/{{ dataset_nextcloud_full_name }}"
       - name: Create dataset for db
-        ansible.builtin.command: zfs create -o {{ dataset_db_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }}/{{ dataset_db_name | quote }}
+        ansible.builtin.command: zfs create {{ zfs_create_options_dataset_db }}
         args:
-          creates: "{{ '/' + zpool_name + '/' + dataset_db_name }}"
+          creates: "/{{ dataset_db_full_name }}"
     - name: Copy key files and checkout/decrypt repo
       block:
         - name: Copy over deploy private key
