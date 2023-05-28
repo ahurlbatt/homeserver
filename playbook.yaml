@@ -115,8 +115,12 @@
               when: force_zpool_import.user_input != "y"
             - name: Force import zpool
               ansible.builtin.command: zpool import -f {{ zpool_name }}
-              register: zpool_import_results
+              register: forced_zpool_import_results
               changed_when: false
+              when: force_zpool_import.user_input == "y"
+            - name: Replace zpool_import_results with forced_zpool_import_results
+              set_fact:
+                zpool_import_results: "{{ forced_zpool_import_results }}"
               when: force_zpool_import.user_input == "y"
           when: zpool_import_results.rc != 0 and zpool_import_results.stderr_lines.0 is search("pool was previously in use from another system")
         - name: Create zpool as it is not importable
@@ -126,6 +130,7 @@
               register: boot_drive
               changed_when: false
             - name: Get a list of drives that are not the boot drive
+              # '-I 8' restricts to only disks, not partitions
               ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
               register: zpool_drives
               changed_when: false
