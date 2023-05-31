@@ -118,4 +118,5 @@
     3. Checkmk?
     4. Uptime Kuma?
     5. Ntfy?
-5. Move secrets to git submodule, then rotate
+5. Template compose file with e.g. dataset names
+6. Move secrets to git submodule, then rotate

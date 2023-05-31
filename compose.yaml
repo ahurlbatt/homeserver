@@ -132,14 +132,14 @@ volumes:
         driver_opts:
             o: bind
             type: none
-            device: /tank/nextcloud
+            device: /tank/nextcloud/nextcloud_data
     ncdb:
         name: ncdb
         driver: local
         driver_opts:
             o: bind
             type: none
-            device: /tank/mariadb
+            device: /tank/nextcloud/mariadb
     caddy-data:
         name: caddy-data
 
