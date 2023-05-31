@@ -253,6 +253,13 @@
         - name: Install sanoid package
           ansible.builtin.apt:
             deb: "{{ playbook_dir }}/sanoid/sanoid_2.1.0_all.deb"
+        - name: Copy sanoid config
+          ansible.builtin.copy:
+            src: "{{ playbook_dir }}/sanoid.conf"
+            dest: /etc/sanoid/sanoid.conf
+            owner: root
+            group: root
+            mode: 0644
         - name: Enable sanoid timer
           ansible.builtin.systemd:
             name: sanoid.timer
