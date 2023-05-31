@@ -106,9 +106,9 @@
     9. ~~MariaDB Hardening~~
     10. ~~Deal with zfs volumes from other servers~~
 2. Backups
-    1. Regular snapshouts with [sanoid](https://github.com/jimsalterjrs/sanoid)
-        1. Install
-        2. Configure
+    1. ~~Regular snapshouts with [sanoid](https://github.com/jimsalterjrs/sanoid)~~
+        1. ~~Install~~
+        2. ~~Configure~~
     2. Borg backup to borgbase
 3. Nextcloud Apps
     1. Memories
