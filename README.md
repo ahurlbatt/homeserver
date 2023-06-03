@@ -17,17 +17,22 @@
 1. If on Windows, install WLS2 and do everything in there
 2. [Follow the online guide for Ubuntu](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html)
     - For Ubuntu, after an `apt update` just use `apt install ansible`
-3. Ensure SSH access (see above)
-4. Check the IP/hostname of the target machine in inventory.yaml
-5. Check the connection with `ansible all -i inventory.yaml -m ping`
-6. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
-7. Install the hardening collection with `ansible-galaxy collection install devsec.hardening`
+3. Install the hardening collection with `ansible-galaxy collection install devsec.hardening`
+4. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
 
 ## Infrastructure
 
 1. Register a domain
 2. Set up a dynamic DNS service
 3. Enable HTTP and HTTPS port forwards from your router to the server
+
+## Setting up the server
+
+1. Ensure SSH access to target server (see above)
+2. Put the IP/hostname of the target machine in inventory.yaml
+3. Check the connection with `ansible all -i inventory.yaml -m ping`
+4. Run the playbook with `ansible-playbook -K -i inventory.yaml playbook.yaml`
+   - The flag `-K` will prompt for the sudo password for the target machine
 
 ## Some explanations
 
@@ -47,6 +52,7 @@
 3. Nextcloud settings have been taken from
     - [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
     - [This health check discussion](https://github.com/nextcloud/docker/issues/676)
+4. ZFS Snapshots are managed using [Sanoid](https://github.com/jimsalterjrs/sanoid)
 
 ## Ansible Notes
 
