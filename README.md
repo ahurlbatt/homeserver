@@ -25,6 +25,11 @@
 1. Register a domain
 2. Set up a dynamic DNS service
 3. Enable HTTP and HTTPS port forwards from your router to the server
+4. Create and activate a Repository on [Borgbase](https://www.borgbase.com/)
+   - Create a new SSH keypair with `ssh-keygen -t ed25519 -a 100`
+   - Copy the public key to Borgbase
+   - Initialise the repo with `borg init -e repokey-blake2 ssh://...`
+   - Export the key with `borg key export --paper ssh://... borg_key.txt` and store it somewhere safe
 
 ## Setting up the server
 
@@ -62,12 +67,7 @@
     ssh 192.168.178.56 'cat ~/.ssh/id_rsa.pub' | ansible-vault encrypt_string --stdin-name 'github_deploy_key_public' --output 'github_deploy_key_public.vault'
     ssh 192.168.178.56 'cat ~/.ssh/id_rsa' | ansible-vault encrypt_string --stdin-name 'github_deploy_key_private' --output 'github_deploy_key_private.vault'
     ```
-3. The same process was done for the Borgbase key, for which the standard is ED25519 - `ssh-keygen a 100 -t ed25519`
-    ```
-    ssh 192.168.178.56 'cat ~/.ssh/id_ed25519.pub' | ansible-vault encrypt_string  --stdin-name 'borgbase_key_public' --output './keys/borgbase_key_public.vault'
-    ssh 192.168.178.56 'cat ~/.ssh/id_ed25519' | ansible-vault encrypt_string --stdin-name 'borgbase_key_private' --output './keys/borgbase_key_private.vault'
-    ```
-4. Secrets were encrypted using `encrypt-secrets.sh` script.
+3. Secrets were encrypted using `encrypt-secrets.sh` script.
 
 ## Backup Strategy
 
