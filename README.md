@@ -67,36 +67,15 @@
 
 ## Backup Strategy
 
-1. Snapshot goals
-    1. Daily, weekly, monthly(ish)
-    2. Daily snapshots are kept for D days
-    3. Weekly snapshots are kept for W weeks
-    4. Monthly snapshots are kept for M months
-2. Automating snapshots
-    1. All snapshots are named by their creation date
-    2. Snapshots are created at the same time each day
-    3. When a snapshot is created, existing snapshots are checked for pruning
-    4. Snapshots are pruned based on checking their age and day-of-week or day-of-month
-    5. Based on the goals as set above, rules are built that snapshots are checked against
-        1. No snapshot younger than D days is purged
-        2. Snapshots older than D days are purged, unless they were made on a Monday
-        3. Snapshots older than W weeks are purged, unless they were made on the first Monday of the month
-        4. Snapshots older than M months are purged
-    6. These decisions are automated by a script
-    7. The script can be provided with a list of existing snapshots, and from this determine:
-        1. If a snapshot should be taken at that point in time, and if so what it should be called
-        2. Which snapshots should be pruned, if any
-        3. If any snapshots are missing
-3. Backing up
-    1. Backups are made of snapshots, not the running filesystem
-    2. Backups are done using borgbackup to an external hosted storage service
-    3. Backups are encrypted on-site
-    4. Each snapshot is backed up in a way that allows them to be retrieved individually
-    5. Backups are automatic and monitored
-    6. All existing snapshots are backed up, if they are not already
-    7. Existing backups that do not correspond to an existing snapshot are checked against the defined snapshot strategy
-       before pruning
-    8. An inconsistent state between backups and snapshots creates an alert
+ 1. Backups are made of snapshots, not the running filesystem
+ 2. Backups are done using borgbackup to an external hosted storage service
+ 3. Backups are encrypted on-site
+ 4. Each snapshot is backed up in a way that allows them to be retrieved individually
+ 5. Backups are automatic and monitored
+ 6. All existing snapshots are backed up, if they are not already
+ 7. Existing backups that do not correspond to an existing snapshot are checked against the defined snapshot strategy
+    before pruning
+ 8. An inconsistent state between backups and snapshots creates an alert
 
 ## TO DO
 
