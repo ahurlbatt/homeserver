@@ -35,3 +35,7 @@ for dataset in "${datasets[@]}"; do
     mount -t zfs "$dataset$subset@$snapname" "$MOUNT_DIR$dataset$subset"
   done
 done
+
+# TODO: Move into functions
+# TODO: Function for unmounting
+# TODO: Mount/Unmount via flags
