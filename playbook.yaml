@@ -60,6 +60,18 @@
               - lzop
               - mbuffer
               - build-essential
+              - python3
+              - python3-pip
+        - name: Grab borgbackup
+          ansible.builtin.get_url:
+            url: https://github.com/borgbackup/borg/releases/download/1.2.4/borg-linux64
+            dest: /usr/local/bin/borg
+            mode: 0755
+            group: root
+            owner: root
+        - name: Install borgmatic
+          ansible.builtin.pip:
+            name: borgmatic
         - name: Install docker
           block:
             - name: Add docker repo with their sketchy custom script
