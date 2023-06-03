@@ -12,6 +12,17 @@
     2. `PubkeyAuthentication yes`
 7. `sudo systemctl restart ssh`
 
+## Infrastructure
+
+1. Register a domain
+2. Set up a dynamic DNS service
+3. Enable HTTP and HTTPS port forwards from your router to the server
+4. Create and activate a Repository on [Borgbase](https://www.borgbase.com/)
+    - On the server, create a new SSH keypair with `ssh-keygen -t ed25519 -a 100`
+    - Copy the public key to Borgbase
+    - Initialise the repo with `borg init -e repokey-blake2 ssh://...`
+    - Export the key with `borg key export --paper ssh://... borg_key.txt` and store it somewhere safe
+
 ## Setting up Ansible Controller
 
 1. If on Windows, install WLS2 and do everything in there
@@ -19,17 +30,6 @@
     - For Ubuntu, after an `apt update` just use `apt install ansible`
 3. Install the hardening collection with `ansible-galaxy collection install devsec.hardening`
 4. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
-
-## Infrastructure
-
-1. Register a domain
-2. Set up a dynamic DNS service
-3. Enable HTTP and HTTPS port forwards from your router to the server
-4. Create and activate a Repository on [Borgbase](https://www.borgbase.com/)
-   - Create a new SSH keypair with `ssh-keygen -t ed25519 -a 100`
-   - Copy the public key to Borgbase
-   - Initialise the repo with `borg init -e repokey-blake2 ssh://...`
-   - Export the key with `borg key export --paper ssh://... borg_key.txt` and store it somewhere safe
 
 ## Setting up the server
 
