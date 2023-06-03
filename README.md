@@ -99,6 +99,9 @@
         1. ~~Install~~
         2. ~~Configure~~
     2. Borg backup to borgbase
+        1. ~~Install borg and borgmatic~~
+        2. Write script to recursively mount the latest snapshot of datasets configured in sanoid
+        3. Configure borgmatic 
 3. Nextcloud Apps
     1. Memories
 4. Monitoring

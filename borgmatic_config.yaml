@@ -1,0 +1,26 @@
+constants:
+    borgbase-repo: ????????
+
+location:
+    source_directories:
+        - ?????????
+
+    repositories:
+        - path: {borgbase-repo}
+          label: borgbase
+
+storage:
+    encryption_passcommand: ????????
+
+    # ssh_command: ssh -i /path/to/private/key
+
+retention:
+    keep_daily: 7
+    keep_weekly: 5
+    keep_monthly: 12
+    keep_yearly: 0
+
+consistency:
+    checks:
+        - name: repository
+          frequency: 2 weeks

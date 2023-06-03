@@ -3,12 +3,12 @@
   collections:
     - devsec.hardening
   become: true
-  roles:
-    - role: devsec.hardening.os_hardening
-      vars:
-        sysctl_overwrite:
-          # Enable IP forwarding, required for docker
-          net.ipv4.ip_forward: 1
+#  roles:
+#    - role: devsec.hardening.os_hardening
+#      vars:
+#        sysctl_overwrite:
+#          # Enable IP forwarding, required for docker
+#          net.ipv4.ip_forward: 1
   vars_files:
     - user_variables.yaml
     - github_deploy_key_public.vault
@@ -242,7 +242,7 @@
           args:
             chdir: "{{ github_repo_destination }}"
       become: false
-    - name: Install sanoid
+    - name: Install and configure sanoid
       block:
         - name: Checkout sanoid repo
           ansible.builtin.git:
@@ -277,35 +277,35 @@
             name: sanoid.timer
             enabled: true
             state: started
-    - name: Start and configure containers
-      block:
-        - name: Fetch container images
-          ansible.builtin.shell: docker compose pull
-          args:
-            chdir: "{{ github_repo_destination_absolute.stdout }}"
-        - name: Start containers
-          ansible.builtin.shell: docker compose up -d
-          args:
-            chdir: "{{ github_repo_destination_absolute.stdout }}"
-        - name: Secure mysql container
-          block:
-            - name: Remove anonymous users
-              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DELETE FROM mysql.global_priv WHERE User=\\\"\\\";\"'"
-              changed_when: false
-              args:
-                chdir: "{{ github_repo_destination_absolute.stdout }}"
-            - name: Prevent root login remotely
-              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DELETE FROM mysql.global_priv WHERE User=\\\"root\\\" AND Host NOT IN (\\\"localhost\\\", \\\"127.0.0.1\\\", \\\"::1\\\");\"'"
-              changed_when: false
-              args:
-                chdir: "{{ github_repo_destination_absolute.stdout }}"
-            - name: Remove test database
-              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DROP DATABASE IF EXISTS test;\"'"
-              changed_when: false
-              args:
-                chdir: "{{ github_repo_destination_absolute.stdout }}"
-            - name: Reload privileged tables
-              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"FLUSH PRIVILEGES;\"'"
-              changed_when: false
-              args:
-                chdir: "{{ github_repo_destination_absolute.stdout }}"
+#    - name: Start and configure containers
+#      block:
+#        - name: Fetch container images
+#          ansible.builtin.shell: docker compose pull
+#          args:
+#            chdir: "{{ github_repo_destination_absolute.stdout }}"
+#        - name: Start containers
+#          ansible.builtin.shell: docker compose up -d
+#          args:
+#            chdir: "{{ github_repo_destination_absolute.stdout }}"
+#        - name: Secure mysql container
+#          block:
+#            - name: Remove anonymous users
+#              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DELETE FROM mysql.global_priv WHERE User=\\\"\\\";\"'"
+#              changed_when: false
+#              args:
+#                chdir: "{{ github_repo_destination_absolute.stdout }}"
+#            - name: Prevent root login remotely
+#              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DELETE FROM mysql.global_priv WHERE User=\\\"root\\\" AND Host NOT IN (\\\"localhost\\\", \\\"127.0.0.1\\\", \\\"::1\\\");\"'"
+#              changed_when: false
+#              args:
+#                chdir: "{{ github_repo_destination_absolute.stdout }}"
+#            - name: Remove test database
+#              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DROP DATABASE IF EXISTS test;\"'"
+#              changed_when: false
+#              args:
+#                chdir: "{{ github_repo_destination_absolute.stdout }}"
+#            - name: Reload privileged tables
+#              ansible.builtin.command: "docker exec nc-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"FLUSH PRIVILEGES;\"'"
+#              changed_when: false
+#              args:
+#                chdir: "{{ github_repo_destination_absolute.stdout }}"
