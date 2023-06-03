@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-mount_location="/mnt/backup"
-#sanoid_config="/etc/sanoid/sanoid.conf"
-sanoid_config="sanoid.conf"
+MOUNT_DIR="/mnt/backup/"
+SANOID_CONFIG_FILE="/etc/sanoid/sanoid.conf"
 
 usage_info() {
   echo "Usage: $0"
-  echo "Mounts the latest sanoid snapshots to $mount_location"
+  echo "Mounts the latest sanoid snapshots to $MOUNT_DIR"
 }
 
 usage() {
@@ -26,9 +25,13 @@ check_root() {
   fi
 }
 
-mapfile -t datasets < <(grep -P '^\s*\[(?!template_)' "$sanoid_config" | sed -E 's/\[|\]//g')
+mapfile -t datasets < <(grep -P '^\s*\[(?!template_)' "$SANOID_CONFIG_FILE" | sed -E 's/\[|\]//g')
 
-echo "Datasets:"
 for dataset in "${datasets[@]}"; do
-  echo "  $dataset"
+  snapname="$(zfs list -H -t snapshot -o name "$dataset" | tail -n1 | sed 's|'"$dataset"'@||')"
+  mkdir -p "$MOUNT_DIR$dataset"
+  mapfile -t all_subsets < <(zfs list -Hr -t snapshot -o name "$dataset" | grep "$snapname" | sed 's|^'"$dataset"'||' | sed 's|@'"$snapname"'$||')
+  for subset in "${all_subsets[@]}"; do
+    mount -t zfs "$dataset$subset@$snapname" "$MOUNT_DIR$dataset$subset"
+  done
 done
