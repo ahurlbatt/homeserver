@@ -32,7 +32,7 @@
 2. Put the IP/hostname of the target machine in inventory.yaml
 3. Check the connection with `ansible all -i inventory.yaml -m ping`
 4. Run the playbook with `ansible-playbook -K -i inventory.yaml playbook.yaml`
-   - The flag `-K` will prompt for the sudo password for the target machine
+    - The flag `-K` will prompt for the sudo password for the target machine
 
 ## Some explanations
 
@@ -58,24 +58,28 @@
 
 1. For encryption of key and other secrets, the file `./secrets/ansible_vault_password.secret` is also needed.
 2. GitHub deploy key was generated on a VM, then extracted and encrypted with ansible vault using these commands:
-
     ```
-    ssh 192.168.178.56 'cat ~/.ssh/id_rsa.pub' | ansible-vault encrypt_string --vault-password-file ansiblevault.secret --stdin-name 'github_deploy_key_public' --output 'github_deploy_key_public.vault'
-    ssh 192.168.178.56 'cat ~/.ssh/id_rsa' | ansible-vault encrypt_string --vault-password-file ansiblevault.secret --stdin-name 'github_deploy_key_private' --output 'github_deploy_key_private.vault'
+    ssh 192.168.178.56 'cat ~/.ssh/id_rsa.pub' | ansible-vault encrypt_string --stdin-name 'github_deploy_key_public' --output 'github_deploy_key_public.vault'
+    ssh 192.168.178.56 'cat ~/.ssh/id_rsa' | ansible-vault encrypt_string --stdin-name 'github_deploy_key_private' --output 'github_deploy_key_private.vault'
     ```
-3. Secrets were encrypted using `encrypt-secrets.sh` script.
+3. The same process was done for the Borgbase key, for which the standard is ED25519 - `ssh-keygen a 100 -t ed25519`
+    ```
+    ssh 192.168.178.56 'cat ~/.ssh/id_ed25519.pub' | ansible-vault encrypt_string  --stdin-name 'borgbase_key_public' --output './keys/borgbase_key_public.vault'
+    ssh 192.168.178.56 'cat ~/.ssh/id_ed25519' | ansible-vault encrypt_string --stdin-name 'borgbase_key_private' --output './keys/borgbase_key_private.vault'
+    ```
+4. Secrets were encrypted using `encrypt-secrets.sh` script.
 
 ## Backup Strategy
 
- 1. Backups are made of snapshots, not the running filesystem
- 2. Backups are done using borgbackup to an external hosted storage service
- 3. Backups are encrypted on-site
- 4. Each snapshot is backed up in a way that allows them to be retrieved individually
- 5. Backups are automatic and monitored
- 6. All existing snapshots are backed up, if they are not already
- 7. Existing backups that do not correspond to an existing snapshot are checked against the defined snapshot strategy
-    before pruning
- 8. An inconsistent state between backups and snapshots creates an alert
+1. Backups are made of snapshots, not the running filesystem
+2. Backups are done using borgbackup to an external hosted storage service
+3. Backups are encrypted on-site
+4. Each snapshot is backed up in a way that allows them to be retrieved individually
+5. Backups are automatic and monitored
+6. All existing snapshots are backed up, if they are not already
+7. Existing backups that do not correspond to an existing snapshot are checked against the defined snapshot strategy
+   before pruning
+8. An inconsistent state between backups and snapshots creates an alert
 
 ## TO DO
 
