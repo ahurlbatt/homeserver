@@ -5,7 +5,10 @@ SANOID_CONFIG_FILE="/etc/sanoid/sanoid.conf"
 
 usage_info() {
   echo "Usage: $0"
-  echo "Mounts the latest sanoid snapshots to $MOUNT_DIR"
+  echo "Mounts or unmounts the latest sanoid snapshots to/from $MOUNT_DIR"
+  echo "Options:"
+  echo "  -m  Mount"
+  echo "  -u  Unount"
 }
 
 usage() {
