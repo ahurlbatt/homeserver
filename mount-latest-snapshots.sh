@@ -25,17 +25,69 @@ check_root() {
   fi
 }
 
-mapfile -t datasets < <(grep -P '^\s*\[(?!template_)' "$SANOID_CONFIG_FILE" | sed -E 's/\[|\]//g')
+get_datasets() {
+  grep -P '^\s*\[(?!template_)' "$SANOID_CONFIG_FILE" | sed -E 's/\[|\]//g'
+}
 
-for dataset in "${datasets[@]}"; do
-  snapname="$(zfs list -H -t snapshot -o name "$dataset" | tail -n1 | sed 's|'"$dataset"'@||')"
-  mkdir -p "$MOUNT_DIR$dataset"
-  mapfile -t all_subsets < <(zfs list -Hr -t snapshot -o name "$dataset" | grep "$snapname" | sed 's|^'"$dataset"'||' | sed 's|@'"$snapname"'$||')
-  for subset in "${all_subsets[@]}"; do
-    mount -t zfs "$dataset$subset@$snapname" "$MOUNT_DIR$dataset$subset"
+get_latest_snap() {
+  zfs list -H -t snapshot -o name "$1" | tail -n1 | sed 's|'"$1"'@||'
+}
+
+get_subsets() {
+  zfs list -Hr -t snapshot -o name "$1" | grep "$2" | sed 's|^'"$1"'||' | sed 's|@'"$2"'$||'
+}
+
+mount_dataset_snap() {
+  mount -t zfs "$1@$2" "$MOUNT_DIR$1"
+}
+
+unmount_dataset() {
+  umount -R "$MOUNT_DIR$1"
+}
+
+mount_snapshots() {
+  mapfile -t datasets < <(get_datasets)
+  for dataset in "${datasets[@]}"; do
+    snapname="$(get_latest_snap "$dataset")"
+    mkdir -p "$MOUNT_DIR$dataset"
+    mapfile -t all_subsets < <(get_subsets "$dataset" "$snapname")
+    for subset in "${all_subsets[@]}"; do
+      mount_dataset_snap "$dataset$subset" "$snapname"
+    done
   done
+}
+
+unmount_snapshots() {
+  mapfile -t datasets < <(get_datasets)
+  for dataset in "${datasets[@]}"; do
+    unmount_dataset "$dataset"
+  done
+}
+
+if [ "$#" -ne 1 ]; then
+  usage
+fi
+
+check_root
+
+MOUNT=0
+
+while getopts "um" opt; do
+  case $opt in
+    u)
+      MOUNT=0
+      ;;
+    m)
+      MOUNT=1
+      ;;
+    *)
+      usage
+      ;;
+  esac
 done
 
-# TODO: Move into functions
-# TODO: Function for unmounting
-# TODO: Mount/Unmount via flags
+if [ "$MOUNT" -eq 1 ]; then
+  mount_snapshots
+else
+  unmount_snapshots
+fi
