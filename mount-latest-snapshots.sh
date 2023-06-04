@@ -46,6 +46,7 @@ mount_dataset_snap() {
 
 unmount_dataset() {
   umount -R "$MOUNT_DIR$1"
+  rm -R "$MOUNT_DIR$1"
 }
 
 mount_snapshots() {
