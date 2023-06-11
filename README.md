@@ -18,7 +18,8 @@
 2. Set up a dynamic DNS service
 3. Enable HTTP and HTTPS port forwards from your router to the server
 4. Create and activate a Repository on [Borgbase](https://www.borgbase.com/)
-    - On the server, create a new SSH keypair with `ssh-keygen -t ed25519 -a 100`
+    - On the server, create a new SSH keypair for root with the flags `-t ed25519` and `-a 100`
+      - Don't set a passphrase
     - Copy the public key to Borgbase
     - Initialise the repo with `borg init -e repokey-blake2 ssh://...`
     - Export the key with `borg key export --paper ssh://... borg_key.txt` and store it somewhere safe

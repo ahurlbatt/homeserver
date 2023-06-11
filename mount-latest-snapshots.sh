@@ -8,7 +8,7 @@ usage_info() {
   echo "Mounts or unmounts the latest sanoid snapshots to/from $MOUNT_DIR"
   echo "Options:"
   echo "  -m  Mount"
-  echo "  -u  Unount"
+  echo "  -u  Unmount"
 }
 
 usage() {

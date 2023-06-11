@@ -1,26 +1,32 @@
 constants:
-    borgbase-repo: ????????
+  borgbase-testrepo: ssh://hx78opb8@hx78opb8.repo.borgbase.com/./repo
 
 location:
-    source_directories:
-        - ?????????
+  source_directories:
+    - /mnt/backup/tank/nextcloud
 
-    repositories:
-        - path: {borgbase-repo}
-          label: borgbase
+  repositories:
+    - path: {borgbase-testrepo}
+      label: borgbase_testrepo
 
 storage:
-    encryption_passcommand: ????????
-
-    # ssh_command: ssh -i /path/to/private/key
+  encryption_passcommand: cat /home/numb7rs/homeserver/secrets/borgbase_testrepo.secret
 
 retention:
-    keep_daily: 7
-    keep_weekly: 5
-    keep_monthly: 12
-    keep_yearly: 0
+  keep_daily: 7
+  keep_weekly: 5
+  keep_monthly: 12
+  keep_yearly: 0
 
 consistency:
-    checks:
-        - name: repository
-          frequency: 2 weeks
+  checks:
+    - name: repository
+      frequency: 2 weeks
+
+hooks:
+  before_backup:
+    - /home/numb7rs/homeserver/mount-latest-snapshots.sh -m
+  after_backup:
+    - /home/numb7rs/homeserver/mount-latest-snapshots.sh -u
+  on_error:
+    - /home/numb7rs/homeserver/mount-latest-snapshots.sh -u
