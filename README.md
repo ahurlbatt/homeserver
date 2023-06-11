@@ -99,10 +99,11 @@
     1. ~~Regular snapshouts with [sanoid](https://github.com/jimsalterjrs/sanoid)~~
         1. ~~Install~~
         2. ~~Configure~~
-    2. Borg backup to borgbase
+    2. ~~Borg backup to borgbase~~
         1. ~~Install borg and borgmatic~~
-        2. Write script to recursively mount the latest snapshot of datasets configured in sanoid
-        3. Configure borgmatic 
+        2. ~~Write script to recursively mount the latest snapshot of datasets configured in sanoid~~
+        3. ~~Configure borgmatic~~
+        4. Create and enable borgmatic systemd service and timer
 3. Nextcloud Apps
     1. Memories
 4. Monitoring
@@ -111,5 +112,5 @@
     3. Checkmk?
     4. Uptime Kuma?
     5. Ntfy?
-5. Template compose file with e.g. dataset names
-6. Move secrets to git submodule, then rotate
+5. Template config and compose files with e.g. dataset names
+6. Move secrets out of git, then rotate
