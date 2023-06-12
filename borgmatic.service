@@ -17,9 +17,9 @@ LockPersonality=true
 # But you can try setting it to "yes" for improved security if you don't use those features.
 MemoryDenyWriteExecute=no
 NoNewPrivileges=yes
-PrivateDevices=yes
+# PrivateDevices=yes
 PrivateTmp=yes
-ProtectClock=yes
+# ProtectClock=yes
 ProtectControlGroups=yes
 ProtectHostname=yes
 ProtectKernelLogs=yes
@@ -30,7 +30,7 @@ RestrictNamespaces=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 SystemCallArchitectures=native
-SystemCallFilter=@system-service
+SystemCallFilter=@system-service @mount
 SystemCallErrorNumber=EPERM
 # To restrict write access further, change "ProtectSystem" to "strict" and uncomment
 # "ReadWritePaths", "ReadOnlyPaths", "ProtectHome", and "BindPaths". Then add any local repository
@@ -44,7 +44,7 @@ ProtectSystem=full
 # BindPaths=-/root/.cache/borg -/root/.config/borg -/root/.borgmatic
 
 # May interfere with running external programs within borgmatic hooks.
-CapabilityBoundingSet=CAP_DAC_READ_SEARCH CAP_NET_RAW
+# CapabilityBoundingSet=CAP_DAC_READ_SEARCH CAP_NET_RAW
 
 # Lower CPU and I/O priority.
 Nice=19

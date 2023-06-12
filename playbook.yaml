@@ -308,11 +308,11 @@
             owner: root
             group: root
             mode: 0644
-        - name: Enable borgmatic timer
-          ansible.builtin.systemd:
-            name: borgmatic.timer
-            enabled: true
-            state: started
+#        - name: Enable borgmatic timer
+#          ansible.builtin.systemd:
+#            name: borgmatic.timer
+#            enabled: true
+#            state: started
 #    - name: Start and configure containers
 #      block:
 #        - name: Fetch container images
