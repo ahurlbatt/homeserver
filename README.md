@@ -72,13 +72,14 @@
 
 ## TO DO
 
-1. Monitoring
+1. Test restoring a backup
+2. Monitoring
     1. Netdata?
     2. Prometheus?
     3. Checkmk?
     4. Uptime Kuma?
     5. Ntfy?
-2. Nextcloud Apps
+3. Nextcloud Apps
    1. Memories
-3. Template config and compose files with e.g. dataset names
-4. Move secrets out of git, then rotate
+4. Template config and compose files with e.g. dataset names
+5. Move secrets out of git, then rotate
