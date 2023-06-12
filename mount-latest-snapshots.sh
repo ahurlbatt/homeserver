@@ -68,6 +68,10 @@ unmount_snapshots() {
   done
 }
 
+set -Eeuo pipefail
+
+trap 'echo " unmounting ..."; unmount_snapshots' ERR
+
 if [ "$#" -ne 1 ]; then
   usage
 fi
