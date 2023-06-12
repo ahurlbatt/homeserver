@@ -84,33 +84,13 @@
 
 ## TO DO
 
-1. Ansible
-    1. ~~Memory overcommit~~
-    2. ~~Install zfs~~
-    3. ~~Install docker~~
-    4. ~~Set up zfs~~
-    5. ~~Checkout repo~~
-    6. ~~Set up secrets and environment~~
-    7. ~~OS Hardening~~
-    8. ~~Start containers~~
-    9. ~~MariaDB Hardening~~
-    10. ~~Deal with zfs volumes from other servers~~
-2. Backups
-    1. ~~Regular snapshouts with [sanoid](https://github.com/jimsalterjrs/sanoid)~~
-        1. ~~Install~~
-        2. ~~Configure~~
-    2. ~~Borg backup to borgbase~~
-        1. ~~Install borg and borgmatic~~
-        2. ~~Write script to recursively mount the latest snapshot of datasets configured in sanoid~~
-        3. ~~Configure borgmatic~~
-        4. Create and enable borgmatic systemd service and timer
-3. Nextcloud Apps
-    1. Memories
-4. Monitoring
+1. Monitoring
     1. Netdata?
     2. Prometheus?
     3. Checkmk?
     4. Uptime Kuma?
     5. Ntfy?
-5. Template config and compose files with e.g. dataset names
-6. Move secrets out of git, then rotate
+2. Nextcloud Apps
+   1. Memories
+3. Template config and compose files with e.g. dataset names
+4. Move secrets out of git, then rotate
