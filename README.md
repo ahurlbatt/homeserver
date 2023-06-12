@@ -70,18 +70,6 @@
     ```
 3. Secrets were encrypted using `encrypt-secrets.sh` script.
 
-## Backup Strategy
-
-1. Backups are made of snapshots, not the running filesystem
-2. Backups are done using borgbackup to an external hosted storage service
-3. Backups are encrypted on-site
-4. Each snapshot is backed up in a way that allows them to be retrieved individually
-5. Backups are automatic and monitored
-6. All existing snapshots are backed up, if they are not already
-7. Existing backups that do not correspond to an existing snapshot are checked against the defined snapshot strategy
-   before pruning
-8. An inconsistent state between backups and snapshots creates an alert
-
 ## TO DO
 
 1. Monitoring
