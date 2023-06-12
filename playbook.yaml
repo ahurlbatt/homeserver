@@ -287,6 +287,13 @@
             owner: root
             group: root
             mode: 0644
+        - name: Copy snapshot mounting script
+          ansible.builtin.copy:
+            src: "{{ playbook_dir }}/mount-latest-snapshots.sh"
+            dest: /usr/local/bin/mount-latest-snapshots.sh
+            owner: root
+            group: root
+            mode: 0744
 #    - name: Start and configure containers
 #      block:
 #        - name: Fetch container images

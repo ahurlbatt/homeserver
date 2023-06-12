@@ -25,8 +25,8 @@ consistency:
 
 hooks:
   before_backup:
-    - /home/numb7rs/homeserver/mount-latest-snapshots.sh -m
+    - /usr/local/bin/mount-latest-snapshots.sh -m
   after_backup:
-    - /home/numb7rs/homeserver/mount-latest-snapshots.sh -u
+    - /usr/local/bin/mount-latest-snapshots.sh -u
   on_error:
-    - /home/numb7rs/homeserver/mount-latest-snapshots.sh -u
+    - /usr/local/bin/mount-latest-snapshots.sh -u
