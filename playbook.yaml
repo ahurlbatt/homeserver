@@ -237,24 +237,21 @@
         - name: Checkout sanoid repo
           ansible.builtin.git:
             repo: "https://github.com/jimsalterjrs/sanoid.git"
-            dest: "{{ playbook_dir }}/sanoid/sanoid"
+            dest: "~/sanoid/sanoid"
             version: "v2.1.0"
-          become: false
         - name: Link debian folder
           ansible.builtin.file:
-            src: "{{ playbook_dir }}/sanoid/sanoid/packages/debian"
-            dest: "{{ playbook_dir }}/sanoid/sanoid/debian"
+            src: "~/sanoid/sanoid/packages/debian"
+            dest: "~/sanoid/sanoid/debian"
             state: link
-          become: false
         - name: Build sanoid package
           ansible.builtin.command: dpkg-buildpackage -us -uc -b
           args:
-            chdir: "{{ playbook_dir }}/sanoid/sanoid"
-            creates: "{{ playbook_dir }}/sanoid/sanoid_2.1.0_all.deb"
-          become: false
+            chdir: "~/sanoid/sanoid"
+            creates: "~/sanoid/sanoid_2.1.0_all.deb"
         - name: Install sanoid package
           ansible.builtin.apt:
-            deb: "{{ playbook_dir }}/sanoid/sanoid_2.1.0_all.deb"
+            deb: "~/sanoid/sanoid_2.1.0_all.deb"
         - name: Copy sanoid config
           ansible.builtin.copy:
             src: "{{ playbook_dir }}/sanoid.conf"
