@@ -279,28 +279,28 @@
             state: present
         - name: Copy borgmatic config
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/borgmatic_config.yaml"
+            src: "{{ playbook_dir }}/borgbackup/borgmatic_config.yaml"
             dest: /etc/borgmatic/config.yaml
             owner: root
             group: root
             mode: 0644
         - name: Copy snapshot mounting script
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/mount-latest-snapshots.sh"
+            src: "{{ playbook_dir }}/borgbackup/mount-latest-snapshots.sh"
             dest: /usr/local/bin/mount-latest-snapshots.sh
             owner: root
             group: root
             mode: 0744
         - name: Copy systemd unit file for borgmatic
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/borgmatic.service"
+            src: "{{ playbook_dir }}/borgbackup/borgmatic.service"
             dest: /etc/systemd/system/borgmatic.service
             owner: root
             group: root
             mode: 0644
         - name: Copy systemd unit file for borgmatic timer
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/borgmatic.timer"
+            src: "{{ playbook_dir }}/borgbackup/borgmatic.timer"
             dest: /etc/systemd/system/borgmatic.timer
             owner: root
             group: root
