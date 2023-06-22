@@ -116,6 +116,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - caddy-data:/data
+            - caddy-config:/config
             - ncdata:/nextcloud/var/www/html:ro
 
 networks:
@@ -142,6 +143,8 @@ volumes:
             device: /tank/nextcloud/mariadb
     caddy-data:
         name: caddy-data
+    caddy-config:
+        name: caddy-config
 
 configs:
     mariadb-override:
