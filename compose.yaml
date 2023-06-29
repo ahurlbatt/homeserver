@@ -81,17 +81,6 @@ services:
             interval: 10s
             timeout: 5s
             retries: 10
-        labels:
-            caddy: "${MY_DOMAIN}"
-            caddy.reverse_proxy: "{{upstreams 80}}"
-            caddy.file_server: ""
-            caddy.encode: gzip
-            caddy.header: "/*"
-            caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
-            caddy.redir_0: "/.well-known/carddav /remote.php/dav"
-            caddy.redir_1: "/.well-known/caldav /remote.php/dav"
-            caddy.@forbidden.path: "/.htaccess /data/* /config/* /db_structure /.xml /README /3rdparty/* /lib/* /templates/* /occ /console.php"
-            caddy.respond: "@forbidden 403"
 
     nc-cron:
         container_name: nc-cron
@@ -103,7 +92,7 @@ services:
 
     caddy:
         container_name: caddy
-        image: lucaslorentz/caddy-docker-proxy:2.8
+        image: caddy:2.6-alpine
         restart: unless-stopped
         ports:
             - 80:80
@@ -115,6 +104,7 @@ services:
             - CADDY_INGRESS_NETWORKS=internal-only
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+            - ./Caddyfile:/etc/caddy/Caddyfile
             - caddy-data:/data
             - caddy-config:/config
             - ncdata:/nextcloud/var/www/html:ro
