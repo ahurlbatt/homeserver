@@ -9,6 +9,9 @@
         sysctl_overwrite:
           # Enable IP forwarding, required for docker
           net.ipv4.ip_forward: 1
+        os_user_pw_ageing: false
+        os_rootuser_pw_ageing: false
+        os_auth_pam_passwdqc_enable: false
   vars_files:
     - user_variables.yaml
     - github_deploy_key_public.vault
