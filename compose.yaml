@@ -3,7 +3,7 @@ x-nc-app: &nc-app
     volumes:
         - ncdata:/var/www/html
     networks:
-        - internal-only
+        - nextcloud
         - exposed
     restart: unless-stopped
     links:
@@ -42,7 +42,7 @@ services:
         volumes:
             - ncdb:/var/lib/mysql
         networks:
-            - internal-only
+            - nextcloud
         restart: unless-stopped
         environment:
             - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
@@ -70,7 +70,7 @@ services:
         image: redis:7-bullseye
         restart: unless-stopped
         networks:
-            - internal-only
+            - nextcloud
 
     nc-app:
         container_name: nc-app
@@ -100,7 +100,7 @@ services:
             - 443:443
         networks:
             - exposed
-            - internal-only
+            - nextcloud
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./Caddyfile:/etc/caddy/Caddyfile
@@ -109,8 +109,8 @@ services:
             - ncdata:/nextcloud/var/www/html:ro
 
 networks:
-    internal-only:
-        name: internal-only
+    nextcloud:
+        name: nextcloud
         internal: true
     exposed:
         name: exposed
