@@ -141,14 +141,14 @@ configs:
 
 secrets:
     mysql_user:
-        file: ./secrets/mysql_user.secret
+        file: ../secrets/mysql_user.secret
     mysql_password:
-        file: ./secrets/mysql_password.secret
+        file: ../secrets/mysql_password.secret
     mysql_database:
-        file: ./secrets/mysql_database.secret
+        file: ../secrets/mysql_database.secret
     mysql_root_password:
-        file: ./secrets/mysql_root_password.secret
+        file: ../secrets/mysql_root_password.secret
     nextcloud_admin_user:
-        file: ./secrets/nextcloud_admin_user.secret
+        file: ../secrets/nextcloud_admin_user.secret
     nextcloud_admin_password:
-        file: ./secrets/nextcloud_admin_password.secret
+        file: ../secrets/nextcloud_admin_password.secret
