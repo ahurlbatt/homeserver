@@ -257,7 +257,7 @@
             deb: "~/sanoid/sanoid_2.1.0_all.deb"
         - name: Copy sanoid config
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/sanoid.conf"
+            src: "{{ playbook_dir }}/sanoid/sanoid.conf"
             dest: /etc/sanoid/sanoid.conf
             owner: root
             group: root
