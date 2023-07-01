@@ -1,10 +1,7 @@
-x-nc-app: &nc-app
+x-nc-common: &nc-common
     image: nextcloud:25-apache
     volumes:
         - ncdata:/var/www/html
-    networks:
-        - nextcloud
-        - exposed
     restart: unless-stopped
     links:
         - redis
@@ -74,7 +71,11 @@ services:
 
     nc-app:
         container_name: nc-app
-        <<: *nc-app
+        <<: *nc-common
+        networks:
+            - nextcloud
+            - caddy
+            - exposed
         healthcheck:
             test: curl -sSf 'http://localhost/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
             interval: 10s
@@ -83,8 +84,11 @@ services:
 
     nc-cron:
         container_name: nc-cron
-        <<: *nc-app
         entrypoint: /cron.sh
+        <<: *nc-common
+        networks:
+            - nextcloud
+            - exposed
         depends_on:
             nc-app:
                 condition: service_healthy
@@ -99,8 +103,8 @@ services:
             - 80:80
             - 443:443
         networks:
+            - caddy
             - exposed
-            - nextcloud
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./Caddyfile:/etc/caddy/Caddyfile
@@ -110,6 +114,9 @@ services:
 networks:
     nextcloud:
         name: nextcloud
+        internal: true
+    caddy:
+        name: caddy
         internal: true
     exposed:
         name: exposed
