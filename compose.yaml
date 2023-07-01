@@ -7,7 +7,6 @@ x-nc-app: &nc-app
         - exposed
     restart: unless-stopped
     links:
-        - caddy
         - redis
         - nc-db
     depends_on:
@@ -94,14 +93,14 @@ services:
         container_name: caddy
         image: caddy:2.6-alpine
         restart: unless-stopped
+        links:
+            - nc-app
         ports:
             - 80:80
             - 443:443
         networks:
             - exposed
             - internal-only
-        environment:
-            - CADDY_INGRESS_NETWORKS=internal-only
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./Caddyfile:/etc/caddy/Caddyfile
