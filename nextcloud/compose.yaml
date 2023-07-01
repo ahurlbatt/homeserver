@@ -97,8 +97,6 @@ services:
         container_name: caddy
         image: caddy:2.6-alpine
         restart: unless-stopped
-        links:
-            - nc-app
         ports:
             - 80:80
             - 443:443
