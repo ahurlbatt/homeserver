@@ -106,7 +106,6 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - caddy-data:/data
             - caddy-config:/config
-            - ncdata:/nextcloud/var/www/html:ro
 
 networks:
     nextcloud:
