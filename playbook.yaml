@@ -17,6 +17,9 @@
     - github_deploy_key_public.vault
     - github_deploy_key_private.vault
   vars:
+    secrets_dir: "{{ playbook_dir }}/secrets"
+    borgbackup_dir: "{{ playbook_dir }}/borgbackup"
+    sanoid_dir: "{{ playbook_dir }}/sanoid"
     zpool_creation_options: "-o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }}"
     dataset_nextcloud_parent_full_name: "{{ zpool_name + '/' + dataset_nextcloud_parent_name }}"
     zfs_create_options_dataset_nextcloud_parent: "{{ dataset_nextcloud_parent_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_parent_full_name | quote }}"
@@ -219,15 +222,15 @@
             force: true
         - name: Copy over secrets
           ansible.builtin.copy:
-            src: "{{ playbook_dir + '/' + item + '.vault' }}"
+            src: "{{ secrets_dir + '/' + item + '.vault' }}"
             dest: "{{ github_repo_destination + '/' + item }}"
             mode: 0600
-          loop: "{{ lookup('file', 'secrets/secrets.txt').splitlines() }}"
-        - name: Copy the domain secret to the .env file, so it's available to docker compose
+          loop: "{{ lookup('file', '{{ secrets_dir }}/secrets.txt').splitlines() }}"
+        - name: Copy the domain secret to nextcloud .env file, so it's available to docker compose
           ansible.builtin.shell: echo -n "MY_DOMAIN=$(cat secrets/mydomain.secret)" > .env
           args:
-            chdir: "{{ github_repo_destination }}"
-            creates: "{{ github_repo_destination + '/.env' }}"
+            chdir: "{{ github_repo_destination + '/nextcloud' }}"
+            creates: "{{ github_repo_destination + '/nextcloud/.env' }}"
         - name: Get the absolute path of the repo
           ansible.builtin.shell: pwd
           register: github_repo_destination_absolute
@@ -257,7 +260,7 @@
             deb: "~/sanoid/sanoid_2.1.0_all.deb"
         - name: Copy sanoid config
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/sanoid/sanoid.conf"
+            src: "{{ sanoid_dir }}/sanoid.conf"
             dest: /etc/sanoid/sanoid.conf
             owner: root
             group: root
@@ -282,28 +285,28 @@
             state: present
         - name: Copy borgmatic config
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/borgbackup/borgmatic_config.yaml"
+            src: "{{ borgbackup_dir }}/borgmatic_config.yaml"
             dest: /etc/borgmatic/config.yaml
             owner: root
             group: root
             mode: 0644
         - name: Copy snapshot mounting script
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/borgbackup/mount-latest-snapshots.sh"
+            src: "{{ borgbackup_dir }}/mount-latest-snapshots.sh"
             dest: /usr/local/bin/mount-latest-snapshots.sh
             owner: root
             group: root
             mode: 0744
         - name: Copy systemd unit file for borgmatic
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/borgbackup/borgmatic.service"
+            src: "{{ borgbackup_dir }}/borgmatic.service"
             dest: /etc/systemd/system/borgmatic.service
             owner: root
             group: root
             mode: 0644
         - name: Copy systemd unit file for borgmatic timer
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/borgbackup/borgmatic.timer"
+            src: "{{ borgbackup_dir }}/borgmatic.timer"
             dest: /etc/systemd/system/borgmatic.timer
             owner: root
             group: root
