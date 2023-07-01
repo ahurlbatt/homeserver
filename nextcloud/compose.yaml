@@ -93,22 +93,6 @@ services:
             nc-app:
                 condition: service_healthy
 
-    caddy:
-        container_name: caddy
-        image: caddy:2.6-alpine
-        restart: unless-stopped
-        ports:
-            - 80:80
-            - 443:443
-        networks:
-            - caddy
-            - exposed
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./Caddyfile:/etc/caddy/Caddyfile
-            - caddy-data:/data
-            - caddy-config:/config
-
 networks:
     nextcloud:
         name: nextcloud
@@ -134,10 +118,6 @@ volumes:
             o: bind
             type: none
             device: /tank/nextcloud/mariadb
-    caddy-data:
-        name: caddy-data
-    caddy-config:
-        name: caddy-config
 
 configs:
     mariadb-override:

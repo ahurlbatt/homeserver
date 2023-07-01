@@ -1,0 +1,30 @@
+services:
+
+    caddy:
+        container_name: caddy
+        image: caddy:2.6-alpine
+        restart: unless-stopped
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            - caddy
+            - exposed
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - caddy-data:/data
+            - caddy-config:/config
+
+networks:
+    caddy:
+        name: caddy
+        internal: true
+    exposed:
+        name: exposed
+
+volumes:
+    caddy-data:
+        name: caddy-data
+    caddy-config:
+        name: caddy-config
