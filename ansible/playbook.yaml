@@ -14,12 +14,12 @@
         os_auth_pam_passwdqc_enable: false
   vars_files:
     - user_variables.yaml
-    - github_deploy_key_public.vault
-    - github_deploy_key_private.vault
+    - ../github_deploy_key_public.vault
+    - ../github_deploy_key_private.vault
   vars:
-    secrets_dir: "{{ playbook_dir }}/secrets"
-    borgbackup_dir: "{{ playbook_dir }}/borgbackup"
-    sanoid_dir: "{{ playbook_dir }}/sanoid"
+    secrets_dir: "{{ playbook_dir }}/../secrets"
+    borgbackup_dir: "{{ playbook_dir }}/../borgbackup"
+    sanoid_dir: "{{ playbook_dir }}/../sanoid"
     zpool_creation_options: "-o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }}"
     dataset_nextcloud_parent_full_name: "{{ zpool_name + '/' + dataset_nextcloud_parent_name }}"
     zfs_create_options_dataset_nextcloud_parent: "{{ dataset_nextcloud_parent_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_parent_full_name | quote }}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-secret_names_file="./secrets/secrets.txt"
+secret_names_file="./secrets.txt"
 
 mapfile -t secret_files < "$secret_names_file"
 
@@ -23,8 +23,8 @@ error() {
 }
 
 check_vault_password_file_exists() {
-  if [ ! -f "./secrets/ansible_vault_password.secret" ]; then
-    error "Required file ./secrets/ansible_vault_password.secret does not exist"
+  if [ ! -f "./ansible_vault_password.secret" ]; then
+    error "Required file ./ansible_vault_password.secret does not exist"
   fi
 }
 
@@ -46,13 +46,13 @@ check_vault_files_exist() {
 
 encrypt_files() {
   for file in "${secret_files[@]}"; do
-    ansible-vault encrypt "$file" --output "$file".vault
+    ansible-vault encrypt "$file" --output "$file".vault --vault-password-file ansible_vault_password.secret
   done
 }
 
 decrypt_files() {
   for file in "${secret_files[@]}"; do
-    ansible-vault decrypt "$file".vault --output "$file"
+    ansible-vault decrypt "$file".vault --output "$file" --vault-password-file ansible_vault_password.secret
   done
 }
 
