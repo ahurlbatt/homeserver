@@ -1,4 +1,4 @@
-{MY_DOMAIN} {
+nextcloud.{MY_DOMAIN} {
 	reverse_proxy nextcloud-app:80
 	encode gzip
 	header {
