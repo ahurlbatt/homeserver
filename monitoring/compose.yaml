@@ -28,3 +28,9 @@ volumes:
     name: grafana
   prometheus:
     name: prometheus
+
+secrets:
+  grafana_admin_user:
+    file: ../secrets/grafana_admin_user.secret
+  grafana_admin_password:
+    file: ../secrets/grafana_admin_password.secret
