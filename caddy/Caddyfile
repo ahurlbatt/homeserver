@@ -9,3 +9,7 @@ nextcloud.{MY_DOMAIN} {
 	@forbidden path '/.htaccess /data/* /config/* /db_structure /.xml /README /3rdparty/* /lib/* /templates/* /occ /console.php'
 	respond @forbidden 403
 }
+
+monitoring.{MY_DOMAIN} {
+    reverse_proxy grafana:3000
+}

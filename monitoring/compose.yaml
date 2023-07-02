@@ -1,0 +1,18 @@
+services:
+  grafana:
+    image: grafana/grafana-enterprise:10.0.1
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana:/var/lib/grafana
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    name: caddy
+    internal: true
+
+volumes:
+  grafana:
+    name: grafana
