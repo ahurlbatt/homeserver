@@ -76,12 +76,12 @@
 
 1. Test restoring a backup
 2. Monitoring
-    1. Netdata?
-    2. Prometheus?
-    3. Checkmk?
-    4. Uptime Kuma?
-    5. Ntfy?
-3. Nextcloud Apps
+    1. Grafana
+    2. Prometheus
+    3. Node Exporter
+    4. Docker?
+3. Change zfs pools to disk by-id (/dev/disk/by-id/)
+4. Nextcloud Apps
    1. Memories
-4. Template config and compose files with e.g. dataset names
-5. Move secrets out of git, then rotate
+5. Template config and compose files with e.g. dataset names
+6. Move secrets out of git, then rotate
