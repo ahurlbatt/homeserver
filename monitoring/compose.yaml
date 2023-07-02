@@ -10,6 +10,13 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER__FILE=/run/secrets/grafana_admin_user
       - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
 
 networks:
   caddy:
@@ -19,3 +26,5 @@ networks:
 volumes:
   grafana:
     name: grafana
+  prometheus:
+    name: prometheus
