@@ -4,12 +4,12 @@ x-nextcloud-common: &nextcloud-common
         - ncdata:/var/www/html
     restart: unless-stopped
     links:
-        - redis
+        - nextcloud-redis
         - nextcloud-db
     depends_on:
         nextcloud-db:
             condition: service_healthy
-        redis:
+        nextcloud-redis:
             condition: service_started
     environment:
         - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nextcloud_admin_user
@@ -22,7 +22,7 @@ x-nextcloud-common: &nextcloud-common
         - MYSQL_USER_FILE=/run/secrets/mysql_user
         - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
         - MYSQL_HOST=nextcloud-db
-        - REDIS_HOST=redis
+        - REDIS_HOST=nextcloud-redis
     secrets:
         - mysql_user
         - mysql_password
@@ -62,8 +62,8 @@ services:
             timeout: 2s
             retries: 120
 
-    redis:
-        container_name: redis
+    nextcloud-redis:
+        container_name: nextcloud-redis
         image: redis:7-bullseye
         restart: unless-stopped
         networks:
