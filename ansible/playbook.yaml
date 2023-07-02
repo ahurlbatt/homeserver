@@ -223,7 +223,7 @@
         - name: Copy over secrets
           ansible.builtin.copy:
             src: "{{ secrets_dir + '/' + item + '.vault' }}"
-            dest: "{{ github_repo_destination + '/' + item }}"
+            dest: "{{ github_repo_destination + '/secrets/' + item }}"
             mode: 0600
           loop: "{{ lookup('file', '{{ secrets_dir }}/secrets.txt').splitlines() }}"
         - name: Copy the domain secret to nextcloud .env file, so it's available to docker compose
