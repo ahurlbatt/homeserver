@@ -59,6 +59,8 @@
     - [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
     - [This health check discussion](https://github.com/nextcloud/docker/issues/676)
 4. ZFS Snapshots are managed using [Sanoid](https://github.com/jimsalterjrs/sanoid)
+5. Monitoring settings
+   - A lot of compose settings taken from the [grafana docs](https://grafana.com/docs/grafana-cloud/quickstart/docker-compose-linux/)
 
 ## Ansible Notes
 
