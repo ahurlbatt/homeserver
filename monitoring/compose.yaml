@@ -7,6 +7,9 @@ services:
       - grafana:/var/lib/grafana
     networks:
       - caddy
+    environment:
+      - GF_SECURITY_ADMIN_USER__FILE=/run/secrets/grafana_admin_user
+      - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
 
 networks:
   caddy:
