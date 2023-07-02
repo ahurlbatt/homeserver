@@ -1,13 +1,13 @@
-x-nc-common: &nc-common
+x-nextcloud-common: &nextcloud-common
     image: nextcloud:25-apache
     volumes:
         - ncdata:/var/www/html
     restart: unless-stopped
     links:
         - redis
-        - nc-db
+        - nextcloud-db
     depends_on:
-        nc-db:
+        nextcloud-db:
             condition: service_healthy
         redis:
             condition: service_started
@@ -21,7 +21,7 @@ x-nc-common: &nc-common
         - MYSQL_DATABASE_FILE=/run/secrets/mysql_database
         - MYSQL_USER_FILE=/run/secrets/mysql_user
         - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
-        - MYSQL_HOST=nc-db
+        - MYSQL_HOST=nextcloud-db
         - REDIS_HOST=redis
     secrets:
         - mysql_user
@@ -32,8 +32,8 @@ x-nc-common: &nc-common
 
 services:
 
-    nc-db:
-        container_name: nc-db
+    nextcloud-db:
+        container_name: nextcloud-db
         image: mariadb:10.11.2
         command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
         volumes:
@@ -69,9 +69,9 @@ services:
         networks:
             - nextcloud
 
-    nc-app:
-        container_name: nc-app
-        <<: *nc-common
+    nextcloud-app:
+        container_name: nextcloud-app
+        <<: *nextcloud-common
         networks:
             - nextcloud
             - caddy
@@ -82,15 +82,15 @@ services:
             timeout: 5s
             retries: 10
 
-    nc-cron:
-        container_name: nc-cron
+    nextcloud-cron:
+        container_name: nextcloud-cron
         entrypoint: /cron.sh
-        <<: *nc-common
+        <<: *nextcloud-common
         networks:
             - nextcloud
             - exposed
         depends_on:
-            nc-app:
+            nextcloud-app:
                 condition: service_healthy
 
 networks:
