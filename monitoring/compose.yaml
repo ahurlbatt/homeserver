@@ -6,6 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - grafana:/var/lib/grafana
+      - ./grafana-provisioning:/etc/grafana/provisioning
     networks:
       - caddy
       - monitoring
