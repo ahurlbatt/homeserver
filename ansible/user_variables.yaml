@@ -14,4 +14,4 @@ dataset_db_options:
   - logbias=throughput
   - atime=off
 github_repo: git@github.com:ahurlbatt/homeserver.git
-github_repo_destination: ~/homeserver
+container_directory: ~/homeserver

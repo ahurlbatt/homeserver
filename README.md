@@ -70,14 +70,18 @@
 
 ## TO DO
 
-1. Test restoring a backup
-2. Monitoring
+1. Finish changing to localhost
+   1. Copy secrets to container directories based on required_secrets file
+   2. Template my_domain into compose file for nextcloud
+   3. Template borgmatic password
+2. Test restoring a backup
+3. Monitoring
     1. Grafana
     2. Prometheus
     3. Node Exporter
     4. Docker?
-3. Change zfs pools to disk by-id (/dev/disk/by-id/)
-4. Nextcloud Apps
+4. Change zfs pools to disk by-id (/dev/disk/by-id/)
+5. Nextcloud Apps
    1. Memories
-5. Template config and compose files with e.g. dataset names
-6. Move secrets out of git, then rotate
+6. Template config and compose files with e.g. dataset names
+7. Move secrets out of git, then rotate
