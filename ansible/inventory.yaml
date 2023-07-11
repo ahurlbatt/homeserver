@@ -1,4 +1,4 @@
 myservers:
   hosts:
     myserver:
-      ansible_host: ???.???.???.???
+      ansible_host: localhost

@@ -6,11 +6,12 @@
 2. Reboot
 3. `sudo apt update && sudo apt upgrade -y`
 4. `sudo apt install vim openssh-server`
-5. Copy ssh-key from controller with `ssh-copy-id SERVER`
-6. `sudo vim /etc/ssh/sshd_config`
+5. Create a local ssh key with `ssh-keygen`
+6. Copy ssh-key to authorized keys file with `ssh-copy-id localhost`
+7. `sudo vim /etc/ssh/sshd_config`
     1. `PasswordAuthentication no`
     2. `PubkeyAuthentication yes`
-7. `sudo systemctl restart ssh`
+8. `sudo systemctl restart ssh`
 
 ## Infrastructure
 
@@ -24,21 +25,16 @@
     - Initialise the repo with `borg init -e repokey-blake2 ssh://...`
     - Export the key with `borg key export --paper ssh://... borg_key.txt` and store it somewhere safe
 
-## Setting up Ansible Controller
-
-1. If on Windows, install WLS2 and do everything in there
-2. [Follow the online guide for Ubuntu](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html)
-    - For Ubuntu, after an `apt update` just use `apt install ansible`
-3. Install the hardening collection with `ansible-galaxy collection install devsec.hardening`
-4. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
-
 ## Setting up the server
 
-1. Ensure SSH access to target server (see above)
-2. Put the IP/hostname of the target machine in inventory.yaml
-3. Check the connection with `ansible all -i inventory.yaml -m ping`
+1. Install ansible and the hardening collection
+    - `apt update`
+    - `apt install ansible`
+    - `ansible-galaxy collection install devsec.hardening`
+2. Clone this repo
+3. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
 4. Run the playbook with `ansible-playbook -K -i inventory.yaml playbook.yaml`
-    - The flag `-K` will prompt for the sudo password for the target machine
+    - The flag `-K` will prompt for the sudo password
 
 ## Some explanations
 
