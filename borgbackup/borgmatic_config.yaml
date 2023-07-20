@@ -10,7 +10,7 @@ location:
       label: borgbase_testrepo
 
 storage:
-  encryption_passphrase: "{{ lookup('file', secrets_dir + 'borgbase_repo_passphrase.secret') }}"
+  encryption_passphrase: "{{ lookup('file', secrets_dir + '/borgbase_repo_passphrase.secret.vault') }}"
 
 retention:
   keep_daily: 7
