@@ -60,13 +60,8 @@
 
 ## Ansible Notes
 
-1. For encryption of key and other secrets, the file `./secrets/ansible_vault_password.secret` is also needed.
-2. GitHub deploy key was generated on a VM, then extracted and encrypted with ansible vault using these commands:
-    ```
-    ssh 192.168.178.56 'cat ~/.ssh/id_rsa.pub' | ansible-vault encrypt_string --stdin-name 'github_deploy_key_public' --output 'github_deploy_key_public.vault'
-    ssh 192.168.178.56 'cat ~/.ssh/id_rsa' | ansible-vault encrypt_string --stdin-name 'github_deploy_key_private' --output 'github_deploy_key_private.vault'
-    ```
-3. Secrets were encrypted using `encrypt-secrets.sh` script.
+1. For encryption of secrets, the file `./secrets/ansible_vault_password.secret` is needed
+2. Secrets were encrypted using `encrypt-secrets.sh` script
 
 ## TO DO
 
