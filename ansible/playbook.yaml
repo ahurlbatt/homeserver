@@ -14,8 +14,6 @@
         os_auth_pam_passwdqc_enable: false
   vars_files:
     - user_variables.yaml
-    - ../github_deploy_key_public.vault
-    - ../github_deploy_key_private.vault
   vars:
     secrets_dir: "{{ playbook_dir }}/../secrets"
     borgbackup_dir: "{{ playbook_dir }}/../borgbackup"
