@@ -10,7 +10,7 @@ location:
       label: borgbase_testrepo
 
 storage:
-  encryption_passcommand: cat /home/numb7rs/homeserver/secrets/borgbase_testrepo.secret
+  encryption_passcommand: cat /home/numb7rs/homeserver/secrets/borgbase_repo_passphrase.secret
 
 retention:
   keep_daily: 7
