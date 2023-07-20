@@ -262,12 +262,12 @@
             name: borgmatic
             state: present
         - name: Copy borgmatic config
-          ansible.builtin.copy:
+          ansible.builtin.template:
             src: "{{ borgbackup_dir }}/borgmatic_config.yaml"
             dest: /etc/borgmatic/config.yaml
             owner: root
             group: root
-            mode: '0644'
+            mode: '0600'
         - name: Copy snapshot mounting script
           ansible.builtin.copy:
             src: "{{ borgbackup_dir }}/mount-latest-snapshots.sh"
