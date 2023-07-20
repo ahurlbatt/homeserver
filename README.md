@@ -33,7 +33,7 @@
     - `ansible-galaxy collection install devsec.hardening`
 2. Clone this repo
 3. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
-4. Run the playbook with `ansible-playbook -K -i inventory.yaml playbook.yaml`
+4. Run the playbook from the `ansible` directory with `ansible-playbook -K -i inventory.yaml playbook.yaml`
     - The flag `-K` will prompt for the sudo password
 
 ## Some explanations
