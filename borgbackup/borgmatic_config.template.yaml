@@ -1,5 +1,5 @@
 constants:
-  borgbase-testrepo: ssh://hx78opb8@hx78opb8.repo.borgbase.com/./repo
+  borgbase-testrepo: "{{ lookup('file', secrets_dir + '/borgbase_repo_address.secret.vault') }}"
 
 location:
   source_directories:
