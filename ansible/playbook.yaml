@@ -263,7 +263,7 @@
             state: present
         - name: Copy borgmatic config
           ansible.builtin.template:
-            src: "{{ borgbackup_dir }}/borgmatic_config.yaml"
+            src: "{{ borgbackup_dir }}/borgmatic_config.template.yaml"
             dest: /etc/borgmatic/config.yaml
             owner: root
             group: root
