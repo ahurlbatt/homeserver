@@ -199,23 +199,14 @@
           ansible.builtin.command: zfs create {{ zfs_create_options_dataset_db }}
           args:
             creates: "/{{ dataset_db_full_name }}"
-    - name: Copy secrets to decrypt them
-      ansible.builtin.copy:
-        src: "{{ secrets_dir + '/' + item + '.vault' }}"
-        dest: "{{ secrets_dir + item }}"
-        mode: '0640'
-      loop: "{{ lookup('file', '{{ secrets_dir }}/secrets.txt').splitlines() }}"
-      become: false
-    - name: Copy container directories
-      ansible.builtin.copy:
-        src: "{{ item }}"
-        dest: "{{ container_dir }}"
-        mode: '0755'
+    - name: Copy container directories and their contents
+      include_tasks: copy_container_directory.yaml
       loop:
-        - "{{ playbook_dir + '/nextcloud' }}"
-        - "{{ playbook_dir + '/monitoring' }}"
-        - "{{ playbook_dir + '/caddy' }}"
-      become: false
+        - nextcloud
+        - monitoring
+        - caddy
+      loop_control:
+        loop_var: container_name
     - name: Install and configure sanoid
       block:
         - name: Checkout sanoid repo
