@@ -237,8 +237,8 @@
           ansible.builtin.apt:
             deb: "~/sanoid/sanoid_2.1.0_all.deb"
         - name: Copy sanoid config
-          ansible.builtin.copy:
-            src: "{{ sanoid_dir }}/sanoid.conf"
+          ansible.builtin.template:
+            src: "{{ sanoid_dir }}/sanoid.template.conf"
             dest: /etc/sanoid/sanoid.conf
             owner: root
             group: root
