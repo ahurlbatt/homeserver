@@ -1,0 +1,22 @@
+- name: Ask user if they want to force import
+  ansible.builtin.pause:
+    prompt: "Zpool {{ zpool_name }} already exists, but may be from a different system:\n  - {{ zpool_import_results.stderr_lines.1 }}\nDo you want to force import it? (y/n)"
+  register: force_zpool_import
+  delegate_to: localhost
+
+- name: Fail if user doesn't want to force import
+  ansible.builtin.fail:
+    msg: "Aborting zpool import."
+  delegate_to: localhost
+  when: force_zpool_import.user_input != "y"
+
+- name: Force import zpool
+  ansible.builtin.command: zpool import -f {{ zpool_name }}
+  register: forced_zpool_import_results
+  changed_when: false
+  when: force_zpool_import.user_input == "y"
+
+- name: Replace zpool_import_results with forced_zpool_import_results
+  set_fact:
+    zpool_import_results: "{{ forced_zpool_import_results }}"
+  when: force_zpool_import.user_input == "y"

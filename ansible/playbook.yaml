@@ -32,113 +32,18 @@
       - "{{ dataset_db_full_name }}"
     my_domain: "{{ lookup('file', secrets_dir + '/mydomain.secret.vault') }}"
   tasks:
+
     - name: Allow memory over commit
       ansible.posix.sysctl:
         name: vm.overcommit_memory
         value: "1"
+
     - name: Install required things
       include_tasks: install_all_the_things.yaml
+
     - name: Create/Import zpool and datasets
-      block:
-        - name: Check existence of zpool
-          ansible.builtin.command: zpool list -H -o name
-          register: existing_zpools
-          changed_when: false
-        - name: Unknown zpools found
-          ansible.builtin.fail:
-            msg: "Existing zpool(s) found with name(s): {{ existing_zpools.stdout_lines | join(', ') }}"
-          when: existing_zpools.stdout != "" and zpool_name not in existing_zpools.stdout_lines
-        - name: Import or create zpool
-          block:
-            - name: Import zpool
-              ansible.builtin.command: zpool import {{ zpool_name }}
-              register: zpool_import_results
-              changed_when: false
-              ignore_errors: true
-            - name: Force import if it failed, and user confirms
-              block:
-                - name: Ask user if they want to force import
-                  ansible.builtin.pause:
-                    prompt: "Zpool {{ zpool_name }} already exists, but may be from a different system:\n  - {{ zpool_import_results.stderr_lines.1 }}\nDo you want to force import it? (y/n)"
-                  register: force_zpool_import
-                  delegate_to: localhost
-                - name: Fail if user doesn't want to force import
-                  ansible.builtin.fail:
-                    msg: "Aborting zpool import."
-                  delegate_to: localhost
-                  when: force_zpool_import.user_input != "y"
-                - name: Force import zpool
-                  ansible.builtin.command: zpool import -f {{ zpool_name }}
-                  register: forced_zpool_import_results
-                  changed_when: false
-                  when: force_zpool_import.user_input == "y"
-                - name: Replace zpool_import_results with forced_zpool_import_results
-                  set_fact:
-                    zpool_import_results: "{{ forced_zpool_import_results }}"
-                  when: force_zpool_import.user_input == "y"
-              when: zpool_import_results.rc != 0 and zpool_import_results.stderr_lines.0 is search("pool was previously in use from another system")
-            - name: Create zpool as it is not importable
-              block:
-                - name: Get the boot drive
-                  ansible.builtin.shell: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
-                  register: boot_drive
-                  changed_when: false
-                - name: Get a list of drives that are not the boot drive
-                  # '-I 8' restricts to only disks, not partitions
-                  ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
-                  register: zpool_drives
-                  changed_when: false
-                - name: Create zpool
-                  ansible.builtin.command: zpool create {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
-                  register: zpool_create_results
-                  ignore_errors: true
-                - name: If zpool fails, try force creation after user confirmation
-                  block:
-                    - name: Ask user if they want to force creation
-                      ansible.builtin.pause:
-                        prompt: "Zpool creation failed for the following reason:\n  - {{ zpool_create_results.stderr_lines.2 }}\nDo you want to force create it? (y/n)"
-                      register: force_zpool_create
-                      delegate_to: localhost
-                    - name: Fail if user doesn't want to force create
-                      ansible.builtin.fail:
-                        msg: "Aborting zpool creation."
-                      delegate_to: localhost
-                      when: force_zpool_create.user_input != "y"
-                    - name: Force create zpool
-                      ansible.builtin.command: zpool create -f {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
-                      register: forced_zpool_create_results
-                      when: force_zpool_create.user_input == "y"
-                    - name: Replace zpool_create_results with forced_zpool_create_results
-                      set_fact:
-                        zpool_create_results: "{{ forced_zpool_create_results }}"
-                      when: force_zpool_create.user_input == "y"
-                  when: zpool_create_results.rc != 0 and zpool_create_results.stderr is search("use '-f' to override the following errors")
-              when: zpool_import_results.rc != 0
-          when: zpool_name not in existing_zpools.stdout_lines
-        - name: Get zfs to mount everything it knows about
-          ansible.builtin.shell: zfs mount -a
-          changed_when: false
-          ignore_errors: true
-        - name: Check existence of dataset
-          ansible.builtin.command: zfs list -H -o name
-          register: existing_zfs_objects
-          changed_when: false
-        - name: Unknown dataset found
-          ansible.builtin.fail:
-            msg: "Existing dataset(s) found with name(s): {{ existing_zfs_objects.stdout_lines | join(', ') }}. Expected: {{ all_zfs_objects | join(', ') }}."
-          when: existing_zfs_objects.stdout != "" and existing_zfs_objects.stdout_lines | difference(all_zfs_objects) | length > 0
-        - name: Create parent dataset for nextcloud
-          ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud_parent }}
-          args:
-            creates: "/{{ dataset_nextcloud_parent_full_name }}"
-        - name: Create dataset for nextcloud
-          ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud }}
-          args:
-            creates: "/{{ dataset_nextcloud_full_name }}"
-        - name: Create dataset for db
-          ansible.builtin.command: zfs create {{ zfs_create_options_dataset_db }}
-          args:
-            creates: "/{{ dataset_db_full_name }}"
+      include_tasks: setup_zpool.yaml
+
     - name: Copy container directories and their contents
       include_tasks: copy_container_directory.yaml
       loop:
@@ -147,6 +52,7 @@
         - caddy
       loop_control:
         loop_var: container_name
+
     - name: Install and configure sanoid
       block:
         - name: Checkout sanoid repo
@@ -179,6 +85,7 @@
             name: sanoid.timer
             enabled: true
             state: started
+
     - name: Install and configure borg and borgmatic
       block:
         - name: Grab borgbackup
@@ -225,6 +132,7 @@
             name: borgmatic.timer
             enabled: true
             state: started
+
     - name: Start internal containers
       block:
         - name: Start nextcloud container
@@ -239,6 +147,7 @@
           ansible.builtin.shell: docker compose up -d
           args:
             chdir: "{{ container_directory }}/caddy"
+
     - name: Secure mysql container
       block:
         - name: Remove anonymous users
