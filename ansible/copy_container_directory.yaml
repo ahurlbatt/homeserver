@@ -39,14 +39,14 @@
   ansible.builtin.file:
     path: "{{ container_directory }}/{{ container_name }}/secrets/"
     state: directory
-    mode: 0755
+    mode: 0700
   when: required_secrets|length is gt(0)
 
 - name: Copy over required secrets
   ansible.builtin.copy:
     src: "{{ playbook_dir}}/../secrets/{{ secret_name }}.vault"
     dest: "{{ container_directory }}/{{ container_name }}/secrets/{{ secret_name }}"
-    mode: 0600
+    mode: 0644
   loop: "{{ required_secrets }}"
   loop_control:
     loop_var: secret_name
