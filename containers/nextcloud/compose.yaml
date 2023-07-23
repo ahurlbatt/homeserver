@@ -14,9 +14,9 @@ x-nextcloud-common: &nextcloud-common
     environment:
         - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nextcloud_admin_user
         - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
-        - NEXTCLOUD_TRUSTED_DOMAINS=${MY_DOMAIN}
+        - NEXTCLOUD_TRUSTED_DOMAINS=${MY_DOMAIN?err}
         - NEXTCLOUD_TRUSTED_PROXIES=caddy
-        - OVERWRITECLIURL=https://${MY_DOMAIN}
+        - OVERWRITECLIURL=https://${MY_DOMAIN?err}
         - OVERWRITEPROTOCOL=https
         - MYSQL_DATABASE_FILE=/run/secrets/mysql_database
         - MYSQL_USER_FILE=/run/secrets/mysql_user
@@ -110,14 +110,14 @@ volumes:
         driver_opts:
             o: bind
             type: none
-            device: /tank/nextcloud/nextcloud_data
+            device: ${NEXTCLOUD_DATA_DIRECTORY?err}
     ncdb:
         name: ncdb
         driver: local
         driver_opts:
             o: bind
             type: none
-            device: /tank/nextcloud/mariadb
+            device: ${MARIADB_DATA_DIRECTORY?err}
 
 configs:
     mariadb-override:
