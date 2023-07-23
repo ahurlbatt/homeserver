@@ -13,4 +13,4 @@ dataset_db_options:
   - primarycache=metadata
   - logbias=throughput
   - atime=off
-container_directory: ~/containers
+container_directory: /containers
