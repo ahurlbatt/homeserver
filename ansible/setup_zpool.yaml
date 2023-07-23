@@ -2,6 +2,7 @@
   ansible.builtin.command: zpool list -H -o name
   register: existing_zpools
   changed_when: false
+  check_mode: true
 
 - name: Unknown zpools found
   ansible.builtin.fail:
