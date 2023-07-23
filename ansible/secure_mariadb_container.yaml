@@ -1,20 +1,10 @@
-- name: Remove anonymous users
-  ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DELETE FROM mysql.global_priv WHERE User=\\\"\\\";\"'"
+- name: Prevent remote root login, remove anonymous users, remove test database, and flush privileges
+  ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"{{ item }}\"'"
   changed_when: false
   args:
     chdir: "{{ container_directory }}/nextcloud"
-- name: Prevent root login remotely
-  ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DELETE FROM mysql.global_priv WHERE User=\\\"root\\\" AND Host NOT IN (\\\"localhost\\\", \\\"127.0.0.1\\\", \\\"::1\\\");\"'"
-  changed_when: false
-  args:
-    chdir: "{{ container_directory }}/nextcloud"
-- name: Remove test database
-  ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"DROP DATABASE IF EXISTS test;\"'"
-  changed_when: false
-  args:
-    chdir: "{{ container_directory }}/nextcloud"
-- name: Reload privileged tables
-  ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"FLUSH PRIVILEGES;\"'"
-  changed_when: false
-  args:
-    chdir: "{{ container_directory }}/nextcloud"
+  loop:
+    - "DELETE FROM mysql.global_priv WHERE User=\\\"root\\\" AND Host NOT IN (\\\"localhost\\\", \\\"127.0.0.1\\\", \\\"::1\\\");"
+    - "DELETE FROM mysql.global_priv WHERE User=\\\"\\\";"
+    - "DROP DATABASE IF EXISTS test;"
+    - "FLUSH PRIVILEGES;"
