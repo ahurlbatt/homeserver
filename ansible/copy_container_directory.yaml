@@ -6,9 +6,12 @@
 
 - name: Copy files from the configuration directory
   ansible.builtin.copy:
-    src: "{{ playbook_dir}}/../containers/{{ container_name }}/configuration/"
+    src: "{{ configuration_directory }}"
     dest: "{{ container_directory }}/{{ container_name }}/"
     mode: 0644
+  vars:
+    - configuration_directory: "{{ playbook_dir}}/../containers/{{ container_name }}/configuration/"
+  when: configuration_directory is directory
 
 - name: Template files from the templates directory
   ansible.builtin.template:
