@@ -1,4 +1,4 @@
 myservers:
   hosts:
     myserver:
-      ansible_host: 192.168.178.56
+      ansible_host: localhost
