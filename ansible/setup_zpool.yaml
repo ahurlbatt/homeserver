@@ -33,6 +33,7 @@
   ansible.builtin.command: zfs list -H -o name
   register: existing_zfs_objects
   changed_when: false
+  check_mode: false
 
 - name: Unknown dataset found
   ansible.builtin.fail:
