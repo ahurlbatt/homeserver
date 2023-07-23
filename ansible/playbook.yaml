@@ -30,6 +30,7 @@
       - "{{ dataset_nextcloud_parent_full_name }}"
       - "{{ dataset_nextcloud_full_name }}"
       - "{{ dataset_db_full_name }}"
+    my_domain: "{{ lookup('file', secrets_dir + '/mydomain.secret.vault') }}"
   tasks:
     - name: Allow memory over commit
       ansible.posix.sysctl:
