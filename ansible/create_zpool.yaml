@@ -2,14 +2,14 @@
   ansible.builtin.shell: df /boot | tail -1 | awk '{print $1}' | sed 's/[0-9]*$//'
   register: boot_drive
   changed_when: false
-  check_mode: true
+  check_mode: false
 
 - name: Get a list of drives that are not the boot drive
   # '-I 8' restricts to only disks, not partitions
   ansible.builtin.shell: lsblk -dpn -I 8 -o NAME -l | sed "\&{{ boot_drive.stdout | quote }}&d"
   register: zpool_drives
   changed_when: false
-  check_mode: true
+  check_mode: false
 
 - name: Create zpool
   ansible.builtin.command: zpool create {{ zpool_creation_options }} {{ zpool_drives.stdout_lines | map('quote') | join(' ') }}
