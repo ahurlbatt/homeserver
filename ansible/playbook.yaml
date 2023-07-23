@@ -57,51 +57,7 @@
       include_tasks: install_configure_sanoid.yaml
 
     - name: Install and configure borg and borgmatic
-      block:
-        - name: Grab borgbackup
-          ansible.builtin.get_url:
-            url: https://github.com/borgbackup/borg/releases/download/1.2.4/borg-linux64
-            dest: /usr/local/bin/borg
-            mode: '0755'
-            group: root
-            owner: root
-        - name: Install borgmatic
-          ansible.builtin.pip:
-            name: borgmatic
-            state: present
-        - name: Copy borgmatic config
-          ansible.builtin.template:
-            src: "{{ borgbackup_dir }}/borgmatic_config.template.yaml"
-            dest: /etc/borgmatic/config.yaml
-            owner: root
-            group: root
-            mode: '0600'
-        - name: Copy snapshot mounting script
-          ansible.builtin.copy:
-            src: "{{ borgbackup_dir }}/mount-latest-snapshots.sh"
-            dest: /usr/local/bin/mount-latest-snapshots.sh
-            owner: root
-            group: root
-            mode: '0744'
-        - name: Copy systemd unit file for borgmatic
-          ansible.builtin.copy:
-            src: "{{ borgbackup_dir }}/borgmatic.service"
-            dest: /etc/systemd/system/borgmatic.service
-            owner: root
-            group: root
-            mode: '0644'
-        - name: Copy systemd unit file for borgmatic timer
-          ansible.builtin.copy:
-            src: "{{ borgbackup_dir }}/borgmatic.timer"
-            dest: /etc/systemd/system/borgmatic.timer
-            owner: root
-            group: root
-            mode: '0644'
-        - name: Enable borgmatic timer
-          ansible.builtin.systemd:
-            name: borgmatic.timer
-            enabled: true
-            state: started
+      include_tasks: install_configure_borgbackup.yaml
 
     - name: Start internal containers
       block:
