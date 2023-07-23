@@ -59,20 +59,16 @@
     - name: Install and configure borg and borgmatic
       include_tasks: install_configure_borgbackup.yaml
 
-    - name: Start internal containers
-      block:
-        - name: Start nextcloud container
-          ansible.builtin.shell: docker compose up -d
-          args:
-            chdir: "{{ container_directory }}/nextcloud"
-        - name: Start monitoring container
-          ansible.builtin.shell: docker compose up -d
-          args:
-            chdir: "{{ container_directory }}/monitoring"
-        - name: Start caddy container
-          ansible.builtin.shell: docker compose up -d
-          args:
-            chdir: "{{ container_directory }}/caddy"
+    - name: Start containers
+      ansible.builtin.shell: docker compose up -d
+      args:
+        chdir: "{{ container_directory }}/{{ container_name }}"
+      loop:
+        - nextcloud
+        - monitoring
+        - caddy
+      loop_control:
+        loop_var: container_name
 
     - name: Secure mysql container
       block:
