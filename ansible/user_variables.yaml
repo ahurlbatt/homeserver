@@ -13,5 +13,4 @@ dataset_db_options:
   - primarycache=metadata
   - logbias=throughput
   - atime=off
-github_repo: git@github.com:ahurlbatt/homeserver.git
 container_directory: ~/containers
