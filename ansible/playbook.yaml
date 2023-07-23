@@ -54,37 +54,7 @@
         loop_var: container_name
 
     - name: Install and configure sanoid
-      block:
-        - name: Checkout sanoid repo
-          ansible.builtin.git:
-            repo: "https://github.com/jimsalterjrs/sanoid.git"
-            dest: "~/sanoid/sanoid"
-            version: "v2.1.0"
-        - name: Link debian folder
-          ansible.builtin.file:
-            src: "~/sanoid/sanoid/packages/debian"
-            dest: "~/sanoid/sanoid/debian"
-            state: link
-        - name: Build sanoid package
-          ansible.builtin.command: dpkg-buildpackage -us -uc -b
-          args:
-            chdir: "~/sanoid/sanoid"
-            creates: "~/sanoid/sanoid_2.1.0_all.deb"
-        - name: Install sanoid package
-          ansible.builtin.apt:
-            deb: "~/sanoid/sanoid_2.1.0_all.deb"
-        - name: Copy sanoid config
-          ansible.builtin.template:
-            src: "{{ sanoid_dir }}/sanoid.template.conf"
-            dest: /etc/sanoid/sanoid.conf
-            owner: root
-            group: root
-            mode: '0644'
-        - name: Enable sanoid timer
-          ansible.builtin.systemd:
-            name: sanoid.timer
-            enabled: true
-            state: started
+      include_tasks: install_configure_sanoid.yaml
 
     - name: Install and configure borg and borgmatic
       block:
