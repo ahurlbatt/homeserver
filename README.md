@@ -2,7 +2,7 @@
 
 This is my playground for building a home Nextcloud solution with something close to a one-touch setup. Feel free to steal the ideas if you think they're good, or send constructive criticism if you think they're bad.
 
-*This repo currently contains encypted passwords for some of the defined services. This is generally not a good idea but is used for this testing phase to make deployment to a new VM simpler. Please don't do this for production systems.*
+*This repo currently contains encrypted passwords for some of the defined services. This is generally not a good idea but is used for this testing phase to make deployment to a new VM simpler. Please don't do this for production systems.*
 
 ## Setting up debian
 
