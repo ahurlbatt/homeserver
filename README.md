@@ -1,8 +1,10 @@
 # homeserver
 
-This is my playground for building a home Nextcloud solution with something close to a one-touch setup. Feel free to steal the ideas if you think they're good, or send constructive criticism if you think they're bad.
+This is my playground for building a home Nextcloud solution with something close to a one-touch setup. Feel free to
+steal the ideas if you think they're good, or send constructive criticism if you think they're bad.
 
-*This repo currently contains encrypted passwords for some of the defined services. This is generally not a good idea but is used for this testing phase to make deployment to a new VM simpler. Please don't do this for production systems.*
+*This repo currently contains encrypted passwords for some of the defined services. This is generally not a good idea
+but is used for this testing phase to make deployment to a new VM simpler. Please don't do this for production systems.*
 
 ## Setting up debian
 
@@ -24,7 +26,7 @@ This is my playground for building a home Nextcloud solution with something clos
 3. Enable HTTP and HTTPS port forwards from your router to the server
 4. Create and activate a Repository on [Borgbase](https://www.borgbase.com/)
     - On the server, create a new SSH keypair for root with the flags `-t ed25519` and `-a 100`
-      - Don't set a passphrase
+        - Don't set a passphrase
     - Copy the public key to Borgbase
     - Initialise the repo with `borg init -e repokey-blake2 ssh://...`
     - Export the key with `borg key export --paper ssh://... borg_key.txt` and store it somewhere safe
@@ -60,7 +62,8 @@ This is my playground for building a home Nextcloud solution with something clos
     - [This health check discussion](https://github.com/nextcloud/docker/issues/676)
 4. ZFS Snapshots are managed using [Sanoid](https://github.com/jimsalterjrs/sanoid)
 5. Monitoring settings
-   - A lot of compose settings taken from the [grafana docs](https://grafana.com/docs/grafana-cloud/quickstart/docker-compose-linux/)
+    - A lot of compose settings taken from
+      the [grafana docs](https://grafana.com/docs/grafana-cloud/quickstart/docker-compose-linux/)
 
 ## Ansible Notes
 
@@ -69,13 +72,14 @@ This is my playground for building a home Nextcloud solution with something clos
 
 ## TO DO
 
-1. Test restoring a backup
-2. Monitoring
-    1. Grafana
-    2. Prometheus
-    3. Node Exporter
-    4. Docker?
+1. Monitoring
+    1. Storage for prometheus
+    2. Loki
+    3. Storage for Loki
+    4. Promtail
+    5. Find where zfs metrics and or logs are
+2. Test restoring a backup
 3. Change zfs pools to disk by-id (/dev/disk/by-id/)
 4. Nextcloud Apps
-   1. Memories
+    1. Memories
 5. Move secrets out of git, then rotate
