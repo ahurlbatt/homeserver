@@ -16,6 +16,11 @@ services:
     secrets:
       - grafana_admin_user
       - grafana_admin_password
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   prometheus:
     image: prom/prometheus:v2.45.0
