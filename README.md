@@ -73,7 +73,6 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 ## TO DO
 
 1. Monitoring
-    1. Storage for prometheus
     2. Loki
     3. Storage for Loki
     4. Promtail
