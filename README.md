@@ -62,8 +62,10 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
     - [This health check discussion](https://github.com/nextcloud/docker/issues/676)
 4. ZFS Snapshots are managed using [Sanoid](https://github.com/jimsalterjrs/sanoid)
 5. Monitoring settings
-    - A lot of compose settings taken from
-      the [grafana docs](https://grafana.com/docs/grafana-cloud/quickstart/docker-compose-linux/)
+   - Ideas taken from [this blog post](https://blog.randombits.host/monitoring-self-hosted-services/)
+   - A lot of compose settings taken from
+     the [grafana docs](https://grafana.com/docs/grafana-cloud/quickstart/docker-compose-linux/)
+   - Loki and promtail settings taken by combining the [production compose file](https://github.com/grafana/loki/blob/main/production/docker-compose.yaml), the [getting-started examples](https://github.com/grafana/loki/tree/main/examples/getting-started) and loki [configuration templates](https://grafana.com/docs/loki/latest/configuration/examples/)
 
 ## Ansible Notes
 
@@ -73,10 +75,7 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 ## TO DO
 
 1. Monitoring
-    2. Loki
-    3. Storage for Loki
-    4. Promtail
-    5. Find where zfs metrics and or logs are
+    1. Find where zfs metrics and or logs are
 2. Test restoring a backup
 3. Change zfs pools to disk by-id (/dev/disk/by-id/)
 4. Nextcloud Apps
