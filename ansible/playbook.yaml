@@ -31,6 +31,8 @@
       - "{{ dataset_nextcloud_full_name }}"
       - "{{ dataset_db_full_name }}"
     my_domain: "{{ lookup('file', secrets_dir + '/mydomain.secret.vault') }}"
+    secret_files: "{{ query('fileglob', secrets_dir + '/*.secret.vault') }}"
+    secret_from_file: "{{ dict(secret_files|map('basename')|map('regex_replace', '^(.*)\\.secret\\.vault$', '\\1') | zip(query('file', *secret_files))) }}"
   tasks:
 
     - name: Allow memory over commit
