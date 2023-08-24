@@ -1,4 +1,4 @@
-nextcloud.{{ my_domain }} {
+nextcloud.{{ secret_from_file['my_domain'] }} {
 	reverse_proxy nextcloud-app:80
 	encode gzip
 	header {
@@ -10,6 +10,6 @@ nextcloud.{{ my_domain }} {
 	respond @forbidden 403
 }
 
-monitoring.{{ my_domain }} {
+monitoring.{{ secret_from_file['my_domain'] }} {
     reverse_proxy grafana:3000
 }
