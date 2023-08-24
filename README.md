@@ -75,11 +75,11 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 ## TO DO
 
 1. Monitoring
-    1. Put influx secrets into env and template it
-    2. Add Telegraf to stack
-    3. Add zfs_influxdb as source for Telegraf using exec input plugin
-    4. Add docker input plugin to Telegraf
-    5. Remove prometheus, node-exporter and cadvisor
+   1. Enable templating directories recursively 
+   2. Add Telegraf to stack
+   3. Add zfs_influxdb as source for Telegraf using exec input plugin
+   4. Add docker input plugin to Telegraf
+   5. Remove prometheus, node-exporter and cadvisor
 2. Test restoring a backup
 3. Change zfs pools to disk by-id (/dev/disk/by-id/)
 4. Nextcloud Apps
