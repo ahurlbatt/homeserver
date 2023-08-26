@@ -18,6 +18,7 @@
     secrets_dir: "{{ playbook_dir }}/../secrets"
     borgbackup_dir: "{{ playbook_dir }}/../borgbackup"
     sanoid_dir: "{{ playbook_dir }}/../sanoid"
+    shell2http_dir: "{{ playbook_dir }}/../shell2http"
     zpool_creation_options: "-o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }}"
     dataset_nextcloud_parent_full_name: "{{ zpool_name + '/' + dataset_nextcloud_parent_name }}"
     zfs_create_options_dataset_nextcloud_parent: "{{ dataset_nextcloud_parent_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_parent_full_name | quote }}"
@@ -63,6 +64,9 @@
 
     - name: Install and configure borg and borgmatic
       include_tasks: install_configure_borgbackup.yaml
+
+    - name: Install shell2http for zpool stats
+      include_tasks: install_shell2http_for_zpool.yaml
 
     - name: Start containers
       ansible.builtin.shell: docker compose up -d

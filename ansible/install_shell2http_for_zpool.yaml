@@ -1,0 +1,25 @@
+- name: Grab the deb package
+  ansible.builtin.get_url:
+    url: https://github.com/msoap/shell2http/releases/download/v1.16.0/shell2http_1.16.0_linux_amd64.deb
+    dest: /tmp/shell2http_1.16.0_linux_amd64.deb
+    mode: '0755'
+    group: root
+    owner: root
+
+- name: Install the deb package
+  ansible.builtin.apt:
+    deb: /tmp/shell2http_1.16.0_linux_amd64.deb
+
+- name: Copy systemd unit file for shell2http
+  ansible.builtin.copy:
+    src: "{{ shell2http_dir }}/shell2http.service"
+    dest: /etc/systemd/system/shell2http.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable shell2http service
+  ansible.builtin.systemd:
+    name: shell2http.service
+    enabled: true
+    state: started

@@ -114,6 +114,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - monitoring
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - ./telegraf.env
     environment:

@@ -1,0 +1,12 @@
+[Unit]
+Description=Serve shell commands over HTTP
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/shell2http -no-index -port 26619 /zpool_stats "zpool_influxdb"
+
+[Install]
+WantedBy=multi-user.target
