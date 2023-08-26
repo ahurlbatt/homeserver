@@ -7,9 +7,9 @@ datasources:
     url: http://influxdb:8086
     jsonData:
       version: Flux
-      organization: homeorg
-      defaultBucket: homebucket
+      organization: "{{ secret_from_file['influxdb_org'] }}"
+      defaultBucket: "{{ secret_from_file['influxdb_bucket'] }}"
       tlsSkipVerify: true
     secureJsonData:
-      token: lh2l48409834hg34093409h3g4g
+      token: "{{ secret_from_file['influxdb_admin_token'] }}"
 
