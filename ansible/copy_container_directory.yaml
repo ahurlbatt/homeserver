@@ -13,16 +13,29 @@
     - configuration_directory: "{{ playbook_dir}}/../containers/{{ container_name }}/configuration/"
   when: configuration_directory is directory
 
-- name: Template files from the templates directory
+- name: Make any directories that are needed by template files
+  ansible.builtin.file:
+    path: "{{ container_directory }}/{{ container_name }}/{{ template_directory.path }}"
+    state: directory
+    mode: 0755
+  with_filetree: "{{ templates_root }}"
+  loop_control:
+    loop_var: template_directory
+  when: template_directory.state == 'directory'
+  vars:
+    - templates_root: "{{ playbook_dir}}/../containers/{{ container_name }}/templates/"
+
+- name: Template files from the template directory
   ansible.builtin.template:
-    src: "{{ template_file }}"
-    dest: "{{ container_directory }}/{{ container_name }}/"
+    src: "{{ template_file.src }}"
+    dest: "{{ container_directory }}/{{ container_name }}/{{ template_file.path }}"
     mode: 0644
-  loop: "{{ query('fileglob', templates_directory + '*') + query('fileglob', templates_directory + '.*') }}"
+  with_filetree: "{{ templates_root }}"
   loop_control:
     loop_var: template_file
+  when: template_file.state == 'file'
   vars:
-    - templates_directory: "{{ playbook_dir}}/../containers/{{ container_name }}/templates/"
+    - templates_root: "{{ playbook_dir}}/../containers/{{ container_name }}/templates/"
 
 - name: Unset required secrets
   ansible.builtin.set_fact:
