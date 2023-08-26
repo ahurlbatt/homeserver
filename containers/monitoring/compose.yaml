@@ -103,6 +103,26 @@ services:
     env_file:
       - ./influxdb.env
 
+  telegraf:
+    image: telegraf:1.27.4
+    container_name: telegraf
+    restart: unless-stopped
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /:hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - monitoring
+    env_file:
+      - ./telegraf.env
+    environment:
+      - HOST_ETC=/hostfs/etc
+      - HOST_PROC=/hostfs/proc
+      - HOST_SYS=/hostfs/sys
+      - HOST_VAR=/hostfs/var
+      - HOST_RUN=/hostfs/run
+      - HOST_MOUNT_PREFIX=/hostfs
+
 networks:
   monitoring:
     name: monitoring
