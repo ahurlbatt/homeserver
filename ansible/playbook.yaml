@@ -45,6 +45,10 @@
     - name: Create/Import zpool and datasets
       include_tasks: setup_zpool.yaml
 
+    - name: Grab the GID of docker.sock, as it is needed for the monitoring stack
+      ansible.builtin.shell: stat -c '%g' /var/run/docker.sock
+      register: docker_group_id_command
+
     - name: Copy container directories and their contents
       include_tasks: copy_container_directory.yaml
       loop:
