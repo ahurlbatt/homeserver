@@ -5,6 +5,16 @@
     - "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
     - "deb-src http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib"
 
+- name: Install some install dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - build-essential
+      - ca-certificates
+      - curl
+      - debhelper
+      - gnupg
+
 - name: Add docker repo with their sketchy custom script
   block:
     - name: Make sure the key directory exists, as GPG can't create it
@@ -31,16 +41,11 @@
   ansible.builtin.apt:
     update_cache: true
     name:
-      - build-essential
-      - ca-certificates
       - containerd.io
-      - curl
-      - debhelper
       - docker-buildx-plugin
       - docker-ce
       - docker-ce-cli
       - docker-compose-plugin
-      - gnupg
       - libcapture-tiny-perl
       - libconfig-inifiles-perl
       - linux-headers-amd64
