@@ -74,11 +74,8 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 
 ## TO DO
 
-1. Monitoring
-   1. Storage for influxdb
-   2. Storage for loki
-2. Test restoring a backup
-3. Change zfs pools to disk by-id (/dev/disk/by-id/)
-4. Nextcloud Apps
+1. Test restoring a backup
+2. Change zfs pools to disk by-id (/dev/disk/by-id/)
+3. Nextcloud Apps
     1. Memories
-5. Move secrets out of git, then rotate
+4. Move secrets out of git, then rotate
