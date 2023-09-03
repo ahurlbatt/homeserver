@@ -9,6 +9,8 @@
 - name: Install the deb package
   ansible.builtin.apt:
     deb: /tmp/shell2http_1.16.0_linux_amd64.deb
+    state: present
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Copy systemd unit file for shell2http
   ansible.builtin.copy:
