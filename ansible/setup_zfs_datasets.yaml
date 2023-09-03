@@ -15,16 +15,16 @@
   when: existing_zfs_objects.stdout != "" and existing_zfs_objects.stdout_lines | difference(all_zfs_objects) | length > 0
 
 - name: Create parent dataset for nextcloud
-  ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud_parent }}
-  args:
-    creates: "/{{ dataset_nextcloud_parent_full_name }}"
-
-- name: Create dataset for nextcloud
   ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud }}
   args:
     creates: "/{{ dataset_nextcloud_full_name }}"
 
-- name: Create dataset for db
-  ansible.builtin.command: zfs create {{ zfs_create_options_dataset_db }}
+- name: Create dataset for nextcloud
+  ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud_data }}
   args:
-    creates: "/{{ dataset_db_full_name }}"
+    creates: "/{{ dataset_nextcloud_data_full_name }}"
+
+- name: Create dataset for db
+  ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud_db }}
+  args:
+    creates: "/{{ dataset_nextcloud_db_full_name }}"
