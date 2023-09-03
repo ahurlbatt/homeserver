@@ -28,6 +28,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/config.yaml
+      - loki:/loki
     networks:
       - monitoring
     healthcheck:
@@ -100,6 +101,13 @@ volumes:
       o: bind
       type: none
       device: ${INFLUXDB_DATA_DIR?err}
+  loki:
+    name: loki
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${LOKI_DATA_DIR?err}
 
 secrets:
   grafana_admin_user:

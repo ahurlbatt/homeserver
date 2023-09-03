@@ -18,4 +18,6 @@ dataset_monitoring_options:
 dataset_influxdb_name: influxdb
 dataset_influxdb_options:
   - atime=off
+dataset_loki_name: loki
+dataset_loki_options:
 container_directory: /containers

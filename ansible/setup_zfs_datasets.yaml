@@ -48,3 +48,10 @@
       zfs_create_options_dataset_influxdb: "{{ dataset_influxdb_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_influxdb_full_name | quote }}"
   args:
       creates: "/{{ dataset_influxdb_full_name }}"
+
+- name: Create dataset for loki
+  ansible.builtin.command: zfs create {{ zfs_create_options_dataset_loki }}
+  vars:
+      zfs_create_options_dataset_loki: "{{ dataset_loki_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_loki_full_name | quote }}"
+  args:
+      creates: "/{{ dataset_loki_full_name }}"
