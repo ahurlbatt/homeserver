@@ -43,8 +43,11 @@
     - name: Install required things
       include_tasks: install_all_the_things.yaml
 
-    - name: Create/Import zpool and datasets
+    - name: Create/Import zpool
       include_tasks: setup_zpool.yaml
+
+    - name: Create/Import zfs datasets
+      include_tasks: setup_zfs_datasets.yaml
 
     - name: Grab the GID of docker.sock, as it is needed for the monitoring stack
       ansible.builtin.shell: stat -c '%g' /var/run/docker.sock
