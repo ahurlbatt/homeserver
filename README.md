@@ -8,7 +8,7 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 
 ## Setting up debian
 
-1. `su -c "usermod -aG sudo USERNAME" -`
+1. `su -c "/user/sbin/usermod -aG sudo USERNAME" -`
 2. Reboot
 3. `sudo apt update && sudo apt upgrade -y`
 4. `sudo apt install vim openssh-server`
