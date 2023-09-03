@@ -75,8 +75,7 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 ## TO DO
 
 1. Monitoring
-   1. Add zfs_influxdb as source for Telegraf using exec input plugin
-   2. Remove prometheus, node-exporter and cadvisor
+   1. Remove prometheus, node-exporter and cadvisor
 2. Test restoring a backup
 3. Change zfs pools to disk by-id (/dev/disk/by-id/)
 4. Nextcloud Apps
