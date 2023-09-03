@@ -16,15 +16,21 @@
 
 - name: Create parent dataset for nextcloud
   ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud }}
+  vars:
+    zfs_create_options_dataset_nextcloud: "{{ dataset_nextcloud_parent_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_full_name | quote }}"
   args:
     creates: "/{{ dataset_nextcloud_full_name }}"
 
 - name: Create dataset for nextcloud
   ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud_data }}
+  vars:
+    zfs_create_options_dataset_nextcloud_data: "{{ dataset_nextcloud_data_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_data_full_name | quote }}"
   args:
     creates: "/{{ dataset_nextcloud_data_full_name }}"
 
 - name: Create dataset for db
   ansible.builtin.command: zfs create {{ zfs_create_options_dataset_nextcloud_db }}
+  vars:
+    zfs_create_options_dataset_nextcloud_db: "{{ dataset_nextcloud_db_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_db_full_name | quote }}"
   args:
     creates: "/{{ dataset_nextcloud_db_full_name }}"
