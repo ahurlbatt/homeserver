@@ -13,4 +13,9 @@ dataset_nextcloud_db_options:
   - primarycache=metadata
   - logbias=throughput
   - atime=off
+dataset_monitoring_name: monitoring
+dataset_monitoring_options:
+dataset_influxdb_name: influxdb
+dataset_influxdb_options:
+  - atime=off
 container_directory: /containers

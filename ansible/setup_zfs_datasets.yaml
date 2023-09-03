@@ -34,3 +34,17 @@
     zfs_create_options_dataset_nextcloud_db: "{{ dataset_nextcloud_db_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_nextcloud_db_full_name | quote }}"
   args:
     creates: "/{{ dataset_nextcloud_db_full_name }}"
+
+- name: Create dataset for monitoring
+  ansible.builtin.command: zfs create {{ zfs_create_options_dataset_monitoring }}
+  vars:
+    zfs_create_options_dataset_monitoring: "{{ dataset_monitoring_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_monitoring_full_name | quote }}"
+  args:
+    creates: "/{{ dataset_monitoring_full_name }}"
+
+- name: Create dataset for influxdb
+  ansible.builtin.command: zfs create {{ zfs_create_options_dataset_influxdb }}
+  vars:
+      zfs_create_options_dataset_influxdb: "{{ dataset_influxdb_options | map('quote') | map('regex_replace', '^', '-o ') | join(' ') }} {{ dataset_influxdb_full_name | quote }}"
+  args:
+      creates: "/{{ dataset_influxdb_full_name }}"

@@ -23,11 +23,15 @@
     dataset_nextcloud_full_name: "{{ zpool_name + '/' + dataset_nextcloud_name }}"
     dataset_nextcloud_data_full_name: "{{ dataset_nextcloud_full_name + '/' + dataset_nextcloud_data_name }}"
     dataset_nextcloud_db_full_name: "{{ dataset_nextcloud_full_name + '/' + dataset_nextcloud_db_name }}"
+    dataset_monitoring_full_name: "{{ zpool_name + '/' + dataset_monitoring_name }}"
+    dataset_influxdb_full_name: "{{ dataset_monitoring_full_name + '/' + dataset_influxdb_name }}"
     all_zfs_objects:
       - "{{ zpool_name }}"
       - "{{ dataset_nextcloud_full_name }}"
       - "{{ dataset_nextcloud_data_full_name }}"
       - "{{ dataset_nextcloud_db_full_name }}"
+      - "{{ dataset_monitoring_full_name }}"
+      - "{{ dataset_influxdb_full_name }}"
     secret_files: "{{ query('fileglob', secrets_dir + '/*.secret.vault') }}"
     secret_from_file: "{{ dict(secret_files|map('basename')|map('regex_replace', '^(.*)\\.secret\\.vault$', '\\1') | zip(query('file', *secret_files))) }}"
   tasks:

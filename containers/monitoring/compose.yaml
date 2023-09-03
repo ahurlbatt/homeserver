@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./influxconfig:/etc/influxdb2
-      - ./influxdb2:/var/lib/influxdb2
+      - influxdb:/var/lib/influxdb2
     networks:
       - monitoring
     env_file:
@@ -93,8 +93,13 @@ networks:
 volumes:
   grafana:
     name: grafana
-  prometheus:
-    name: prometheus
+  influxdb:
+    name: influxdb
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${INFLUXDB_DATA_DIR?err}
 
 secrets:
   grafana_admin_user:
