@@ -11,6 +11,14 @@
     name: borgmatic
     state: present
 
+- name: Create borgmatic config directory
+  ansible.builtin.file:
+      path: /etc/borgmatic
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+
 - name: Copy borgmatic config
   ansible.builtin.template:
     src: "{{ borgbackup_dir }}/borgmatic_config.template.yaml"
