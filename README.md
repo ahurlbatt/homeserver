@@ -74,9 +74,17 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 
 ## TO DO
 
-1. Include monitoring dataset in backups
-2. Test restoring a backup
-3. Change zfs pools to disk by-id (/dev/disk/by-id/)
-4. Nextcloud Apps
+1. Fix bug in `mount-latest-snapshots.sh` where sub-datasets are missed due to changing times between snapshots
+   - Look at this bullshit
+     ```
+     tank/nextcloud@autosnap_2023-09-04_17:59:41_daily
+     tank/nextcloud/mariadb@autosnap_2023-09-04_17:59:42_daily
+     tank/nextcloud/nextcloud_data@autosnap_2023-09-04_17:59:42_daily
+     ```
+   - Get names of datasets and subdatasets first, then find latest snapshot of each
+2. Include monitoring dataset in backups
+3. Test restoring a backup
+4. Change zfs pools to disk by-id (/dev/disk/by-id/)
+5. Nextcloud Apps
     1. Memories
-5. Move secrets out of git, then rotate
+6. Move secrets out of git, then rotate
