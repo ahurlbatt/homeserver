@@ -65,7 +65,10 @@ mount_snapshots() {
 unmount_snapshots() {
   mapfile -t datasets < <(get_datasets)
   for dataset in "${datasets[@]}"; do
-    unmount_dataset "$dataset"
+    rm -R "$MOUNT_DIR$dataset"
+  done
+  for dataset in "${datasets[@]}"; do
+    umount -R "$MOUNT_DIR$dataset"
   done
 }
 
