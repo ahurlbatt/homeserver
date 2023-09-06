@@ -75,7 +75,6 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 ## TO DO
 
 
-1. Test restoring a backup
-2. Nextcloud Apps
+1. Nextcloud Apps
     1. Memories
-3. Move secrets out of git, then rotate
+2. Move secrets out of git, then rotate
