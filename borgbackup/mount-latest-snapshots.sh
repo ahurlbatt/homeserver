@@ -37,7 +37,7 @@ get_latest_snap() {
 }
 
 get_subsets() {
-  zfs list -Hr -t snapshot -o name "$1" | grep "$2" | sed 's|^'"$1"'||' | sed 's|@'"$2"'$||'
+  zfs list -Hr -t filesystem -o name "$1" | sed 's|^'"$1"'||'
 }
 
 mount_dataset_snap() {
@@ -52,11 +52,12 @@ unmount_dataset() {
 mount_snapshots() {
   mapfile -t datasets < <(get_datasets)
   for dataset in "${datasets[@]}"; do
-    snapname="$(get_latest_snap "$dataset")"
     mkdir -p "$MOUNT_DIR$dataset"
-    mapfile -t all_subsets < <(get_subsets "$dataset" "$snapname")
-    for subset in "${all_subsets[@]}"; do
-      mount_dataset_snap "$dataset$subset" "$snapname"
+    mapfile -t subsets < <(get_subsets "$dataset")
+    for subset in "${subsets[@]}"; do
+      fullset="$dataset$subset"
+      snapname="$(get_latest_snap "$fullset")"
+      mount_dataset_snap "$fullset" "$snapname"
     done
   done
 }
