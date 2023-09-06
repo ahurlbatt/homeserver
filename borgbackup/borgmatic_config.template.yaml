@@ -1,5 +1,5 @@
 constants:
-  borgbase-testrepo: "{{ lookup('file', secrets_dir + '/borgbase_repo_address.secret.vault') }}"
+  borgbase-testrepo: "{{ secret_from_file['borgbase_repo_address'] }}"
 
 location:
   source_directories:
@@ -10,7 +10,7 @@ location:
       label: borgbase_testrepo
 
 storage:
-  encryption_passphrase: "{{ lookup('file', secrets_dir + '/borgbase_repo_passphrase.secret.vault') }}"
+  encryption_passphrase: "{{ secret_from_file['borgbase_repo_passphrase'] }}"
 
 retention:
   keep_daily: 7
