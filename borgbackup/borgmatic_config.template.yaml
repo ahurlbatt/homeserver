@@ -3,7 +3,7 @@ constants:
 
 location:
   source_directories:
-    - "/mnt/backup/{{ zpool_name }}/{{ dataset_nextcloud_name }}"
+    - "/mnt/backup/{{ zpool_name }}"
 
   repositories:
     - path: {borgbase-testrepo}
