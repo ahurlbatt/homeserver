@@ -38,3 +38,12 @@
       when: force_zpool_create.user_input == "y"
   when: zpool_create_results.rc != 0 and zpool_create_results.stderr is search("use '-f' to override the following errors")
   ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Export and re-import zpool via disk IDs, as device names are unstable
+  block:
+    - name: Export zpool
+      ansible.builtin.command: zpool export {{ zpool_name }}
+      changed_when: false
+    - name: Import zpool
+      ansible.builtin.command: zpool import -d /dev/disk/by-id {{ zpool_name }}
+      changed_when: false

@@ -12,7 +12,7 @@
 - name: Import or create zpool
   block:
     - name: Import zpool
-      ansible.builtin.command: zpool import {{ zpool_name }}
+      ansible.builtin.command: zpool import -d /dev/disk/by-id/ {{ zpool_name }}
       register: zpool_import_results
       changed_when: false
       ignore_errors: true

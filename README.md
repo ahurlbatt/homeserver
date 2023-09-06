@@ -76,7 +76,6 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
 
 
 1. Test restoring a backup
-2. Change zfs pools to disk by-id (/dev/disk/by-id/)
-3. Nextcloud Apps
+2. Nextcloud Apps
     1. Memories
-4. Move secrets out of git, then rotate
+3. Move secrets out of git, then rotate
