@@ -3,9 +3,6 @@
 This is my playground for building a home Nextcloud solution with something close to a one-touch setup. Feel free to
 steal the ideas if you think they're good, or send constructive criticism if you think they're bad.
 
-*This repo currently contains encrypted passwords for some of the defined services. This is generally not a good idea
-but is used for this testing phase to make deployment to a new VM simpler. Please don't do this for production systems.*
-
 ## Setting up debian
 
 1. `su -c "/user/sbin/usermod -aG sudo USERNAME" -`
@@ -38,7 +35,7 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
     - `apt install ansible`
     - `ansible-galaxy collection install devsec.hardening`
 2. Clone this repo
-3. Put the ansible vault password in `./secrets/ansible_vault_password.secret`
+3. Create and populate all the required secrets listed in `./secrets/required_secrets.txt`
 4. Run the playbook from the `ansible` directory with `ansible-playbook -K -i inventory.yaml playbook.yaml`
     - The flag `-K` will prompt for the sudo password
 
@@ -67,14 +64,9 @@ but is used for this testing phase to make deployment to a new VM simpler. Pleas
      the [grafana docs](https://grafana.com/docs/grafana-cloud/quickstart/docker-compose-linux/)
     - Loki and promtail settings taken by combining the [production compose file](https://github.com/grafana/loki/blob/main/production/docker-compose.yaml), the [getting-started examples](https://github.com/grafana/loki/tree/main/examples/getting-started) and loki [configuration templates](https://grafana.com/docs/loki/latest/configuration/examples/)
 
-## Ansible Notes
-
-1. For encryption of secrets, the file `./secrets/ansible_vault_password.secret` is needed
-2. Secrets were encrypted using `encrypt-secrets.sh` script
-
 ## TO DO
-
 
 1. Nextcloud Apps
     1. Memories
-2. Move secrets out of git, then rotate
+    2. ???
+2. Write runbook for full restore from backup
