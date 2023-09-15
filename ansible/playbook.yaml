@@ -34,9 +34,16 @@
       - "{{ dataset_monitoring_full_name }}"
       - "{{ dataset_influxdb_full_name }}"
       - "{{ dataset_loki_full_name }}"
-    secret_files: "{{ query('fileglob', secrets_dir + '/*.secret.vault') }}"
-    secret_from_file: "{{ dict(secret_files|map('basename')|map('regex_replace', '^(.*)\\.secret\\.vault$', '\\1') | zip(query('file', *secret_files))) }}"
+    required_secrets: "{{ lookup('file', secrets_dir + '/required_secrets.txt').splitlines() }}"
+    existing_secret_files: "{{ query('fileglob', secrets_dir + '/*.secret') }}"
+    secret_from_file: "{{ dict(existing_secret_files | map('basename') | map('regex_replace', '^(.*)\\.secret\\.vault$', '\\1') | zip(query('file', *existing_secret_files))) }}"
+    missing_secrets: "{{ required_secrets | map('basename') | reject('in', existing_secret_files | map('basename')) }}"
   tasks:
+
+    - name: Abort when secrets are missing
+      ansible.builtin.fail:
+        msg: "The following secrets are missing from the ./secrets folder: {{ missing_secrets|map('basename')|join(', ') }}"
+      when: missing_secrets | length > 0
 
     - name: Allow memory over commit
       ansible.posix.sysctl:
