@@ -10,12 +10,8 @@ services:
     networks:
       - caddy
       - monitoring
-    environment:
-      - GF_SECURITY_ADMIN_USER__FILE=/run/secrets/grafana_admin_user
-      - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
-    secrets:
-      - grafana_admin_user
-      - grafana_admin_password
+    env_file:
+      - grafana.env
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
       interval: 10s
@@ -108,9 +104,3 @@ volumes:
       o: bind
       type: none
       device: ${LOKI_DATA_DIR?err}
-
-secrets:
-  grafana_admin_user:
-    file: ./secrets/grafana_admin_user.secret
-  grafana_admin_password:
-    file: ./secrets/grafana_admin_password.secret
