@@ -60,11 +60,13 @@ mount_snapshots() {
 unmount_snapshots() {
   mapfile -t datasets < <(get_datasets)
   for dataset in "${datasets[@]}"; do
-    rm -R "$MOUNT_DIR$dataset"
+    mapfile -t subsets < <(get_subsets "$dataset" | tac)
+    for subset in "${subsets[@]}"; do
+      fullset="$dataset$subset"
+      umount "$MOUNT_DIR$fullset"
+    done
   done
-  for dataset in "${datasets[@]}"; do
-    umount -R "$MOUNT_DIR$dataset"
-  done
+  rm -R "$MOUNT_DIR"
 }
 
 set -Eeuo pipefail
