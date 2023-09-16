@@ -76,7 +76,7 @@
       include_tasks: install_configure_sanoid.yaml
 
     - name: Install and configure borg and borgmatic
-      include_tasks: install_configure_borgbackup.yaml
+      include_tasks: configure_borgbackup.yaml
 
     - name: Install shell2http for zpool stats
       include_tasks: install_shell2http_for_zpool.yaml

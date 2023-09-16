@@ -41,6 +41,7 @@
   ansible.builtin.apt:
     update_cache: true
     name:
+      - borgmatic
       - containerd.io
       - docker-buildx-plugin
       - docker-ce
