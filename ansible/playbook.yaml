@@ -36,7 +36,7 @@
       - "{{ dataset_loki_full_name }}"
     required_secrets: "{{ lookup('file', secrets_dir + '/required_secrets.txt').splitlines() }}"
     existing_secret_files: "{{ query('fileglob', secrets_dir + '/*.secret') }}"
-    secret_from_file: "{{ dict(existing_secret_files | map('basename') | map('regex_replace', '^(.*)\\.secret\\.vault$', '\\1') | zip(query('file', *existing_secret_files))) }}"
+    secret_from_file: "{{ dict(existing_secret_files | map('basename') | map('regex_replace', '^(.*)\\.secret$', '\\1') | zip(query('file', *existing_secret_files))) }}"
     missing_secrets: "{{ required_secrets | map('basename') | reject('in', existing_secret_files | map('basename')) }}"
   tasks:
 
