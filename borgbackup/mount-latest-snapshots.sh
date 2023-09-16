@@ -37,16 +37,11 @@ get_latest_snap() {
 }
 
 get_subsets() {
-  zfs list -Hr -t filesystem -o name "$1" | sed 's|^'"$1"'||'
+  zfs list -Hr -t filesystem -o name "$1" | sed 's|^'"$1"'||' | sort
 }
 
 mount_dataset_snap() {
   mount -t zfs "$1@$2" "$MOUNT_DIR$1"
-}
-
-unmount_dataset() {
-  umount -R "$MOUNT_DIR$1"
-  rm -R "$MOUNT_DIR$1"
 }
 
 mount_snapshots() {
