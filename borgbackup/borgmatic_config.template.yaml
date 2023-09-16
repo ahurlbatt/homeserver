@@ -1,13 +1,9 @@
-constants:
-  borgbase-testrepo: "{{ secret_from_file['borgbase_repo_address'] }}"
-
 location:
   source_directories:
     - "/mnt/backup/{{ zpool_name }}"
 
   repositories:
-    - path: {borgbase-testrepo}
-      label: borgbase_testrepo
+    - "{{ secret_from_file['borgbase_repo_address'] }}"
 
 storage:
   encryption_passphrase: "{{ secret_from_file['borgbase_repo_passphrase'] }}"
