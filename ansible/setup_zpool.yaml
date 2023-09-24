@@ -23,3 +23,9 @@
       include_tasks: create_zpool.yaml
       when: zpool_import_results.rc != 0
   when: zpool_name not in existing_zpools.stdout_lines
+
+- name: Enable regular zfs scrub using systemd timer
+  ansible.builtin.systemd:
+    name: zfs-scrub-monthly.timer
+    enabled: true
+    state: started
