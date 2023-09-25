@@ -1,5 +1,5 @@
 - name: Prevent remote root login, remove anonymous users, remove test database, and flush privileges
-  ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$(cat $MYSQL_ROOT_PASSWORD_FILE) -e \"{{ item }}\"'"
+  ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$MYSQL_ROOT_PASSWORD -e \"{{ item }}\"'"
   changed_when: false
   args:
     chdir: "{{ container_directory }}/nextcloud"

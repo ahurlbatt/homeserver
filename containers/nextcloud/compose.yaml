@@ -31,7 +31,7 @@ services:
         env_file:
             - mariadb.env
         healthcheck:
-            test: ["CMD-SHELL", "mysqladmin ping -p$$(cat $$MYSQL_ROOT_PASSWORD_FILE)"]
+            test: ["CMD-SHELL", "mysqladmin ping -p$MYSQL_ROOT_PASSWORD"]
             interval: 2s
             timeout: 2s
             retries: 120
