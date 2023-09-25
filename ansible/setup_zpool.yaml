@@ -26,6 +26,6 @@
 
 - name: Enable regular zfs scrub using systemd timer
   ansible.builtin.systemd:
-    name: zfs-scrub-monthly.timer
+    name: "zfs-scrub-monthly@{{ zpool_name }}.timer"
     enabled: true
     state: started
