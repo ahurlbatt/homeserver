@@ -66,7 +66,10 @@ steal the ideas if you think they're good, or send constructive criticism if you
 
 ## TO DO
 
-1. Nextcloud Apps
+1. Send-Only email MTA (postfix)
+2. Check all settings and advice from Nextcloud Admin Dashboard
+3. Bump all versions
+4. Nextcloud Apps
     1. Memories
     2. ???
-2. Write runbook for full restore from backup
+5. Write runbook for full restore from backup
