@@ -52,7 +52,9 @@
       - libconfig-inifiles-perl
       - linux-headers-amd64
       - lzop
+      - mailutils
       - mbuffer
+      - mstmp-mta
       - pv
       - python3
       - python3-pip

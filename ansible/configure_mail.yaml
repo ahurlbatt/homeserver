@@ -1,0 +1,8 @@
+- name: Copy msmtp config file
+  ansible.builtin.copy:
+    src: "{{ mail_dir }}/msmtprc"
+    dest: /etc/msmtprc
+    owner: root
+    group: root
+    mode: '0600'
+

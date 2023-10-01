@@ -19,6 +19,7 @@
     borgbackup_dir: "{{ playbook_dir }}/../borgbackup"
     sanoid_dir: "{{ playbook_dir }}/../sanoid"
     shell2http_dir: "{{ playbook_dir }}/../shell2http"
+    mail_dir: "{{ playbook_dir }}/../mail"
     zpool_creation_options: "-o {{ zpool_options | map('quote') | join(' -o ') }} {{ zpool_name | quote }} {{ zpool_raid_type | quote }}"
     dataset_nextcloud_full_name: "{{ zpool_name + '/' + dataset_nextcloud_name }}"
     dataset_nextcloud_data_full_name: "{{ dataset_nextcloud_full_name + '/' + dataset_nextcloud_data_name }}"
@@ -81,6 +82,9 @@
 
     - name: Install shell2http for zpool stats
       include_tasks: install_shell2http_for_zpool.yaml
+
+    - name: Configure msmtp on server
+      include_tasks: configure_mail.yaml
 
     - name: Start containers
       ansible.builtin.shell: docker compose up -d
