@@ -1,0 +1,17 @@
+services:
+  postfix:
+    image: juanluisbaptiste/postfix:1.7.1
+    container_name: postfix
+    env_file: postfix.env
+    networks:
+      - exposed
+      - mail
+    ports:
+      - 127.0.0.1:25:25
+
+networks:
+  mail:
+    name: mail
+    internal: true
+  exposed:
+    name: exposed

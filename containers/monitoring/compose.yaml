@@ -10,6 +10,7 @@ services:
     networks:
       - caddy
       - monitoring
+      - mail
     env_file:
       - grafana.env
     healthcheck:
@@ -85,6 +86,9 @@ networks:
     internal: true
   caddy:
     name: caddy
+    internal: true
+  mail:
+    name: mail
     internal: true
 
 volumes:

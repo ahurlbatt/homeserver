@@ -50,6 +50,7 @@ services:
             - nextcloud
             - caddy
             - exposed
+            - mail
         healthcheck:
             test: curl -sSf 'http://localhost/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
             interval: 10s
@@ -76,6 +77,9 @@ networks:
         internal: true
     exposed:
         name: exposed
+    mail:
+        name: mail
+        internal: true
 
 volumes:
     ncdata:

@@ -69,6 +69,7 @@
         - nextcloud
         - monitoring
         - caddy
+        - postfix
       loop_control:
         loop_var: container_name
 
@@ -89,6 +90,7 @@
         - nextcloud
         - monitoring
         - caddy
+        - postfix
       loop_control:
         loop_var: container_name
 
