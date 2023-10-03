@@ -54,7 +54,7 @@
       - lzop
       - mailutils
       - mbuffer
-      - mstmp-mta
+      - msmtp-mta
       - pv
       - python3
       - python3-pip
