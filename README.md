@@ -66,7 +66,7 @@ steal the ideas if you think they're good, or send constructive criticism if you
 
 ## TO DO
 
-1. Send-Only email MTA (postfix)
+1. Configure Nextcloud mail via environment
 2. Check all settings and advice from Nextcloud Admin Dashboard
 3. Bump all versions
 4. Nextcloud Apps
