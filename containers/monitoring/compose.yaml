@@ -87,6 +87,10 @@ networks:
   caddy:
     name: caddy
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
   mail:
     name: mail
     internal: true

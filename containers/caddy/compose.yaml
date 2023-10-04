@@ -8,8 +8,9 @@ services:
       - 80:80
       - 443:443
     networks:
-      - caddy
-      - exposed
+      caddy:
+        ipv4_address: 172.30.0.10
+      exposed:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./Caddyfile:/etc/caddy/Caddyfile
@@ -20,6 +21,10 @@ networks:
   caddy:
     name: caddy
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
   exposed:
     name: exposed
 

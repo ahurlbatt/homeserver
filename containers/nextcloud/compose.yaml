@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
     configs:
       - source: mariadb-override
-       target: /etc/mysql/conf.d/override.cnf
+        target: /etc/mysql/conf.d/override.cnf
     env_file:
       - mariadb.env
     healthcheck:
@@ -75,6 +75,10 @@ networks:
   caddy:
     name: caddy
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
   exposed:
     name: exposed
   mail:
