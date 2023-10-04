@@ -1,102 +1,102 @@
 x-nextcloud-common: &nextcloud-common
-    image: nextcloud:25-apache
-    volumes:
-        - ncdata:/var/www/html
-    restart: unless-stopped
-    links:
-        - nextcloud-redis
-        - nextcloud-db
-    depends_on:
-        nextcloud-db:
-            condition: service_healthy
-        nextcloud-redis:
-            condition: service_started
-    env_file:
-        - nextcloud.env
+  image: nextcloud:25-apache
+  volumes:
+    - ncdata:/var/www/html
+  restart: unless-stopped
+  links:
+    - nextcloud-redis
+    - nextcloud-db
+  depends_on:
+    nextcloud-db:
+      condition: service_healthy
+    nextcloud-redis:
+      condition: service_started
+  env_file:
+    - nextcloud.env
 
 services:
 
-    nextcloud-db:
-        container_name: nextcloud-db
-        image: mariadb:10.11.2
-        command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
-        volumes:
-            - ncdb:/var/lib/mysql
-        networks:
-            - nextcloud
-        restart: unless-stopped
-        configs:
-            - source: mariadb-override
-              target: /etc/mysql/conf.d/override.cnf
-        env_file:
-            - mariadb.env
-        healthcheck:
-            test: ["CMD-SHELL", "mysqladmin ping -p$MYSQL_ROOT_PASSWORD"]
-            interval: 2s
-            timeout: 2s
-            retries: 120
+  nextcloud-db:
+    container_name: nextcloud-db
+    image: mariadb:10.11.2
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - ncdb:/var/lib/mysql
+    networks:
+      - nextcloud
+    restart: unless-stopped
+    configs:
+      - source: mariadb-override
+       target: /etc/mysql/conf.d/override.cnf
+    env_file:
+      - mariadb.env
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -p$MYSQL_ROOT_PASSWORD"]
+      interval: 2s
+      timeout: 2s
+      retries: 120
 
-    nextcloud-redis:
-        container_name: nextcloud-redis
-        image: redis:7-bullseye
-        restart: unless-stopped
-        networks:
-            - nextcloud
+  nextcloud-redis:
+    container_name: nextcloud-redis
+    image: redis:7-bullseye
+    restart: unless-stopped
+    networks:
+      - nextcloud
 
-    nextcloud-app:
-        container_name: nextcloud-app
-        <<: *nextcloud-common
-        networks:
-            - nextcloud
-            - caddy
-            - exposed
-            - mail
-        healthcheck:
-            test: curl -sSf 'http://localhost/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
-            interval: 10s
-            timeout: 5s
-            retries: 10
+  nextcloud-app:
+    container_name: nextcloud-app
+    <<: *nextcloud-common
+    networks:
+      - nextcloud
+      - caddy
+      - exposed
+      - mail
+    healthcheck:
+      test: curl -sSf 'http://localhost/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
-    nextcloud-cron:
-        container_name: nextcloud-cron
-        entrypoint: /cron.sh
-        <<: *nextcloud-common
-        networks:
-            - nextcloud
-            - exposed
-        depends_on:
-            nextcloud-app:
-                condition: service_healthy
+  nextcloud-cron:
+    container_name: nextcloud-cron
+    entrypoint: /cron.sh
+    <<: *nextcloud-common
+    networks:
+      - nextcloud
+      - exposed
+    depends_on:
+      nextcloud-app:
+        condition: service_healthy
 
 networks:
-    nextcloud:
-        name: nextcloud
-        internal: true
-    caddy:
-        name: caddy
-        internal: true
-    exposed:
-        name: exposed
-    mail:
-        name: mail
-        internal: true
+  nextcloud:
+    name: nextcloud
+    internal: true
+  caddy:
+    name: caddy
+    internal: true
+  exposed:
+    name: exposed
+  mail:
+    name: mail
+    internal: true
 
 volumes:
-    ncdata:
-        name: ncdata
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ${NEXTCLOUD_DATA_DIRECTORY?err}
-    ncdb:
-        name: ncdb
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ${MARIADB_DATA_DIRECTORY?err}
+  ncdata:
+    name: ncdata
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${NEXTCLOUD_DATA_DIRECTORY?err}
+  ncdb:
+    name: ncdb
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${MARIADB_DATA_DIRECTORY?err}
 
 configs:
-    mariadb-override:
-        file: ./mariadb_override.cnf
+  mariadb-override:
+    file: ./mariadb_override.cnf
