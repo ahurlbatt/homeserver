@@ -49,7 +49,7 @@ services:
     networks:
       - nextcloud
       - caddy
-      - exposed
+      - exposed-nextcloud
       - mail
     healthcheck:
       test: curl -sSf 'http://localhost/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
@@ -63,7 +63,7 @@ services:
     <<: *nextcloud-common
     networks:
       - nextcloud
-      - exposed
+      - exposed-nextcloud
     depends_on:
       nextcloud-app:
         condition: service_healthy
@@ -79,8 +79,8 @@ networks:
       driver: default
       config:
         - subnet: 172.30.0.0/24
-  exposed:
-    name: exposed
+  exposed-nextcloud:
+    name: exposed-nextcloud
   mail:
     name: mail
     internal: true
