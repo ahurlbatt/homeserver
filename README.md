@@ -57,6 +57,8 @@ steal the ideas if you think they're good, or send constructive criticism if you
 3. Nextcloud settings have been taken from
     - [Server tuning guide](https://docs.nextcloud.com/server/21/admin_manual/installation/server_tuning.html)
     - [This health check discussion](https://github.com/nextcloud/docker/issues/676)
+	- Environment variables are reasonably well documented on the official [Docker Hub page](https://hub.docker.com/_/nextcloud)
+	- SMTP environment variables are further clarified in [this Github issue](https://github.com/nextcloud/docker/issues/1187)
 4. ZFS Snapshots are managed using [Sanoid](https://github.com/jimsalterjrs/sanoid)
 5. Monitoring settings
     - Ideas taken from [this blog post](https://blog.randombits.host/monitoring-self-hosted-services/)
