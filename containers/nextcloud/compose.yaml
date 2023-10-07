@@ -1,5 +1,5 @@
 x-nextcloud-common: &nextcloud-common
-  image: nextcloud:25-apache
+  image: nextcloud:27.1.1-apache
   volumes:
     - ncdata:/var/www/html
   restart: unless-stopped
@@ -18,7 +18,7 @@ services:
 
   nextcloud-db:
     container_name: nextcloud-db
-    image: mariadb:10.11.2
+    image: mariadb:11.1.2
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     volumes:
       - ncdb:/var/lib/mysql
@@ -38,7 +38,7 @@ services:
 
   nextcloud-redis:
     container_name: nextcloud-redis
-    image: redis:7-bullseye
+    image: redis:7.2.1
     restart: unless-stopped
     networks:
       - nextcloud
