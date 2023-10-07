@@ -68,10 +68,9 @@ steal the ideas if you think they're good, or send constructive criticism if you
 
 ## TO DO
 
-1. Configure Nextcloud mail via environment
-2. Check all settings and advice from Nextcloud Admin Dashboard
-3. Bump all versions
-4. Nextcloud Apps
+1. Check all settings and advice from Nextcloud Admin Dashboard
+2. Bump all versions
+3. Nextcloud Apps
     1. Memories
     2. ???
-5. Write runbook for full restore from backup
+4. Write runbook for full restore from backup
