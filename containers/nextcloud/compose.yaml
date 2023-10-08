@@ -58,6 +58,8 @@ services:
     <<: *nextcloud-common
     volumes:
       - ncdata:/var/www/html
+      - type: tmpfs
+        target: /tmp:exec
     networks:
       - nextcloud
       - caddy
