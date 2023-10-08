@@ -78,7 +78,7 @@ services:
       dockerfile_inline: |
         FROM nextcloud:27.1.1-apache
         RUN set -ex; \
-          echo "*/10 * * * * php occ preview:pre-generate" >> /var/spool/cron/crontabs/www-data
+          echo "*/10 * * * * php /var/www/html/occ preview:pre-generate" >> /var/spool/cron/crontabs/www-data
         ENTRYPOINT ["/cron.sh"]
     <<: *nextcloud-common
     volumes:
