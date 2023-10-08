@@ -71,8 +71,13 @@ services:
 
   nextcloud-cron:
     container_name: nextcloud-cron
-    image: nextcloud:27.1.1-apache
-    entrypoint: /cron.sh
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM nextcloud:27.1.1-apache
+        RUN set -ex; \
+          echo "*/10 * * * * php occ preview:pre-generate" >> /var/spool/cron/crontabs/www-data
+        ENTRYPOINT ["/cron.sh"]
     <<: *nextcloud-common
     networks:
       - nextcloud
