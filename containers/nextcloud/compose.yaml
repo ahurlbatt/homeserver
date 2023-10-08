@@ -1,5 +1,4 @@
 x-nextcloud-common: &nextcloud-common
-  image: nextcloud:27.1.1-apache
   volumes:
     - ncdata:/var/www/html
   restart: unless-stopped
@@ -45,6 +44,7 @@ services:
 
   nextcloud-app:
     container_name: nextcloud-app
+    image: nextcloud:27.1.1-apache
     <<: *nextcloud-common
     networks:
       - nextcloud
@@ -59,6 +59,7 @@ services:
 
   nextcloud-cron:
     container_name: nextcloud-cron
+    image: nextcloud:27.1.1-apache
     entrypoint: /cron.sh
     <<: *nextcloud-common
     networks:
