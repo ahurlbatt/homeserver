@@ -38,6 +38,12 @@ steal the ideas if you think they're good, or send constructive criticism if you
 3. Create and populate all the required secrets listed in `./secrets/required_secrets.txt`
 4. Run the playbook from the `ansible` directory with `ansible-playbook -K -i inventory.yaml playbook.yaml`
     - The flag `-K` will prompt for the sudo password
+5. Nextcloud and apps require manual setup
+    - Nextcloud itself needs e.g. email set for the admin account, locations if wanted, and apps installing
+    - For running command-line configuration using `occ`, this should be done with the user `www-data` according to the [Documentation](https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/occ_command.html)
+      - This is done from the host machine for example using `sudo docker compose exec -it -u33 nextcloud-app php occ <command>`
+      - Here user Id 33 corresponds to `www-data` - check this by running `getent passwd` inside the container
+    - The app [Memories](https://github.com/pulsejet/memories) needs some [initial configuration](https://memories.gallery/config/), which is fortunately well documented
 
 ## Some explanations
 
@@ -68,9 +74,4 @@ steal the ideas if you think they're good, or send constructive criticism if you
 
 ## TO DO
 
-1. Check all settings and advice from Nextcloud Admin Dashboard
-2. Bump all versions
-3. Nextcloud Apps
-    1. Memories
-    2. ???
-4. Write runbook for full restore from backup
+1. Write runbook for full restore from backup
