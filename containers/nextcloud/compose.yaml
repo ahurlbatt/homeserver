@@ -44,7 +44,19 @@ services:
 
   nextcloud-app:
     container_name: nextcloud-app
-    image: nextcloud:27.1.1-apache
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM nextcloud:27.1.1-apache
+        RUN set -ex; \
+          \
+          apt-get update; \
+          apt-get install -y --no-install-recommends \
+              ffmpeg \
+              ghostscript \
+              libmagickcore-6.q16-6-extra \
+          ; \
+          rm -rf /var/lib/apt/lists/*
     <<: *nextcloud-common
     networks:
       - nextcloud
