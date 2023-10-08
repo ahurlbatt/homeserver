@@ -1,6 +1,4 @@
 x-nextcloud-common: &nextcloud-common
-  volumes:
-    - ncdata:/var/www/html
   restart: unless-stopped
   links:
     - nextcloud-redis
@@ -58,6 +56,8 @@ services:
           ; \
           rm -rf /var/lib/apt/lists/*
     <<: *nextcloud-common
+    volumes:
+      - ncdata:/var/www/html
     networks:
       - nextcloud
       - caddy
@@ -79,6 +79,8 @@ services:
           echo "*/10 * * * * php occ preview:pre-generate" >> /var/spool/cron/crontabs/www-data
         ENTRYPOINT ["/cron.sh"]
     <<: *nextcloud-common
+    volumes:
+      - ncdata:/var/www/html
     networks:
       - nextcloud
       - exposed-nextcloud
