@@ -44,7 +44,7 @@ steal the ideas if you think they're good, or send constructive criticism if you
       - This is done from the host machine for example using `sudo docker compose exec -it -u33 nextcloud-app php occ <command>`
       - Here user Id 33 corresponds to `www-data` - check this by running `getent passwd` inside the container
     - The app [Memories](https://github.com/pulsejet/memories) needs some [initial configuration](https://memories.gallery/config/), which is fortunately well documented
-	  - It depends on the apps [Preview Generator](https://github.com/rullzer/previewgenerator) and [Recognize](https://github.com/nextcloud/recognize)
+	  - It depends on the apps [Preview Generator](https://github.com/rullzer/previewgenerator), [Recognize](https://github.com/nextcloud/recognize), and [Camera RAW Previews](https://github.com/ariselseng/camerarawpreviews)
 	    - Preview Generator requires `occ preview:generate-all` to be run once after installation (also a cron line, but that's part of the nextcloud-cron docker image)
 		- Recognize needs to have models downloaded and tagging activated - check the admin settings page
 		- The [Face Recognition](https://github.com/matiasdelellis/facerecognition) is also recommended, but seems a lot of work to set up
