@@ -87,7 +87,7 @@
       include_tasks: configure_mail.yaml
 
     - name: Start containers
-      ansible.builtin.shell: docker compose up -d
+      ansible.builtin.shell: docker compose up --build -d
       args:
         chdir: "{{ container_directory }}/{{ container_name }}"
       loop:
