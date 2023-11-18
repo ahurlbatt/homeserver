@@ -2,7 +2,7 @@
   ansible.builtin.git:
     repo: "https://github.com/jimsalterjrs/sanoid.git"
     dest: "~/sanoid/sanoid"
-    version: "v2.1.0"
+    version: "v2.2.0"
 
 - name: Link debian folder
   ansible.builtin.file:
@@ -14,11 +14,11 @@
   ansible.builtin.command: dpkg-buildpackage -us -uc -b
   args:
     chdir: "~/sanoid/sanoid"
-    creates: "~/sanoid/sanoid_2.1.0_all.deb"
+    creates: "~/sanoid/sanoid_2.2.0_all.deb"
 
 - name: Install sanoid package
   ansible.builtin.apt:
-    deb: "~/sanoid/sanoid_2.1.0_all.deb"
+    deb: "~/sanoid/sanoid_2.2.0_all.deb"
 
 - name: Copy sanoid config
   ansible.builtin.template:
