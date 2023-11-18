@@ -26,7 +26,7 @@ steal the ideas if you think they're good, or send constructive criticism if you
         - Don't set a passphrase
     - Copy the public key to Borgbase
     - Initialise the repo with `borg init -e repokey-blake2 ssh://...`
-    - Export the key with `borg key export --paper ssh://... borg_key.txt` and store it somewhere safe
+    - Export the key with `borg key export ssh://...` and store it somewhere safe
 
 ## Setting up the server
 
