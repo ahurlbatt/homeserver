@@ -5,10 +5,9 @@ steal the ideas if you think they're good, or send constructive criticism if you
 
 ## Setting up debian
 
-1. `su -c "/user/sbin/usermod -aG sudo USERNAME" -`
-2. Reboot
+1. Install debian without a Desktop environment, but with ssh server
+2. Don't set a root password, to get sudo
 3. `sudo apt update && sudo apt upgrade -y`
-4. `sudo apt install vim openssh-server`
 5. Create a local ssh key with `ssh-keygen`
 6. Copy ssh-key to authorized keys file with `ssh-copy-id localhost`
 7. `sudo vim /etc/ssh/sshd_config`
