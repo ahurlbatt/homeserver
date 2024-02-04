@@ -2,6 +2,7 @@ services:
   postfix:
     image: juanluisbaptiste/postfix:1.7.1
     container_name: postfix
+    restart: unless-stopped
     env_file: postfix.env
     networks:
       - exposed-postfix
