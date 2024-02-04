@@ -79,13 +79,7 @@ steal the ideas if you think they're good, or send constructive criticism if you
 ## TO DO
 
 1. Write runbook for full restore from backup
-2. Check things like backports against latest version of debian
-3. Configure two network interfaces
-    - Local access e.g. ssh should be on a different interface to that with external forwarding
-    - Or do this in software? One interface, two IPs?
-5. Bind caddy to a specific interface
-6. Find a different DDNS provider
-7. Make caddy do the DDNS stuff
-8. Make an ephemereal SMB server container
-    - Local network only, no security
-9. Find a solution that can replace syncthing on the RPi
+2. Find a different DDNS provider
+3. Make caddy do the DDNS stuff
+4. Click together grafana monitoring
+5. Set up notifications
