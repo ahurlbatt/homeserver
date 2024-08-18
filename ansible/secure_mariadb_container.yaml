@@ -1,3 +1,6 @@
+- name: Start mariadb container only
+  ansible.builtin.command: "docker compose start nextcloud-db"
+
 - name: Prevent remote root login, remove anonymous users, remove test database, and flush privileges
   ansible.builtin.command: "docker exec nextcloud-db bash -c 'mariadb -u root -p$MYSQL_ROOT_PASSWORD -e \"{{ item }}\"'"
   changed_when: false
@@ -8,3 +11,7 @@
     - "DELETE FROM mysql.global_priv WHERE User=\\\"\\\";"
     - "DROP DATABASE IF EXISTS test;"
     - "FLUSH PRIVILEGES;"
+
+- name: Stop mariadb container
+  ansible.builtin.command: "docker compose stop nextcloud-db"
+

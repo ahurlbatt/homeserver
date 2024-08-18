@@ -86,8 +86,8 @@
     - name: Configure msmtp on server
       include_tasks: configure_mail.yaml
 
-    - name: Start containers
-      ansible.builtin.shell: docker compose up --build -d
+    - name: Get containers ready to start
+      ansible.builtin.shell: docker compose up --no-start --build
       args:
         chdir: "{{ container_directory }}/{{ container_name }}"
       loop:
