@@ -48,6 +48,26 @@ steal the ideas if you think they're good, or send constructive criticism if you
 		- Recognize needs to have models downloaded and tagging activated - check the admin settings page
 		- The [Face Recognition](https://github.com/matiasdelellis/facerecognition) is also recommended, but seems a lot of work to set up
 		
+## Restoring from remote backup
+
+The backup will be restored from the remote repository using `borgmatic extract`. As the name suggests, this extracts files, it doesn't restore a state. That means, for eaxmple, that files created since the time of the backup will not be automatically deleted from the target. The simplest way to deal with this is to manually delete the contents of the target before starting the `extract`ion. There may be a 'smarter' way to do this using mounts and sync tools - see the [discussion about this on Github](https://github.com/borgbackup/borg/issues/4598).
+
+1. If you're starting from scratch, set up the server as detailed above, with the exception of the infrastructure - this should alread exist, and you don't want to reinitialise the borg repo
+    - You will also not need to do the setup of Nextcloud and its apps
+2. Disable the scheduled back up tasks
+    - `sudo systemctl disable sanoid.timer borgmatic.timer`
+3. Use `sudo borgmatic rlist` to get a list of the archives available and pick the one to use
+    - Each 'archive' is a single backup
+    - Copy the name and put it somewhere temporary - you'll need it a few times
+4. Navigate your terminal to `/tank` and delete the contents of the datasets there, if there is any
+    - You can only delete the _contents_ of a dataset, not the dataset itself, without going through `zfs`
+    - We don't want to do this, so your delete command will need to name each dataset explicitly
+5. Still within the directory `/tank`, use the following extract command to extract the contents of the archive onto disk i.e. restore from the backup
+    - `sudo borgmatic extract --archive {YOUR_ARCHIVE_NAME} --path mnt/backup/tank --strip-components 3`
+    - The last two options are needed because of the way snapshots are mounted as the source of each backup
+    - I didn't realise what effect this would have and now it's kinda too late to change it
+    - You can use the `--progress` flag to monitor the progress, but there's a chance it would actually slow down the restore
+6. Figure out a way of checking the progress, or I guess leave it running and pray
 
 ## Some explanations
 
