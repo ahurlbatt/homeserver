@@ -8,12 +8,11 @@ steal the ideas if you think they're good, or send constructive criticism if you
 1. Install debian without a Desktop environment, but with ssh server
 2. Don't set a root password, to get sudo
 3. `sudo apt update && sudo apt upgrade -y`
-5. Create a local ssh key with `ssh-keygen`
-6. Copy ssh-key to authorized keys file with `ssh-copy-id localhost`
-7. `sudo vim /etc/ssh/sshd_config`
+4. Copy your ssh-key from your machine to the server authorized keys file with `ssh-copy-id user@server`
+5. `sudo vim /etc/ssh/sshd_config`
     1. `PasswordAuthentication no`
     2. `PubkeyAuthentication yes`
-8. `sudo systemctl restart ssh`
+6. `sudo systemctl restart ssh`
 
 ## Infrastructure
 
@@ -35,9 +34,10 @@ steal the ideas if you think they're good, or send constructive criticism if you
     - `ansible-galaxy collection install devsec.hardening`
 2. Clone this repo
 3. Create and populate all the required secrets listed in `./secrets/required_secrets.txt`
-4. Run the playbook from the `ansible` directory with `ansible-playbook -K -i inventory.yaml playbook.yaml`
+4. Adapt the address of the server in the file `./ansible/inventory.yaml`
+5. Run the playbook from the `ansible` directory with `ansible-playbook -K -i inventory.yaml playbook.yaml`
     - The flag `-K` will prompt for the sudo password
-5. Nextcloud and apps require manual setup
+6. Nextcloud and apps require manual setup
     - Nextcloud itself needs e.g. email set for the admin account, locations if wanted, and apps installing
     - For running command-line configuration using `occ`, this should be done with the user `www-data` according to the [Documentation](https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/occ_command.html)
       - This is done from the host machine for example using `sudo docker compose exec -it -u33 nextcloud-app php occ <command>`
@@ -79,7 +79,7 @@ steal the ideas if you think they're good, or send constructive criticism if you
 ## TO DO
 
 1. Write runbook for full restore from backup
-2. Find a different DDNS provider
+2. Update diagram
 3. Make caddy do the DDNS stuff
 4. Click together grafana monitoring
 5. Set up notifications
