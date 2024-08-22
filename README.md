@@ -99,7 +99,6 @@ The backup will be restored from the remote repository using `borgmatic extract`
 ## TO DO
 
 1. Write runbook for full restore from backup
-2. Update diagram
-3. Make caddy do the DDNS stuff
-4. Click together grafana monitoring
-5. Set up notifications
+2. Make caddy do the DDNS stuff
+3. Click together grafana monitoring
+4. Set up notifications
