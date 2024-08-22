@@ -37,7 +37,9 @@ steal the ideas if you think they're good, or send constructive criticism if you
 4. Adapt the address of the server in the file `./ansible/inventory.yaml`
 5. Run the playbook from the `ansible` directory with `ansible-playbook -K -i inventory.yaml playbook.yaml`
     - The flag `-K` will prompt for the sudo password
-6. Nextcloud and apps require manual setup
+6. Start the containers using `sudo docker compose up -d` in each of the directories in `/containers`
+    - Think about when you want to start up caddy - when you do it will immediately try to get TLS certificates for your domain, and this might not be what you want
+7. Nextcloud and apps require manual setup
     - Nextcloud itself needs e.g. email set for the admin account, locations if wanted, and apps installing
     - For running command-line configuration using `occ`, this should be done with the user `www-data` according to the [Documentation](https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/occ_command.html)
       - This is done from the host machine for example using `sudo docker compose exec -it -u33 nextcloud-app php occ <command>`
