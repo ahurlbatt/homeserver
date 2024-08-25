@@ -2,7 +2,7 @@ services:
 
   caddy:
     container_name: caddy
-    image: caddy:2.7-alpine
+    image: caddy:2.8-alpine
     restart: unless-stopped
     ports:
       - 80:80
