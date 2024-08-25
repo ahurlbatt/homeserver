@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM nextcloud:27.1.1-apache
+        FROM nextcloud:28.0.9-apache
         RUN set -ex; \
           \
           apt-get update; \
@@ -76,7 +76,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM nextcloud:27.1.1-apache
+        FROM nextcloud:28.0.9-apache
         RUN set -ex; \
           echo "*/10 * * * * php /var/www/html/occ preview:pre-generate" >> /var/spool/cron/crontabs/www-data
         ENTRYPOINT ["/cron.sh"]
