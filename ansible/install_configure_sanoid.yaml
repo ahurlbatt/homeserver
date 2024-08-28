@@ -28,6 +28,14 @@
     group: root
     mode: '0644'
 
+- name: Copy script for flushing Nextcloud Database
+  ansible.builtin.copy:
+    src: "{{ sanoid_dir }}/lock-nextcloud-db.sh"
+    dest: /usr/local/bin/lock-nextcloud-db.sh
+    owner: root
+    group: root
+    mode: '0744'
+
 - name: Enable sanoid timer
   ansible.builtin.systemd:
     name: sanoid.timer
