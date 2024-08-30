@@ -42,7 +42,7 @@ EOF
 }
 
 lock_db() {
-  lockscript | docker exec --interactive nextcloud-db bash
+  lockscript | docker exec nextcloud-db bash
 }
 
 release_lock() {
