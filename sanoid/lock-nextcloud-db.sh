@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 LOCKFILE="/tmp/mariadb-locked"
+CONTAINER_NAME="nextcloud-db"
 
 usage_info() {
   echo "Usage: $0"
-  echo "Forces or removes a read lock on the instance of mariadb running in the container nextcloud-db"
+  echo "Forces or removes a read lock on the instance of mariadb running in the container $CONTAINER_NAME"
   echo "Options:"
   echo "  -l  Lock"
   echo "  -u  Unlock"
@@ -21,10 +22,18 @@ error() {
   exit 1
 }
 
-check_root() {
-  if [ "$(id -u)" -ne 0 ]; then
-    error "This script must be run as root"
+check_permissions() {
+  if docker info >/dev/null 2>&1 && true; then
+    error "This script must have permission to run 'docker' commands."
   fi
+}
+
+container_running() {
+  [ $(docker inspect --type=container --format='{{.State.Running}}' "$CONTAINER_NAME") == "true" ]
+}
+
+lockfile_exists() {
+  docker exec "$CONTAINER_NAME" bash -c "[ -e $LOCKFILE ]"
 }
 
 lockscript() {
@@ -42,11 +51,11 @@ EOF
 }
 
 lock_db() {
-  lockscript | docker exec nextcloud-db bash
+  lockscript | docker exec "$CONTAINER_NAME" bash
 }
 
 release_lock() {
-  docker exec nextcloud-db bash -c "rm $LOCKFILE"
+  docker exec "$CONTAINER_NAME" bash -c "rm $LOCKFILE"
 }
 
 set -Eeuo pipefail
@@ -57,7 +66,7 @@ if [ "$#" -ne 1 ]; then
   usage
 fi
 
-check_root
+check_permissions
 
 LOCK=0
 
@@ -75,8 +84,22 @@ while getopts "lu" opt; do
   esac
 done
 
+if ! container_running; then
+  echo "Container $CONTAINER_NAME not running - nothing to do."
+  return 0
+fi
+
 if [ "$LOCK" -eq 1 ]; then
-  lock_db
+  if ! lockfile exists; then
+    lock_db
+  else
+    echo "Database already locked - nothing to do."
+    return 0
+  fi
 else
-  release_lock
+  if lockfile_exists; then
+    release_lock
+  else
+    echo "Database not locked - nothing to do."
+    return 0
 fi
