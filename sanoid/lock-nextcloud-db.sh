@@ -23,7 +23,7 @@ error() {
 }
 
 check_permissions() {
-  if docker info >/dev/null 2>&1 && true; then
+  if ! docker info >/dev/null 2>&1 && true; then
     error "This script must have permission to run 'docker' commands."
   fi
 }
@@ -86,20 +86,21 @@ done
 
 if ! container_running; then
   echo "Container $CONTAINER_NAME not running - nothing to do."
-  return 0
+  exit 0
 fi
 
 if [ "$LOCK" -eq 1 ]; then
-  if ! lockfile exists; then
+  if ! lockfile_exists; then
     lock_db
   else
     echo "Database already locked - nothing to do."
-    return 0
+    exit 0
   fi
 else
   if lockfile_exists; then
     release_lock
   else
     echo "Database not locked - nothing to do."
-    return 0
+    exit 0
+  fi
 fi
