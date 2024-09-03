@@ -92,6 +92,7 @@ fi
 if [ "$LOCK" -eq 1 ]; then
   if ! lockfile_exists; then
     lock_db
+    echo "Database locked."
   else
     echo "Database already locked - nothing to do."
     exit 0
@@ -99,6 +100,7 @@ if [ "$LOCK" -eq 1 ]; then
 else
   if lockfile_exists; then
     release_lock
+    echo "Database unlocked."
   else
     echo "Database not locked - nothing to do."
     exit 0
