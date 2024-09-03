@@ -36,8 +36,58 @@
     group: root
     mode: '0744'
 
+- name: Copy sanoid service override
+  block:
+    - name: Ensure directory exists
+      ansible.builtin.file:
+        path: "{{ dest_path | dirname }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+    - name: Copy override.conf
+      ansible.builtin.copy:
+        src: "{{ src_path }}"
+        dest: "{{ dest_path }}"
+        owner: root
+        group: root
+        mode: '0644'
+  vars:
+    src_path: "{{ sanoid_dir }}/service.override.conf"
+    dest_path: /etc/systemd/system/sanoid.service.d/override.conf
+
+- name: Copy sanoid timer override
+  block:
+    - name: Ensure directory exists
+      ansible.builtin.file:
+        path: "{{ dest_path | dirname }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+    - name: Copy override.conf
+      ansible.builtin.copy:
+        src: "{{ src_path }}"
+        dest: "{{ dest_path }}"
+        owner: root
+        group: root
+        mode: '0644'
+  vars:
+    src_path: "{{ sanoid_dir }}/timer.override.conf"
+    dest_path: /etc/systemd/system/sanoid.timer.d/override.conf
+
+- name: Copy sanoid timer override
+  ansible.builtin.copy:
+    src: "{{ sanoid_dir }}/timer.override.conf"
+    dest: /etc/systemd/system/sanoid.timer.d/override.conf"
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Enable sanoid timer
   ansible.builtin.systemd:
     name: sanoid.timer
     enabled: true
     state: started
+    daemon_reload: true
+
