@@ -71,7 +71,7 @@ services:
     networks:
       - monitoring
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "host.docker.internal=172.40.0.1"
     env_file:
       - ./telegraf.env
     environment:
@@ -86,6 +86,11 @@ networks:
   monitoring:
     name: monitoring
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.40.0.0/24
+          gateway: 172.40.0.1
   caddy:
     name: caddy
     internal: true
