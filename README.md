@@ -28,7 +28,9 @@ steal the ideas if you think they're good, or send constructive criticism if you
 
 ## Setting up the server
 
-1. Install ansible and the hardening collection
+This assumes that you are working on a machine that is not the server, connecting to it over a local network using ssh.
+
+1. Install ansible and the hardening collection on your machine
     - `apt update`
     - `apt install ansible`
     - `ansible-galaxy collection install devsec.hardening`
@@ -37,9 +39,11 @@ steal the ideas if you think they're good, or send constructive criticism if you
 4. Adapt the address of the server in the file `./ansible/inventory.yaml`
 5. Run the playbook from the `ansible` directory with `ansible-playbook -K -i inventory.yaml playbook.yaml`
     - The flag `-K` will prompt for the sudo password
-6. Start the containers using `sudo docker compose up -d` in each of the directories in `/containers`
+6. Grab a coffee, this might take a while.
+7. `ssh` into the server - the next steps require doing some things locally
+8. Start the containers using `sudo docker compose up -d` in each of the directories in `/containers`
     - Think about when you want to start up caddy - when you do it will immediately try to get TLS certificates for your domain, and this might not be what you want
-7. Nextcloud and apps require manual setup
+9. Nextcloud and apps require manual setup
     - Nextcloud itself needs e.g. email set for the admin account, locations if wanted, and apps installing
     - For running command-line configuration using `occ`, this should be done with the user `www-data` according to the [Documentation](https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/occ_command.html)
       - This is done from the host machine for example using `sudo docker compose exec -it -u33 nextcloud-app php occ <command>`
@@ -52,9 +56,9 @@ steal the ideas if you think they're good, or send constructive criticism if you
 		
 ## Restoring from remote backup
 
-The backup will be restored from the remote repository using `borgmatic extract`. As the name suggests, this extracts files, it doesn't restore a state. That means, for eaxmple, that files created since the time of the backup will not be automatically deleted from the target. The simplest way to deal with this is to manually delete the contents of the target before starting the `extract`ion. There may be a 'smarter' way to do this using mounts and sync tools - see the [discussion about this on Github](https://github.com/borgbackup/borg/issues/4598).
+The backup will be restored from the remote repository using `borgmatic extract`. As the name suggests, this extracts files, it doesn't restore a state. That means, for example, that files created since the time of the backup will not be automatically deleted from the target. The simplest way to deal with this is to manually delete the contents of the target before starting the `extract`ion. There may be a 'smarter' way to do this using mounts and sync tools - see the [discussion about this on Github](https://github.com/borgbackup/borg/issues/4598).
 
-1. If you're starting from scratch, set up the server as detailed above, with the exception of the infrastructure - this should alread exist, and you don't want to reinitialise the borg repo
+1. If you're starting from scratch, set up the server as detailed above, with the exception of the infrastructure - this should already exist, and you don't want to reinitialise the borg repo
     - You will also not need to do the setup of Nextcloud and its apps
 2. Disable the scheduled back up tasks
     - `sudo systemctl disable sanoid.timer borgmatic.timer`
@@ -66,7 +70,7 @@ The backup will be restored from the remote repository using `borgmatic extract`
     - We don't want to do this, so your delete command will need to name each dataset explicitly
 5. Still within the directory `/tank`, use the following extract command to extract the contents of the archive onto disk i.e. restore from the backup
     - `sudo borgmatic extract --archive {YOUR_ARCHIVE_NAME} --path mnt/backup/tank --strip-components 3`
-    - The last two options are needed because of the way snapshots are mounted as the source of each backup
+    - The last two options are needed because of the way snapshots are mounted during backups
     - I didn't realise what effect this would have and now it's kinda too late to change it
     - You can use the `--progress` flag to monitor the progress, but there's a chance it would actually slow down the restore
 6. Figure out a way of checking the progress, or I guess leave it running and pray
@@ -100,7 +104,6 @@ The backup will be restored from the remote repository using `borgmatic extract`
 
 ## TO DO
 
-1. Write runbook for full restore from backup
-2. Make caddy do the DDNS stuff
-3. Click together grafana monitoring
-4. Set up notifications
+1. Make caddy do the DDNS stuff
+2. Click together grafana monitoring
+3. Set up notifications
