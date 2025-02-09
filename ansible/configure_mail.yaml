@@ -6,3 +6,11 @@
     group: root
     mode: '0600'
 
+- name: Copy aliases file
+  ansible.builtin.copy:
+    src: "{{ mail_dir }}/aliases"
+    dest: /etc/aliases
+    owner: root
+    group: root
+    mode: '0600'
+
